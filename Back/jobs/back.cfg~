@@ -1,0 +1,119 @@
+process Demo =  {
+  
+source = PoolSource 
+{ 
+     # replace 'myfile.root' with the source file you want to use
+     untracked vstring fileNames = {
+#"rfio:/castor/cern.ch/cms/store/CSA07/skim/2008/2/20/CSA07-CSA07Muon-Chowder-A1-PDMuon-ReReco-startup-Skims0/0001/247E24F7-05E0-DC11-95A6-000423D94A20.root"
+"rfio:/castor/cern.ch/cms_joda_"
+	}
+}
+
+#untracked PSet maxEvents = {untracked int32 input = 100}
+
+
+# Magnetic Field
+include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+
+# Geometries
+include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cff" 
+include "Geometry/CommonDetUnit/data/bareGlobalTrackingGeometry.cfi"
+include "Geometry/DTGeometry/data/dtGeometry.cfi"
+include "Geometry/CSCGeometry/data/cscGeometry.cfi"
+include "Geometry/RPCGeometry/data/rpcGeometry.cfi"
+include "RecoMuon/DetLayers/data/muonDetLayerGeometry.cfi"
+
+#Particle tree drawer.
+include "SimGeneral/HepPDTESSource/data/pythiapdt.cfi"
+include "PhysicsTools/HepMCCandAlgos/data/genParticles.cfi"
+
+
+include "PhysicsTools/HepMCCandAlgos/data/genParticleCandidates.cfi"
+include "Configuration/StandardSequences/data/L1Emulator.cff"
+
+
+##CaloMuons
+include "RecoTracker/GeometryESProducer/data/TrackerRecoGeometryESProducer.cfi"
+
+# This is a fix for "No TrackingComponentsRecord found in the EventSetup."
+include "RecoTracker/CkfPattern/data/CkfTrackCandidates.cff"
+ 
+ # This is needed for rec tracks
+include "TrackPropagation/SteppingHelixPropagator/data/SteppingHelixPropagatorAny.cfi"
+ 
+
+#include "RecoMuon/MuonIdentification/data/calomuons.cfi"
+
+include "Geometry/CaloEventSetup/data/CaloGeometry.cff"
+
+#    es_module = EcalBarrelGeometryEP {}
+  #  es_module = HcalHardcodeGeometryEP {}
+  #  es_module = CaloTowerHardcodeGeometryEP {}
+  #  es_module = CaloGeometryBuilder {}
+
+
+#keep the logging output to a nice level
+service = MessageLogger {
+	#	untracked vstring destinations = { "todo" }
+	#	untracked PSet Outputsim.txt = {
+	  #  		untracked bool noLineBreaks = true 
+	  #  		untracked string threshold = "INFO"
+	#		}
+	}
+
+module printTree = ParticleTreeDrawer {
+    InputTag src = genParticleCandidates
+    untracked bool printP4 = true
+    untracked bool printPtEtaPhi = true
+    untracked bool printVertex = true    
+    untracked bool printStatus = false
+    untracked bool printIndex = false
+    untracked vint32 status = { 3 }
+  }   
+
+
+
+
+
+
+module demo = Back { 
+		untracked string RootFileName = "/tmp/aocampor/back_zskim_joda1.root"
+		untracked int32 PtStart = 0
+		untracked int32 PtEnd = 100
+		untracked int32 PtBins = 100
+		untracked string text_file_name = "/tmp/aocampor/back_zskim_joda1.txt"
+#		string globalMuonTracks = "globalMuons"
+#		untracked string StandAloneTrackCollectionLabel = "standAloneMuons"
+###############Units in "cm-2" or "pb-1"
+		untracked string lum_units = "pb-1"
+######### exponent of the luminosity if none, then set to 0.
+		untracked int32 lum_exp = 0
+########## values of the luminosity whitout the exponent
+		untracked double lum_value = 10
+
+########## calo muons
+include "RecoMuon/MuonIdentification/data/caloCompatibility.cff"
+include "TrackingTools/TrackAssociator/data/default.cfi"
+   
+   		InputTag inputTracks = generalTracks
+		InputTag inputMuons = muons
+		double minCaloCompatibility = 0.6
+
+}
+   module csa07EventWeightProducer = CSA07EventWeightProducer {
+     InputTag src = source
+     untracked bool talkToMe = true
+     double overallLumi = 1000.
+     double ttKfactor = 1.
+   }
+module csa07ProcessIdFilter = CSA07ProcessIdFilter {
+     vint32 csa07Ids = { 22,23,24,25,26 }
+     double overallLumi = 1000.
+     string csa07EventWeightProducerLabel = "csa07EventWeightProducer"
+   }
+
+
+  path p = { csa07EventWeightProducer,demo}
+# path p = {csa07EventWeightProducer, csa07ProcessIdFilter ,demo}
+
+}

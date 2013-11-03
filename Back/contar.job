@@ -1,0 +1,20 @@
+#!/bin/tcsh
+#set echo on
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+cd /afs/cern.ch/user/a/aocampor/scratch0/CMSSW_1_6_12/src
+project CMSSW
+eval `scramv1 ru -csh`
+
+cd UserCode/Back/
+set a1 = `cat lista.txt`
+touch /tmp/aocampor/w0.dat
+foreach fls ( $a1[*] )
+	rfcp /castor/cern.ch/user/a/aocampor/results/Back/w0/$fls /tmp/aocampor/
+	cat /tmp/aocampor/$fls  >> /tmp/aocampor/w0.dat
+	rm /tmp/aocampor/$fls 
+end
+rfcp /tmp/aocampor/w0.dat /castor/cern.ch/user/a/aocampor/results/Back/w0/w0.dat
+rm /tmp/aocampor/w0.dat
+exit 0

@@ -1,0 +1,198 @@
+#ifndef Back_h
+#define Back_h
+
+
+// -*- C++ -*-
+//
+// Package:    Back
+// Class:      Back
+//
+/**\class Back Back.cc UserCode/Back/src/Back.cc
+ Description: 
+         Reconstructs Z bosons using CaloMuons TrackMuons and tracks
+ Implementation:
+     <Notes on implementation>
+*/
+//
+// Original Author:  Alberto Ocampo
+//         Created:  Thu May 29 10:50:26 CEST 2008
+// $Id: Back.h~,v 1.1 2011/07/01 12:15:12 aocampor Exp $
+//
+//
+
+// user include files
+
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+
+/// root includes
+
+#include "TROOT.h"
+#include "TFile.h"
+#include "TH1.h"
+#include "TH1D.h"
+#include "TH2D.h"
+#include "TMath.h"
+
+//math inclusions
+//#include "DataFormats/Math/interface/Vector.h"
+
+///Track parameters includes
+
+#include "TrackingTools/TrackAssociator/interface/TrackDetectorAssociator.h"
+#include "TrackingTools/Records/interface/TrackingComponentsRecord.h"
+
+//CaloMuon parameters includes
+
+#include "RecoMuon/MuonIdentification/interface/MuonCaloCompatibility.h"
+
+///File output
+
+#include <iostream>
+#include <fstream>
+
+
+
+//
+// class decleration
+//
+
+class Back : public edm::EDAnalyzer {
+
+ public:
+
+  explicit Back(const edm::ParameterSet&);
+  ~Back();
+
+ private:
+
+  virtual void beginJob(const edm::EventSetup&) ;
+  virtual void analyze(const edm::Event&, const edm::EventSetup&);
+  virtual void endJob() ;
+
+  double InvMass(double ,double ,double ,double ,double ,double ,double ,double );
+  double delta(double a , double b){return fabs(a-b);}
+  double deltar(double a, double b){return sqrt(a + b);}
+  double angle(double,double,double,double,double,double);
+
+  std::string RootFileName;
+  //    std::string theSTAMuonLabel;
+  std::string unit;
+  TFile* theFile;
+  //  std::ofstream textfile;
+  //  std::string textfile_name;
+  TH2D* h2anglevsinv;
+
+  TH1D* hPtTrackMuons;
+  TH1D* hEtaTrackMuons;
+  TH1D* hPhiTrackMuons;
+
+  TH1D* hPtRecoMuons;
+  TH1D* hEtaRecoMuons;
+  TH1D* hPhiRecoMuons;
+
+  TH1D* hPtL1Mu;
+  TH1D* hEtaL1Mu;
+  TH1D* hPhiL1Mu;
+
+  TH1D* hPtL1Mumatch;
+  TH1D* hEtaL1Mumatch;
+  TH1D* hPhiL1Mumatch;
+
+  TH1D* hmuonbacka;
+  TH1D* hmuonbackb;
+
+  TH1D* hPtCaloMuons;
+  TH1D* hEtaCaloMuons;
+  TH1D* hPhiCaloMuons;
+
+  //            TH1D* hNumMuonRecPerEv;
+  //            TH1D* hPtStandAloneMu;
+
+  TH1D* hDifStandTrackPt;
+  TH1D* hDifStandTrackPhi;
+  TH1D* hDifStandTrackEta;
+
+  //            TH1D* hDifStandRecoPt;
+  TH1D* hDifL1RecoPhi;
+  TH1D* hDifL1RecoEta;
+
+  TH1D* hInvMass;
+
+  TH1D* hcaloInvMass;
+  //    edm::InputTag m_globalMuonTracks;
+
+  TH1D* hZmassReco;
+  TH1D* hcaloZmassReco;
+  TH1D* hsameqcaloZmassReco;
+
+  TH1D* htrackInvMass;
+  TH1D* htracksmulz;
+  TH1D* htracksmulbef;
+
+  TH1D* hcalomulz;
+  TH1D* hcalomulzb;
+
+  TH1D* htmumulz;
+  TH1D* htmumulzb;
+
+  TH1D* hcalosameqmulz;
+
+  TH1D* hCalocom;
+  TH1D* hCalocompion; 
+  TH1D* hCalocommuon;
+  TH1D* hCalocomextra;
+
+  TH1D* occL1caloPt;
+  TH1D* occL1caloEta;
+  TH1D* occL1caloPhi;
+
+  TH1D* occL1trackPt;
+  TH1D* occL1trackEta;
+  TH1D* occL1trackPhi;
+
+  TH1D* occcaloL1Pt;
+  TH1D* occcaloL1Eta;
+  TH1D* occcaloL1Phi;
+
+  TH1D* occtrackL1Pt;
+  TH1D* occtrackL1Eta;
+  TH1D* occtrackL1Phi;
+
+  TH1D* occcalotrackPt;
+  TH1D* occcalotrackEta;
+  TH1D* occcalotrackPhi;
+
+  TH1D* occtrackcaloPt;
+  TH1D* occtrackcaloEta;
+  TH1D* occtrackcaloPhi;
+
+  TH1D* exptrackPt;
+  TH1D* exptrackEta;
+  TH1D* exptrackPhi;
+
+  TH1D* expcaloPt;
+  TH1D* expcaloEta;
+  TH1D* expcaloPhi;
+
+  TH1D* calomuonspions;
+  TH1D* calomuonsmuons;
+  TH1D* calomuonsextra;
+  TH1D* calomuonstot;
+
+  int start;
+  int bins;
+  int end;
+
+  TrackDetectorAssociator trackAssociator_;
+  TrackAssociatorParameters parameters_;
+  MuonCaloCompatibility muonCaloCompatibility_;
+
+  // ----------member data ---------------------------
+};
+
+
+#endif

@@ -1,0 +1,553 @@
+// -*- C++ -*-
+//
+// Package:    Back
+// Class:      Back
+// 
+/**\class Back Back.cc UserCode/Back/src/Back.cc
+
+ Description: <one line class summary>
+
+ Implementation:
+     <Notes on implementation>
+*/
+//
+// Original Author:  pts/9
+//         Created:  Thu May 29 10:50:26 CEST 2008
+// $Id: Back.cc_copy_working_very_elaborated_method,v 1.1 2011/07/01 12:15:13 aocampor Exp $
+//
+//
+
+
+// system include files
+#include <memory>
+
+// user include files
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/EDAnalyzer.h"
+
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+
+/// Muons data formats
+
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
+
+#include "DataFormats/TrackReco/interface/Track.h"
+
+/// Stand Alone Guess 
+
+#include "MagneticField/Engine/interface/MagneticField.h"
+#include "MagneticField/Records/interface/IdealMagneticFieldRecord.h"
+#include "Geometry/Records/interface/GlobalTrackingGeometryRecord.h"
+#include "Geometry/CommonDetUnit/interface/GlobalTrackingGeometry.h"
+#include "Geometry/CommonDetUnit/interface/GeomDet.h"
+
+#include "TrackingTools/TransientTrack/interface/TransientTrack.h"
+#include "DataFormats/TrajectorySeed/interface/TrajectorySeedCollection.h"
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "RecoMuon/TrackingTools/interface/MuonPatternRecoDumper.h"
+
+#include "SimDataFormats/Track/interface/SimTrackContainer.h"
+
+//// L1 includes
+#include "DataFormats/L1Trigger/interface/L1MuonParticleFwd.h"
+
+#include "DataFormats/HLTReco/interface/HLTFilterObject.h"
+
+#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h"
+#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuGMTCand.h"
+#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuGMTExtendedCand.h"
+#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuGMTReadoutCollection.h"
+
+///Particle Candidates
+
+#include "DataFormats/Candidate/interface/Candidate.h"
+#include "DataFormats/Candidate/interface/CandMatchMap.h"
+
+/// root includes
+#include "TROOT.h"
+#include "TFile.h"
+#include "TH1.h"
+#include "TH1D.h"
+#include "TH2D.h"
+#include "TMath.h"
+
+// Vector
+
+#include <vector>
+
+///File output
+
+#include <iostream>
+#include <fstream>
+
+
+
+//
+// class decleration
+//
+
+class Back : public edm::EDAnalyzer {
+	public:
+      		explicit Back(const edm::ParameterSet&);
+      		~Back();
+
+
+   	private:
+      		virtual void beginJob(const edm::EventSetup&) ;
+      		virtual void analyze(const edm::Event&, const edm::EventSetup&);
+      		virtual void endJob() ;
+		std::string RootFileName;
+	//	std::string theSTAMuonLabel;
+		std::string unit;
+		TFile* theFile;
+		std::ofstream textfile;
+		std::string textfile_name;
+		TH1D* hPtTrackMuons;
+		TH1D* hEtaTrackMuons;
+		TH1D* hPhiTrackMuons;
+		TH1D* hPtRecoMuons;
+		TH1D* hEtaRecoMuons;
+		TH1D* hPhiRecoMuons;
+//		TH1D* hNumMuonRecPerEv;
+//		TH1D* hPtStandAloneMu;
+		TH1D* hEtaL1Mu;
+		TH1D* hPhiL1Mu;
+		TH1D* hDifStandTrackPt;
+		TH1D* hDifStandTrackPhi;
+		TH1D* hDifStandTrackEta;
+//		TH1D* hDifStandRecoPt;
+		TH1D* hDifL1RecoPhi;
+		TH1D* hDifL1RecoEta;
+	//	edm::InputTag m_globalMuonTracks;
+		TH1D* hZmassReco;
+		TH1D* hZmassReco_phi;
+		int start;
+      		int bins;
+      		int end;
+		int numZRec;
+		int numZRec_phi;
+		int generatedz;
+		double val;
+		int expo;
+
+      // ----------member data ---------------------------
+};
+
+//
+// constants, enums and typedefs
+//
+
+//
+// static data member definitions
+//
+
+//
+// constructors and destructor
+//
+Back::Back(const edm::ParameterSet& iConfig)
+
+{
+   //now do what ever initialization is needed
+//	theSTAMuonLabel = iConfig.getUntrackedParameter<std::string>("StandAloneTrackCollectionLabel");
+	textfile_name = iConfig.getUntrackedParameter<std::string>("text_file_name");
+	RootFileName = iConfig.getUntrackedParameter<std::string>("RootFileName");
+	start = iConfig.getUntrackedParameter<int>("PtStart");
+	end = iConfig.getUntrackedParameter<int>("PtEnd");
+	bins = iConfig.getUntrackedParameter<int>("PtBins");
+//	m_globalMuonTracks = iConfig.getParameter<edm::InputTag>("globalMuonTracks");
+	unit = iConfig.getUntrackedParameter<std::string>("lum_units");
+	val = iConfig.getUntrackedParameter<double>("lum_value");
+	expo = iConfig.getUntrackedParameter<int>("lum_exp");
+}
+
+
+Back::~Back()
+{
+ 
+   // do anything here that needs to be done at desctruction time
+   // (e.g. close files, deallocate resources etc.)
+
+}
+
+
+//
+// member functions
+//
+
+// ------------ method called to for each event  ------------
+void
+Back::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+{
+	using namespace edm;
+	using namespace reco;
+	using namespace std;
+
+        Handle<MuonCollection> muons;
+        iEvent.getByLabel("muons",muons);
+        Handle<MuonCollection> tmuons;
+        iEvent.getByLabel("trackerMuons",tmuons);
+
+	Handle<reco::CandidateCollection> genParticles;
+        iEvent.getByLabel("genParticleCandidates", genParticles);
+//	edm::Handle<reco::TrackCollection> globalMuonTracks;
+//	iEvent.getByLabel(m_globalMuonTracks, globalMuonTracks);
+// 	Handle<reco::TrackCollection> staTracks;
+//  	iEvent.getByLabel(theSTAMuonLabel, staTracks);
+	ESHandle<MagneticField> theMGField;
+	iSetup.get<IdealMagneticFieldRecord>().get(theMGField);
+	ESHandle<GlobalTrackingGeometry> theTrackingGeometry;
+	iSetup.get<GlobalTrackingGeometryRecord>().get(theTrackingGeometry);
+	
+	edm::Handle<L1MuGMTReadoutCollection> pCollection; 
+	iEvent.getByType(pCollection);
+
+	textfile << "Event: " << iEvent.id() << endl;
+//	reco::TrackCollection::const_iterator staTrack;
+	
+	std::vector<reco::Muon> Tracker_mat;
+	std::vector<reco::Muon> Tracker_mat1;
+	double pi = 3.14159265;
+
+	for (unsigned int i=0; i < muons->size(); ++i){
+		hPtRecoMuons->Fill((*muons)[i].pt());
+		hPhiRecoMuons->Fill((*muons)[i].phi());
+		hEtaRecoMuons->Fill((*muons)[i].eta());
+		}
+
+	for ( unsigned int i=0; i< tmuons->size();++i) {
+		hPtTrackMuons->Fill((*tmuons)[i].pt());
+		hEtaTrackMuons->Fill((*tmuons)[i].eta());
+		hPhiTrackMuons->Fill((*tmuons)[i].phi());
+		}
+
+	L1MuGMTReadoutCollection const* gmtrc = pCollection.product(); 
+	vector<L1MuGMTReadoutRecord> gmt_records = gmtrc->getRecords(); 
+	vector<L1MuGMTReadoutRecord>::const_iterator RRItr; 
+	for( RRItr = gmt_records.begin(); RRItr != gmt_records.end(); RRItr++ ) {  
+		vector<L1MuGMTExtendedCand> GMTCands   = RRItr->getGMTCands();
+		vector<L1MuGMTExtendedCand>::const_iterator GMTItr;
+		for( GMTItr = GMTCands.begin(); GMTItr != GMTCands.end(); ++GMTItr ) {
+	    	//	reco::TransientTrack track(*staTrack,&*theMGField,theTrackingGeometry);
+			bool Match_R_SA=false;
+			bool Reco_true=false;
+			bool Reco_true1=false;
+			double deltaphi_Reco_SA=0;
+			double deltaeta_Reco_SA=0;
+			double deltaR_Reco_SA=0;
+			double deltamin=0;
+			double phiL1=0;
+			reco::Muon ST_RECO_Match;
+			if ((GMTItr->phiValue())<pi){
+				phiL1=GMTItr->phiValue();
+				}
+			else{
+				phiL1=GMTItr->phiValue()-2*pi;
+				}
+			
+			textfile << "L1 Muons: " << endl;
+			textfile << "phi: " << phiL1 << "\t eta: " << GMTItr->etaValue() << endl;
+//		hPtStandAloneMu->Fill(GMTItr->pt());
+			hPhiL1Mu->Fill(phiL1);
+			hEtaL1Mu->Fill(GMTItr->etaValue());
+			for (unsigned int i=0; i < muons->size(); ++i){
+				textfile << "\t Reconstructed Muon: " << endl;
+				textfile << "\t pt: " << (*muons)[i].pt() << "\t phi: " << (*muons)[i].phi() << "\t eta: " << (*muons)[i].eta() << " P4: " << "(" << (*muons)[i].energy() << "," << (*muons)[i].px() << "," << (*muons)[i].py() << "," << (*muons)[i].pz() << ")" << endl;
+		//		textfile << "\t Differences between L1 and RECO pt: " << staTrack->pt()-(*muons)[i].pt()  << endl;
+				deltaphi_Reco_SA = fabs(phiL1-(*muons)[i].phi());
+				deltaeta_Reco_SA=(*muons)[i].eta()-GMTItr->etaValue();
+				if(deltaphi_Reco_SA>pi) deltaphi_Reco_SA=2*pi-deltaphi_Reco_SA;
+				textfile << "\t Differences between L1 and RECO phi: " << deltaphi_Reco_SA << endl;
+				textfile << "\t Differences betwenn L1 and RECO Eta: " << deltaeta_Reco_SA << endl;
+			//	hDifStandRecoPt->Fill(GMTItr->pt()-(*muons)[i].pt());
+				hDifL1RecoPhi->Fill(deltaphi_Reco_SA);
+				hDifL1RecoEta->Fill(deltaeta_Reco_SA);
+				deltaR_Reco_SA=sqrt(deltaeta_Reco_SA*deltaeta_Reco_SA+deltaphi_Reco_SA*deltaphi_Reco_SA);
+				textfile << "\t Delta R between L1 and Reco is: " << deltaR_Reco_SA << endl;
+				if(deltaR_Reco_SA<0.5){
+					if(Match_R_SA){	
+						textfile << "\t Delta min: " << deltamin << " Delta reco sa : " << deltaR_Reco_SA << endl;
+						if(deltaR_Reco_SA<deltamin){
+							ST_RECO_Match = (*muons)[i];
+							textfile << "\t L1 and Reco Muon Matched and replaced with a better candidate." << endl;
+							textfile << "\t Cinematic quantities of the matched pt: " << ST_RECO_Match.pt() << " phi : " << ST_RECO_Match.phi() << " eta: "  << ST_RECO_Match.eta() << endl;
+							deltamin=deltaR_Reco_SA;
+							}
+						}
+					if(!Match_R_SA){
+						Match_R_SA=true;
+						ST_RECO_Match = (*muons)[i];
+						textfile << "\t L1 and Reco Muon Matched first time." << endl;
+						textfile << "\t Cinematic quantities of the matched pt: " << ST_RECO_Match.pt() << " phi : " << ST_RECO_Match.phi() << " eta: "  << ST_RECO_Match.eta() << endl;
+						deltamin=deltaR_Reco_SA;
+						}		
+					}
+				}
+			if(Tracker_mat.size()!=0){
+				for(unsigned int k=0;k<Tracker_mat.size();++k){			
+					double track_dphi=fabs(Tracker_mat[k].phi()-ST_RECO_Match.phi());
+					if (track_dphi>pi) track_dphi=2*pi-track_dphi;
+					double track_deta=Tracker_mat[k].eta()-ST_RECO_Match.eta();
+					double tracker_dr=sqrt(track_dphi*track_dphi+track_deta*track_deta);
+					textfile << "\t\t\t For mass reconstruction matching delta: " << tracker_dr << endl;
+					if(tracker_dr<0.5){
+						textfile << "\t\t\t Match!!!!!!!!!!!!!!!!!!!! " << endl;
+						Reco_true=true;
+						}
+					}
+				}
+			if(Tracker_mat1.size()!=0){
+				for(unsigned int k=0;k<Tracker_mat1.size();++k){			
+					double track_dphi=fabs(Tracker_mat1[k].phi()-ST_RECO_Match.phi());
+					if (track_dphi>pi) track_dphi=2*pi-track_dphi;
+					double track_deta=Tracker_mat1[k].eta()-ST_RECO_Match.eta();
+					double tracker_dr=sqrt(track_dphi*track_dphi+track_deta*track_deta);
+					textfile << "\t\t\t For phi reconstruction matching delta: " << tracker_dr << endl;
+					if(tracker_dr<0.5){
+						textfile << "\t\t\t Match!!!!!!!!!!!!!!!!!!!! " << endl;
+						Reco_true1=true;
+						}
+					}
+				}
+			for ( unsigned int i=0; i< tmuons->size();++i) {
+				textfile << "\t\t Tracker Muons: " << endl;
+				textfile << "\t\t pt: " << (*tmuons)[i].pt() << "\t phi: " << (*tmuons)[i].phi() << "\t eta: " << (*tmuons)[i].eta() << " P4: " << "(" << (*tmuons)[i].energy() << "," << (*tmuons)[i].px() << "," << (*tmuons)[i].py() << "," << (*tmuons)[i].pz() << ")" << endl;
+				textfile << "\t\t Reco Muon: " << endl;
+				textfile << "\t\t pt: " << ST_RECO_Match.pt() << "\t phi: " << ST_RECO_Match.phi() << "\t eta: " << ST_RECO_Match.eta() << " P4: " << "(" << ST_RECO_Match.energy() << "," << ST_RECO_Match.px() << "," << ST_RECO_Match.py() << "," << ST_RECO_Match.pz() << ")" << endl;
+				hDifStandTrackPt->Fill(ST_RECO_Match.pt()-(*tmuons)[i].pt());
+				textfile << "\t\t Differences between L1 track pt: " << ST_RECO_Match.pt()-(*tmuons)[i].pt()  << endl;
+				deltaphi_Reco_SA=fabs(ST_RECO_Match.phi()-(*tmuons)[i].phi());
+				if(deltaphi_Reco_SA>pi) deltaphi_Reco_SA=2*pi-deltaphi_Reco_SA;
+				hDifStandTrackPhi->Fill(deltaphi_Reco_SA);
+				textfile << "\t\t Differences between L1 Track phi: " << deltaphi_Reco_SA << endl;
+				hDifStandTrackEta->Fill(ST_RECO_Match.eta()-(*tmuons)[i].eta());
+				textfile << "\t\t Differences between L1 and Track Eta: " << ST_RECO_Match.eta()-(*tmuons)[i].eta() << endl;
+				double zm=0;
+				double aux=ST_RECO_Match.energy()*ST_RECO_Match.energy()+(*tmuons)[i].energy()*(*tmuons)[i].energy()+2*(*tmuons)[i].energy()*ST_RECO_Match.energy();
+				double aux1=ST_RECO_Match.px()*ST_RECO_Match.px()+ST_RECO_Match.py()*ST_RECO_Match.py()+ST_RECO_Match.pz()*ST_RECO_Match.pz();
+				double aux2=(*tmuons)[i].px()*(*tmuons)[i].px()+(*tmuons)[i].py()*(*tmuons)[i].py()+(*tmuons)[i].pz()*(*tmuons)[i].pz();
+				double aux3=2*((*tmuons)[i].px()*ST_RECO_Match.px()+(*tmuons)[i].py()*ST_RECO_Match.py()+(*tmuons)[i].pz()*ST_RECO_Match.pz());
+				zm=sqrt(aux-aux1-aux2-aux3);
+				textfile << "\t\t Zm: " << zm << endl;textfile << "\t\t Tracker Muons: " << endl;
+				textfile << "\t\t pt: " << (*tmuons)[i].pt() << "\t phi: " << (*tmuons)[i].phi() << "\t eta: " << (*tmuons)[i].eta() << " P4: " << "(" << (*tmuons)[i].energy() << "," << (*tmuons)[i].px() << "," << (*tmuons)[i].py() << "," << (*tmuons)[i].pz() << ")" << endl;
+				if(zm>60 && zm<120){
+					textfile << "#############################################" << endl;
+					textfile << "################    Reconstructed Z by mass: " << zm << " phi: " << deltaphi_Reco_SA << endl;
+					textfile << "#############################################" << endl;
+					if(!Reco_true){
+						hZmassReco->Fill(zm);
+						numZRec++;
+						Tracker_mat.push_back((*tmuons)[i]);
+						textfile << "################    counted one Z mass " << zm << endl;
+						}
+					}
+				if( deltaphi_Reco_SA > 3.0 && deltaphi_Reco_SA <= pi ){
+					textfile << "#############################################" << endl;
+					textfile << "################    Reconstructed Z by phi" << " mass: " << zm << " phi: " << deltaphi_Reco_SA << endl;
+					textfile << "#############################################" << endl;
+					if(!Reco_true1){
+						hZmassReco_phi->Fill(zm);
+						Tracker_mat1.push_back((*tmuons)[i]);
+						numZRec_phi++;
+						textfile << "################    counted one Z phi " << zm << endl;
+						}
+					}
+				}
+			}
+		}
+	for( size_t i = 0; i < genParticles->size(); ++ i ) {
+		const Candidate & p = (*genParticles)[ i ];
+                if (p.pdgId()==23){
+			if(p.status()==3){
+				bool zdecay=false;
+				for( size_t j = 0; j < p.numberOfDaughters(); ++ j ) {
+				        const Candidate * daughter = p.daughter( j );
+					if ((*daughter).pdgId()==13||(*daughter).pdgId()==-13){
+						textfile << "#############################################" << endl;
+						textfile << "################### We got a Z decaying into muons."   << endl;
+						textfile << "#############################################" << endl;
+						zdecay=true;
+						}
+      					}
+				if(zdecay){
+					generatedz++;
+					}
+				}
+			}
+		}
+/*  	for (staTrack = staTracks->begin(); staTrack != staTracks->end(); ++staTrack){
+    		reco::TransientTrack track(*staTrack,&*theMGField,theTrackingGeometry);
+		double deltaphi_Reco_SA=0;
+		double deltaeta_Reco_SA=0;
+		double deltaR_Reco_SA=0;
+		double deltamin=0;
+		textfile << "Stand Alone Muons: " << endl;
+		textfile << "pt: " << staTrack->pt() << "\t phi: " << staTrack->phi() << "\t eta: " << staTrack->eta() << endl;
+		hPtStandAloneMu->Fill(staTrack->pt());
+		hPhiStandAloneMu->Fill(staTrack->phi());
+		hEtaStandAloneMu->Fill(staTrack->eta());
+		for (unsigned int i=0; i < muons->size(); ++i){
+			textfile << "\t Reconstructed Muon: " << endl;
+			textfile << "\t pt: " << (*muons)[i].pt() << "\t phi: " << (*muons)[i].phi() << "\t eta: " << (*muons)[i].eta() << endl;
+			textfile << "\t Differences between SA and RECO pt: " << staTrack->pt()-(*muons)[i].pt()  << endl;
+			textfile << "\t Differences between SA and RECO phi: " << staTrack->phi()-(*muons)[i].phi() << endl;
+			textfile << "\t Differences betwenn SA and RECO Eta: " << staTrack->eta()-(*muons)[i].eta() << endl;
+			hPtRecoMuons->Fill((*muons)[i].pt());
+			hPhiRecoMuons->Fill((*muons)[i].phi());
+			hEtaRecoMuons->Fill((*muons)[i].eta());
+			hDifStandRecoPt->Fill(staTrack->pt()-(*muons)[i].pt());
+			hDifStandRecoPhi->Fill(staTrack->phi()-(*muons)[i].phi());
+			hDifStandRecoEta->Fill(staTrack->eta()-(*muons)[i].eta());
+			deltaphi_Reco_SA=(*muons)[i].phi()-staTrack->phi();
+			deltaeta_Reco_SA=(*muons)[i].eta()-staTrack->eta();
+			deltaR_Reco_SA=sqrt(deltaeta_Reco_SA*deltaeta_Reco_SA+deltaphi_Reco_SA*deltaeta_Reco_SA);
+			if(deltaR_Reco_SA<0.5){
+				if(Match_R_SA){	
+					if(deltaR_Reco_SA<deltamin){
+						ST_RECO_Match = (*muons)[i];
+						deltamin=deltaR_Reco_SA;
+						}
+					}
+				if(!Match_R_SA){
+					ST_RECO_Match = (*muons)[i];
+					Match_R_SA=true;
+					deltamin=deltaR_Reco_SA;
+					}		
+				}
+			}
+		for ( unsigned int i=0; i< tmuons->size();++i) {
+			textfile << "\t\t Tracker Muons: " << endl;
+			textfile << "\t\t pt: " << (*tmuons)[i].pt() << "\t phi: " << (*tmuons)[i].phi() << "\t eta: " << (*tmuons)[i].eta() << endl;
+			hDifStandTrackPt->Fill(ST_RECO_Match.pt()-(*tmuons)[i].pt());
+			textfile << "\t\t Differences between SA track pt: " << ST_RECO_Match.pt()-(*tmuons)[i].pt()  << endl;
+			hDifStandTrackPhi->Fill(ST_RECO_Match.phi()-(*tmuons)[i].phi());
+			textfile << "\t\t Differences between SA Track phi: " << ST_RECO_Match.phi()-(*tmuons)[i].phi() << endl;
+			hDifStandTrackEta->Fill(ST_RECO_Match.eta()-(*tmuons)[i].eta());
+			textfile << "\t\t Differences between SA and Track Eta: " << ST_RECO_Match.eta()-(*tmuons)[i].eta() << endl;
+			hPtTrackMuons->Fill((*tmuons)[i].pt());
+			hEtaTrackMuons->Fill((*tmuons)[i].eta());
+			hPhiTrackMuons->Fill((*tmuons)[i].phi());
+			double zm=0;
+			double aux=ST_RECO_Match.energy()*ST_RECO_Match.energy()+(*tmuons)[i].energy()*(*tmuons)[i].energy()+2*(*tmuons)[i].energy()*ST_RECO_Match.energy();
+			double aux1=ST_RECO_Match.px()*ST_RECO_Match.px()+ST_RECO_Match.py()*ST_RECO_Match.py()+ST_RECO_Match.pz()*ST_RECO_Match.pz();
+			double aux2=(*tmuons)[i].px()*(*tmuons)[i].px()+(*tmuons)[i].py()*(*tmuons)[i].py()+(*tmuons)[i].pz()*(*tmuons)[i].pz();
+			double aux3=2*((*tmuons)[i].px()*ST_RECO_Match.px()+(*tmuons)[i].py()*ST_RECO_Match.py()+(*tmuons)[i].pz()*ST_RECO_Match.pz());
+			zm=sqrt(aux-aux1-aux2-aux3);
+			if(zm>60 && zm<120){
+				textfile << "#############################################" << endl;
+				textfile << "################    Reconstructed Z " << zm << endl;
+				textfile << "#############################################" << endl;
+				hZmassReco->Fill(zm);
+				numZRec++;
+				}
+			}
+		}
+*/
+/*	for ( reco::TrackCollection::const_iterator globalMuonTrack = globalMuonTracks->begin(); globalMuonTrack != globalMuonTracks->end();  ++globalMuonTrack) {
+		hPtGlobMuons->Fill(globalMuonTrack->pt());
+		hEtaGlobMuons->Fill(globalMuonTrack->eta());
+		hPhiGlobMuons->Fill(globalMuonTrack->phi());
+		}
+*/
+
+	/*for (unsigned int i=0; i < muons->size(); ++i){
+                hPtRecMuons->Fill((*muons)[i].pt());
+		textfile << "Reconstructed Muon: " << endl;
+		textfile << "Charge: " << (*muons)[i].charge() << endl;
+		textfile << "Phi Value: "<< (*muons)[i].phi() << " Eta Value: " << (*muons)[i].eta() << " Transverse Momentum in GeV: " << (*muons)[i].pt() << endl;
+		textfile << "Momentum vector: " << (*muons)[i].momentum() << endl;
+		numMuRec++;
+                }
+	hNumMuonRecPerEv->Fill(numMuRec);
+	 for (reco::MuonCollection::const_iterator muon = muons->begin();  muon != muons->end();  ++muon) {
+		textfile << "Muon collection with iterator: " << muon->combinedMuon()->phi() << endl;
+		}*/
+
+
+
+#ifdef THIS_IS_AN_EVENT_EXAMPLE
+   Handle<ExampleData> pIn;
+   iEvent.getByLabel("example",pIn);
+#endif
+   
+#ifdef THIS_IS_AN_EVENTSETUP_EXAMPLE
+   ESHandle<SetupData> pSetup;
+   iSetup.get<SetupRecord>().get(pSetup);
+#endif
+}
+
+
+// ------------ method called once each job just before starting event loop  ------------
+void 
+Back::beginJob(const edm::EventSetup&)
+{
+	theFile = new TFile(RootFileName.c_str(), "RECREATE");
+	textfile.open (textfile_name.c_str());
+        theFile->cd();
+//	hNumMuonRecPerEv = new TH1D("NumMuonRecPerEv","Number of Muons per Even",21,-10,10);
+	hPtTrackMuons = new TH1D("TrackMuonsPt","Tracker Muons Pt",bins,start,end);
+	hPhiTrackMuons = new TH1D("TrackMuonsPhi","Tracker Muons Phi",bins,-5,5);
+	hEtaTrackMuons = new TH1D("TrackMuonsEta","Tracker Muons Eta",bins,-5,5);
+	hPtRecoMuons = new TH1D("RecoMuonsPt","Reconstructed Muons Pt",bins,start,end);
+	hPhiRecoMuons = new TH1D("RecoMuonsPhi","Reconstructed Muons Phi",bins,-5,5);
+	hEtaRecoMuons = new TH1D("RecoMuonsEta","Reconstructed Muons Eta",bins,-5,5);
+//	hPtStandAloneMu = new TH1D ("StandAlonePt","Stand Alone Muons Pt", bins,start,end);
+	hPhiL1Mu = new TH1D ("L1Phi","L1 Muons Phi", bins,-5,5);
+	hEtaL1Mu = new TH1D ("L1Eta","L1 Muons Eta", bins,-5,5);
+	hDifStandTrackPt = new TH1D ("DifStanTrackPt","Difference Pt",100,-10,10);
+	hDifStandTrackPhi = new TH1D ("DifStanTrackPhi","Difference Phi",200,-3,3);
+	hDifStandTrackEta = new TH1D ("DifStanTrackEta","Difference Eta",200,-3,3);
+//	hDifL1RecoPt = new TH1D ("DifStanRecoPt","Difference Pt",100,-10,10);
+	hDifL1RecoPhi = new TH1D ("DifL1RecoPhi","Difference Phi",200,-3,3);
+	hDifL1RecoEta = new TH1D ("DifL1RecoEta","Difference Eta",200,-3,3);
+	hZmassReco = new TH1D("ZMassReco","Z Invariant Mass",360,10,120);
+	hZmassReco_phi = new TH1D("ZMassRecophi","Z Invariant Mass phi",360,10,120);
+	numZRec=0;
+	generatedz=0;
+	numZRec_phi=0;
+	
+}
+
+// ------------ method called once each job just after ending the event loop  ------------
+void 
+Back::endJob() {
+	using namespace std;
+	textfile << "The observed Number of Z->MM events were: " << numZRec << " The integrated luminosity of the sample was: " << val << "E(" << expo << ") " << unit << endl;
+	if(unit.compare("pb-1")==0){
+		textfile << "The Z->MuMu events generated were: " << generatedz << " The MC cross section is: " << generatedz/val << "E(" << -expo << ") pb" << endl;
+		textfile << "The Z->MuMu observed Cross Section is: " << numZRec/val << "E(" << -expo << ") pb" << endl;
+		textfile << "The Z->MuMu observed Cross Section with phi reconstruction is: " << numZRec_phi/val << "E(" << -expo << ") pb" << endl;
+		}
+	else if(unit.compare("cm-2")==0){
+		textfile << "The Z->MuMu events generated were: " << generatedz << " The cross section is: " << generatedz/val << "E(" << -expo+36 << ") pb" << endl;
+		textfile << "The Z->MM Cross Section is: " << numZRec/val << "E(" << -(expo-36) << ") pb" << endl;
+		textfile << "The Z->MM Cross Section with phi reconstruction is: " << numZRec_phi/val << "E(" << -(expo-36) << ") pb" << endl;
+		}
+	theFile->cd();
+//	hNumMuonRecPerEv->Write();
+	hPtTrackMuons->Write();
+	hPtRecoMuons->Write();
+//	hPtStandAloneMu->Write();
+	hPhiTrackMuons->Write();
+	hPhiRecoMuons->Write();
+	hPhiL1Mu->Write();
+	hEtaTrackMuons->Write();
+	hEtaRecoMuons->Write();
+	hEtaL1Mu->Write();
+	hDifStandTrackPt->Write();
+	hDifStandTrackPhi->Write();
+	hDifStandTrackEta->Write();
+//	hDifStandRecoPt->Write();
+	hDifL1RecoPhi->Write();
+	hDifL1RecoEta->Write();
+	hZmassReco->Write();
+	hZmassReco_phi->Write();
+	theFile->Close(); 
+	textfile.close();
+}
+
+//define this as a plug-in
+DEFINE_FWK_MODULE(Back);

@@ -1,0 +1,29 @@
+#!/bin/tcsh
+#set echo on
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+cd /afs/cern.ch/user/a/aocampor/scratch0/CMSSW_1_6_12/src
+project CMSSW
+eval `scramv1 ru -csh`
+
+cd UserCode/Back/jobs
+
+set a1 = `cat lista.dat`
+
+foreach fls ($a1[*])
+	set temp = `echo $fls | replace "'" "" | replace "," "" | replace " " ""`
+        set label = `echo $temp | awk -F"/" '{print $9}'  | awk -F "-" '{print $5}'  | awk -F "." '{print $1}' ` 
+	echo $label
+	cp back.cfg trabajos/back_${label}.cfg
+	replace "_joda_" "${temp}"  -- trabajos/back_${label}.cfg
+	replace "_joda1" "${label}" -- trabajos/back_${label}.cfg
+	cp sub.job trabajos/sub_${label}.job
+	cd trabajos
+	replace "trabajo_" "back_${label}.cfg"  -- sub_${label}.job
+	replace "res1" "back_zskim${label}.root" -- sub_${label}.job
+	replace "res2" "back_zskim${label}.txt" -- sub_${label}.job
+	chmod a+x sub_${label}.job
+	bsub -q cmscaf sub_${label}.job 
+	cd ..
+end

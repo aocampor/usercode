@@ -1,0 +1,18 @@
+#!/bin/tcsh
+#set echo on
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+cd /afs/cern.ch/user/a/aocampor/scratch0/CMSSW_1_6_12/src
+project CMSSW
+eval `scramv1 ru -csh`
+
+cd UserCode/Back/jobs/trabajos
+
+cmsRun trabajo_
+
+rfcp /tmp/aocampor/res1 $CASTOR_HOME/results/Back/gum/
+rfcp /tmp/aocampor/res2 $CASTOR_HOME/results/Back/gum/
+rm /tmp/aocampor/res1
+rm /tmp/aocampor/res2
+ 

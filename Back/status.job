@@ -1,0 +1,10 @@
+#!/bin/bash
+#set echo on
+#setenv CORAL_AUTH_USER ""
+#setenv CORAL_AUTH_PASSWORD ""
+a1=`cat status1.txt`
+touch status2.txt
+for x in $a1
+do
+	glite-wms-job-status $x >> status2.txt
+done

@@ -1,0 +1,11 @@
+#!/bin/tcsh
+#set echo on
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+cd ~/scratch0/CMSSW_1_6_9/src/UserCode/Back/
+project CMSSW
+eval `scramv1 runtime -csh`
+
+cmsRun back.cfg > tree.txt
+exit 0

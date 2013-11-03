@@ -1,0 +1,762 @@
+///CMSSW_1_6_12
+
+// Back include
+#include "UserCode/Back/interface/Back.h" 
+
+// system include files
+#include <memory>
+
+/// Muons data formats
+
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
+
+#include "DataFormats/TrackReco/interface/Track.h"
+
+/// Stand Alone Guess 
+
+#include "MagneticField/Engine/interface/MagneticField.h"
+#include "MagneticField/Records/interface/IdealMagneticFieldRecord.h"
+#include "Geometry/Records/interface/GlobalTrackingGeometryRecord.h"
+#include "Geometry/CommonDetUnit/interface/GlobalTrackingGeometry.h"
+#include "Geometry/CommonDetUnit/interface/GeomDet.h"
+
+
+#include "TrackingTools/TransientTrack/interface/TransientTrack.h"
+#include "DataFormats/TrajectorySeed/interface/TrajectorySeedCollection.h"
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "RecoMuon/TrackingTools/interface/MuonPatternRecoDumper.h"
+
+#include "SimDataFormats/Track/interface/SimTrackContainer.h"
+
+//// L1 includes
+#include "DataFormats/L1Trigger/interface/L1MuonParticleFwd.h"
+
+#include "DataFormats/HLTReco/interface/HLTFilterObject.h"
+
+#include "DataFormats/L1Trigger/interface/L1MuonParticle.h"
+#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h"
+#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuGMTCand.h"
+#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuGMTExtendedCand.h"
+#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuGMTReadoutCollection.h"
+
+///Particle Candidates
+
+#include "DataFormats/Candidate/interface/Candidate.h"
+#include "DataFormats/Candidate/interface/CandMatchMap.h"
+
+
+///CaloMuons.
+
+#include "DataFormats/MuonReco/interface/CaloMuon.h"
+#include <DataFormats/RecoCandidate/interface/RecoCandidate.h>
+
+//Physics tools
+#include "PhysicsTools/Utilities/interface/InvariantMass.h"
+
+// Vector
+
+#include <vector>
+
+//
+// constants, enums and typedefs
+//
+
+//
+// static data member definitions
+//
+
+//
+// constructors and destructor
+//
+Back::Back(const edm::ParameterSet& iConfig)
+
+{
+  //now do what ever initialization is needed
+  //	theSTAMuonLabel = iConfig.getUntrackedParameter<std::string>("StandAloneTrackCollectionLabel");
+  // textfile_name = iConfig.getUntrackedParameter<std::string>("text_file_name");
+  RootFileName = iConfig.getUntrackedParameter<std::string>("RootFileName");
+  start = iConfig.getUntrackedParameter<int>("PtStart");
+  end = iConfig.getUntrackedParameter<int>("PtEnd");
+  bins = iConfig.getUntrackedParameter<int>("PtBins");
+  //	m_globalMuonTracks = iConfig.getParameter<edm::InputTag>("globalMuonTracks");
+  
+  // Load TrackDetectorAssociator parameters
+  edm::ParameterSet parameters = iConfig.getParameter<edm::ParameterSet>("TrackAssociatorParameters");  
+  parameters_.loadParameters( parameters );
+  
+  // Load MuonCaloCompatibility parameters
+  parameters = iConfig.getParameter<edm::ParameterSet>("MuonCaloCompatibility");
+  muonCaloCompatibility_.configure( parameters );
+
+}
+
+
+Back::~Back()
+{
+ 
+   // do anything here that needs to be done at desctruction time
+   // (e.g. close files, deallocate resources etc.)
+
+}
+
+
+//
+// member functions
+//
+// ------------ method called to for each event  ------------
+void
+Back::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+{
+  using namespace edm;
+  using namespace reco;
+  using namespace std;
+
+  Handle<MuonCollection> muons;
+  iEvent.getByLabel("muons",muons);
+  Handle<MuonCollection> tmuons;
+  iEvent.getByLabel("trackerMuons",tmuons);
+  Handle< double> weightHandle;
+  iEvent.getByType(weightHandle);
+  double weigth = *weightHandle;
+
+  double beftrack=0; 
+  double tracksmulcon=0;
+  double calomulcon=0;
+  double calomulconb=0;
+  double trackermulcon=0;
+  double calomulconsameq=0;
+
+  Handle<reco::CandidateCollection> genParticles;
+  iEvent.getByLabel("genParticleCandidates", genParticles);
+  Handle<reco::TrackCollection> tracks;
+  iEvent.getByLabel("ctfWithMaterialTracks",tracks);
+  edm::Handle<L1MuGMTReadoutCollection> pCollection; 
+  iEvent.getByType(pCollection);
+  Handle<l1extra::L1MuonParticleCollection> l1muons;
+  iEvent.getByType(l1muons);
+
+  std::vector<reco::Muon> Tracker_mat;
+  std::vector<reco::Muon> Tracker_mat1;
+  double pi = 3.14159265;
+
+  for (unsigned int i=0; i < muons->size(); ++i){
+    hPtRecoMuons->Fill((*muons)[i].pt(),weigth);
+    hPhiRecoMuons->Fill((*muons)[i].phi(),weigth);
+    hEtaRecoMuons->Fill((*muons)[i].eta(),weigth);
+  }
+
+  for ( unsigned int i=0; i< tmuons->size();++i) {
+    hPtTrackMuons->Fill((*tmuons)[i].pt(),weigth);
+    hEtaTrackMuons->Fill((*tmuons)[i].eta(),weigth);
+    hPhiTrackMuons->Fill((*tmuons)[i].phi(),weigth);
+  }
+
+  L1MuGMTReadoutCollection const* gmtrc = pCollection.product(); 
+  vector<L1MuGMTReadoutRecord> gmt_records = gmtrc->getRecords(); 
+  vector<L1MuGMTReadoutRecord>::const_iterator RRItr; 
+	
+  double SPHI=-10;
+  double SETA=-10;
+  double SQ=4;
+  double SPT=-1;
+  float CH=0;
+
+  for( RRItr = gmt_records.begin(); RRItr != gmt_records.end(); RRItr++ ) {  
+
+    vector<L1MuGMTExtendedCand> GMTCands   = RRItr->getGMTCands();
+    vector<L1MuGMTExtendedCand>::const_iterator GMTItr;
+    vector<L1MuGMTExtendedCand>::const_iterator GMTItr1;
+
+    for( GMTItr = GMTCands.begin(); GMTItr != GMTCands.end(); ++GMTItr ) {
+      if( (GMTItr->quality()>=SQ) && (GMTItr->ptValue()>SPT) ){
+	bool isol = true;
+
+	for(GMTItr1 = GMTCands.begin(); GMTItr1 != GMTCands.end(); ++GMTItr1 ){
+	  double r = Back::deltar(Back::delta(GMTItr->phiValue(),GMTItr1->phiValue()),Back::delta(GMTItr->etaValue(),GMTItr1->etaValue()));
+
+	  if( r != 0 and r < 1.7) 
+	    isol = false;
+
+	}
+	if ( isol ){
+	  SPHI=GMTItr->phiValue();
+	  SETA=GMTItr->etaValue();
+	  SQ=GMTItr->quality();
+	  SPT=GMTItr->ptValue();
+	  CH=GMTItr->charge();
+	}
+      }
+    }
+  }   
+
+  if(SPHI==-10){
+    for (l1extra::L1MuonParticleCollection::const_iterator it=l1muons->begin(); it!=l1muons->end(); it++){
+      if( it->pt() > SPT ){
+	bool isol = true;
+
+	for (l1extra::L1MuonParticleCollection::const_iterator it1=l1muons->begin(); it1!=l1muons->end(); it1++){
+	  double r = Back::deltar(Back::delta(it->phi(),it1->phi()),Back::delta(it->eta(),it1->eta()));
+
+	  if ( r !=0 and r < 1.7 )
+	    isol = false;
+	}
+
+	if (isol){
+	  SPHI=it->phi();
+	  SETA=it->eta();
+	  SPT=it->pt();
+	  CH=it->charge();
+
+	}
+      }
+    }
+  }
+
+  if (SPHI>pi){
+    SPHI=SPHI-2*pi;
+  }
+
+  hPtL1Mu->Fill(SPT,weigth);
+  hPhiL1Mu->Fill(SPHI,weigth);
+  hEtaL1Mu->Fill(SETA,weigth);
+
+  int Match_R_SA=0;
+  double deltaphi_Reco_SA=0;
+  double deltaeta_Reco_SA=0;
+  double deltaR_Reco_SA=0;
+  reco::Muon ST_RECO_Match;
+
+  for (unsigned int i=0; i < muons->size(); ++i){
+    deltaphi_Reco_SA = Back::delta(SPHI,(*muons)[i].phi());
+    deltaeta_Reco_SA = Back::delta((*muons)[i].eta(),SETA);
+
+    if(deltaphi_Reco_SA>pi) 
+      deltaphi_Reco_SA=2*pi-deltaphi_Reco_SA;
+
+    hDifL1RecoPhi->Fill(deltaphi_Reco_SA,weigth);
+    hDifL1RecoEta->Fill(deltaeta_Reco_SA,weigth);
+
+    deltaR_Reco_SA = Back::deltar(deltaeta_Reco_SA,deltaphi_Reco_SA);
+
+    if( deltaR_Reco_SA < 0.4 && CH == (*muons)[i].charge()){
+	ST_RECO_Match = (*muons)[i];
+	Match_R_SA++;
+    }
+  }
+  
+
+  if ( ST_RECO_Match.pt() != 0 and ST_RECO_Match.phi() != 0 and ST_RECO_Match.eta() != 0 and Match_R_SA == 1){
+    hPtL1Mumatch->Fill(ST_RECO_Match.pt(),weigth);
+    hPhiL1Mumatch->Fill(ST_RECO_Match.phi(),weigth);
+    hEtaL1Mumatch->Fill(ST_RECO_Match.eta(),weigth);
+  }
+
+  std::auto_ptr<reco::CaloMuonCollection> caloMuons( new reco::CaloMuonCollection );   
+  edm::ESHandle<Propagator> propagator;
+  iSetup.get<TrackingComponentsRecord>().get("SteppingHelixPropagatorAny", propagator); 
+  trackAssociator_.setPropagator(propagator.product());
+
+  unsigned int l=0;
+
+
+    beftrack++;
+
+    if( trackzm > 60 && trackzm < 120 ){
+      reco::CaloMuon tempMuon;
+      tracksmulcon++;
+      reco::TrackRef track(tracks,l);
+      tempMuon.setTrack(track );
+      TrackDetMatchInfo info = trackAssociator_.associate(iEvent, iSetup, *(track.get()), parameters_);
+   // energy
+      reco::MuonEnergy muonEnergy;
+
+      muonEnergy.em  = info.crossedEnergy(TrackDetMatchInfo::EcalRecHits);
+      muonEnergy.had = info.crossedEnergy(TrackDetMatchInfo::HcalRecHits);
+      muonEnergy.ho  = info.crossedEnergy(TrackDetMatchInfo::HORecHits);
+
+      muonEnergy.emS9  = info.nXnEnergy(TrackDetMatchInfo::EcalRecHits,1); // 3x3 energy
+      muonEnergy.hadS9 = info.nXnEnergy(TrackDetMatchInfo::HcalRecHits,1); // 3x3 energy0    
+      muonEnergy.hoS9  = info.nXnEnergy(TrackDetMatchInfo::HORecHits,1);   // 3x3 energy
+
+      tempMuon.setCalEnergy( muonEnergy );
+      // make a temporary reco::Muon to evaluate calo compatibility
+      math::XYZTLorentzVector p4(track->px(), track->py(), track->pz(), energy);
+      reco::Muon tmpMuon( track->charge(), p4, track->vertex() );
+      tmpMuon.setCalEnergy( tempMuon.getCalEnergy() );
+      tmpMuon.setTrack( tempMuon.track() );
+
+      // get calo compatibility
+      tempMuon.setCaloCompatibility( muonCaloCompatibility_.evaluate(tmpMuon) );
+      for( size_t i = 0; i < genParticles->size(); ++ i ) {
+	const Candidate & p = (*genParticles)[ i ];
+	double dif = Back::deltar(Back::delta(p.phi(),tempMuon.track()->phi()),Back::delta(p.eta(),tempMuon.track()->eta()));
+
+	if (dif < 0.4 and p.charge() == tempMuon.track()->charge() and p.status() == 3){
+	  hmuonbackb->Fill(p.pdgId(),weigth);
+
+	  if (fabs(p.pdgId()) == 211)
+	    hCalocompion->Fill(tempMuon.caloCompatibility_,weigth);
+
+	  else
+	    if (fabs(p.pdgId()) == 13)
+	      hCalocommuon->Fill(tempMuon.caloCompatibility_,weigth);
+
+	    else
+	      hCalocomextra->Fill(tempMuon.caloCompatibility_,weigth);
+
+	  if (tempMuon.caloCompatibility_ > 0.6){
+	    hmuonbacka->Fill(p.pdgId(),weigth);
+	    calomuonstot->Fill(1,weigth);
+	    if(fabs(p.pdgId()) == 13)
+	      calomuonsmuons->Fill(1,weigth);
+	    else
+	      if(fabs(p.pdgId()) == 211)
+		calomuonspions->Fill(1,weigth);
+	      else
+		calomuonsextra->Fill(1,weigth);
+	  }
+	}
+      }
+
+      hCalocom->Fill(tempMuon.caloCompatibility_,weigth); 
+      //if ( tempMuon.isCaloCompatibilityValid() ) 
+      //caloMuons->push_back( tempMuon );
+      if ( tempMuon.caloCompatibility_ > 0.5 ) 
+	caloMuons->push_back( tempMuon );
+
+    }
+  }
+  if (beftrack != 0)
+    htracksmulbef->Fill(beftrack,weigth);
+
+  if (tracksmulcon != 0)
+    htracksmulz->Fill(tracksmulcon,weigth);
+  
+  for (l=0;l<caloMuons->size();l++){
+    hPtCaloMuons->Fill((*caloMuons)[l].pt(),weigth);
+    hPhiCaloMuons->Fill((*caloMuons)[l].phi(),weigth);
+    hEtaCaloMuons->Fill((*caloMuons)[l].eta(),weigth);
+  }
+
+  double CALOPHI=-10;
+  double CALOETA=-10;
+  double CALOPT=-10;
+  double TRACKPHI=-10;
+  double TRACKETA=-10;
+  double TRACKPT=-10;
+  double zmc = 0;
+  double zmc1 = 0;
+  double delfi = 0;
+  double zfi = 0;
+  int mctid = 0;
+
+  for(l=0;l<caloMuons->size();l++){	
+    double calener=sqrt((*caloMuons)[l].p()*(*caloMuons)[l].p()+ 0.011163691);
+    double zm = Back::InvMass(ST_RECO_Match.energy(),ST_RECO_Match.px(),ST_RECO_Match.py(),ST_RECO_Match.pz(),calener,(*caloMuons)[l].px(),(*caloMuons)[l].py(),(*caloMuons)[l].pz());
+    hcaloInvMass->Fill(zm,weigth);
+
+    if( (*caloMuons)[l].charge() == -ST_RECO_Match.charge() ){
+      calomulconb++;
+      zfi = zm;
+      double ang = Back::delta(ST_RECO_Match.phi(),(*caloMuons)[l].phi());
+      delfi = ang;
+      float deltaetamct;
+      float deltaphimct;
+      float deltarmct;
+      if( ang > 2.0 && ang <= pi ){
+	zmc = zm;
+	calomulcon++;
+	CALOPT = (*caloMuons)[l].pt();
+	CALOPHI = (*caloMuons)[l].phi();
+	CALOETA = (*caloMuons)[l].eta();
+	for( size_t i = 0; i < genParticles->size(); ++ i ) {
+	  const Candidate & p = (*genParticles)[ i ];
+	  deltaetamct = Back::delta(p.eta(),(*caloMuons)[l].eta());
+	  deltaphimct = Back::delta(p.phi(),(*caloMuons)[l].phi());
+	  deltarmct = Back::delta(deltaetamct,deltaphimct );
+	  if(deltarmct<0.4)
+	    mctid = p.pdgId();
+	}
+      }
+    }
+  
+    if( (*caloMuons)[l].charge()== ST_RECO_Match.charge() ){
+      double ang = Back::delta(ST_RECO_Match.phi(),(*caloMuons)[l].phi());
+
+      if( ang > 2.0 && ang <= pi ){
+	calomulconsameq++;
+	zmc1 = zm;
+      }
+    }      
+  }
+  
+  if (calomulcon == 1){
+    hcaloZmassReco->Fill(zmc,weigth);
+  }
+
+  if (calomulconsameq == 1){
+    hsameqcaloZmassReco->Fill(zmc1,weigth);
+  }
+
+  if (calomulconb == 1){
+    h2anglevsinv->Fill(zfi,delfi,weigth);
+  }
+
+  if (calomulcon != 0)
+    hcalomulz->Fill(calomulcon,weigth);
+
+  if (calomulconb != 0)
+    hcalomulzb->Fill(calomulconb,weigth);
+
+  if (calomulconsameq != 0)
+    hcalosameqmulz->Fill(calomulconsameq,weigth);
+  
+  int trackermulconb = 0;
+
+  for ( unsigned int i=0; i< tmuons->size();++i) {
+    hDifStandTrackPt->Fill((ST_RECO_Match.pt()-(*tmuons)[i].pt()),weigth);
+    deltaphi_Reco_SA = Back::delta(ST_RECO_Match.phi(),(*tmuons)[i].phi());
+
+    if(deltaphi_Reco_SA>pi) 
+      deltaphi_Reco_SA=2*pi-deltaphi_Reco_SA;
+
+    hDifStandTrackPhi->Fill(deltaphi_Reco_SA,weigth);
+    hDifStandTrackEta->Fill((ST_RECO_Match.eta()-(*tmuons)[i].eta()),weigth);
+    double zm = Back::InvMass(ST_RECO_Match.energy(),ST_RECO_Match.px(),ST_RECO_Match.py(),ST_RECO_Match.pz(),(*tmuons)[i].energy(),(*tmuons)[i].px(),(*tmuons)[i].py(),(*tmuons)[i].pz());
+    hInvMass->Fill(zm,weigth);
+
+    if (zm >= 60 and zm <= 120){
+      if( (*tmuons)[i].charge()==-ST_RECO_Match.charge() ){
+	trackermulconb++;
+	
+	if( deltaphi_Reco_SA > 2.0 && deltaphi_Reco_SA <= pi ){
+	  trackermulcon++;
+	  zmc = zm;
+	  TRACKPT = (*tmuons)[i].pt();
+	  TRACKPHI = (*tmuons)[i].phi();
+	  TRACKETA = (*tmuons)[i].eta();
+	}
+      }
+    }
+  }
+
+  if (trackermulcon == 1){
+    hZmassReco->Fill(zmc,weigth);
+  }
+
+  if (trackermulcon != 0)
+    htmumulz->Fill(trackermulcon,weigth);
+
+  if (trackermulconb != 0)
+    htmumulzb->Fill(trackermulconb,weigth);
+
+  if (CALOPT != -10 ){
+    expcaloPt->Fill(CALOPT,weigth);
+    expcaloPhi->Fill(CALOPHI,weigth);
+    expcaloEta->Fill(CALOETA,weigth);
+    bool tag=false;
+
+    if ( Back::deltar(Back::delta(TRACKETA,CALOETA),Back::delta(TRACKPHI,CALOPHI)) < 0.4){
+      occtrackcaloPt->Fill(CALOPT,weigth);
+      occtrackcaloPhi->Fill(CALOPHI,weigth);
+      occtrackcaloEta->Fill(CALOETA,weigth);
+    }
+
+    for( RRItr = gmt_records.begin(); RRItr != gmt_records.end(); RRItr++ ) {
+      vector<L1MuGMTExtendedCand> GMTCands   = RRItr->getGMTCands();
+      vector<L1MuGMTExtendedCand>::const_iterator GMTItr;
+
+      for( GMTItr = GMTCands.begin(); GMTItr != GMTCands.end(); ++GMTItr ) {
+	double phi = GMTItr->phiValue();
+
+	if (phi >= pi){
+	  phi = phi-2*pi;
+	}
+
+	if(Back::deltar(Back::delta(GMTItr->etaValue(),CALOETA),Back::delta(phi,CALOPHI)) < 0.4 and !tag){
+	  occL1caloPt->Fill(CALOPT,weigth);
+	  occL1caloPhi->Fill(CALOPHI,weigth);
+	  occL1caloEta->Fill(CALOETA,weigth);
+	  tag = true;
+	}
+      }
+    }
+
+    for(l1extra::L1MuonParticleCollection::const_iterator it=l1muons->begin(); it!=l1muons->end(); it++){
+      double phi = it->phi();
+
+      if (phi >= pi){
+	phi = phi-2*pi;
+      }
+
+      if(Back::deltar(Back::delta(it->eta(),CALOETA),Back::delta(phi,CALOPHI)) < 0.4 and !tag ){
+	occL1caloPt->Fill(CALOPT,weigth);
+	occL1caloPhi->Fill(CALOPHI,weigth);
+	occL1caloEta->Fill(CALOETA,weigth);
+	tag = true;
+      }
+    }
+  }
+
+  if ( TRACKPT != -10 ){
+    exptrackPt->Fill(TRACKPT,weigth);
+    exptrackPhi->Fill(TRACKPHI,weigth);
+    exptrackEta->Fill(TRACKETA,weigth);
+    bool tag = false;
+
+    if (Back::deltar(Back::delta(TRACKETA,CALOETA),Back::delta(TRACKPHI,CALOPHI)) < 0.4){
+      occcalotrackPt->Fill(TRACKPT,weigth);
+      occcalotrackPhi->Fill(TRACKPHI,weigth);
+      occcalotrackEta->Fill(TRACKETA,weigth);
+    }
+
+    for( RRItr = gmt_records.begin(); RRItr != gmt_records.end(); RRItr++ ) {
+      vector<L1MuGMTExtendedCand> GMTCands   = RRItr->getGMTCands();
+      vector<L1MuGMTExtendedCand>::const_iterator GMTItr;
+
+      for( GMTItr = GMTCands.begin(); GMTItr != GMTCands.end(); ++GMTItr ) {
+        double phi = GMTItr->phiValue();
+
+        if (phi >= pi){
+          phi = phi-2*pi;
+        }
+
+	if(Back::deltar(Back::delta(GMTItr->etaValue(),TRACKETA),Back::delta(phi,TRACKPHI)) < 0.4 and !tag ){
+          occL1trackPt->Fill(TRACKPT,weigth);
+          occL1trackPhi->Fill(TRACKPHI,weigth);
+          occL1trackEta->Fill(TRACKETA,weigth);
+	  tag = true;
+        }
+      }
+    }
+
+    for (l1extra::L1MuonParticleCollection::const_iterator it=l1muons->begin(); it!=l1muons->end(); it++){
+      double phi = it->phi();
+
+      if (phi >= pi){
+        phi = phi-2*pi;
+      }
+
+      if( Back::deltar(Back::delta(it->eta(),TRACKETA),Back::delta(phi,TRACKPHI)) < 0.4 and !tag ){
+        occL1trackPt->Fill(TRACKPT,weigth);
+        occL1trackPhi->Fill(TRACKPHI,weigth);
+        occL1trackEta->Fill(TRACKETA,weigth);
+        tag = true;
+      }
+    }
+  }
+}
+
+
+// ------------ method called once each job just before starting event loop  ------------
+void 
+Back::beginJob(const edm::EventSetup&)
+{
+  theFile = new TFile(RootFileName.c_str(), "RECREATE");
+  theFile->cd();
+
+  h2anglevsinv = new TH2D("AngleVSInvariantMassforcaloandL1muons","Angle vs Invariant mass Between the tag and the probe",120,60,120,50,0,3.2);
+
+  htracksmulz = new TH1D("ZMultiplicityWithTracksAfter","Z multiplicity per event per tracks after angular cut",10,0,20);
+  htracksmulbef = new TH1D("ZMultiplicityWithTracksBeforeAnySelection","Z multiplicity per event per tracks before angular cut",10,0,20);
+
+  hcalomulz = new TH1D("NumberOfcalomatchesAfterAllCutsMultiplicityPerEvent","Z multiplicity per event for calomuons after all cuts",10,0,10);
+  hcalomulzb = new TH1D("NumberOfCaloMatchesBeforeAllCutsMultiplicityPerEvent","Z multiplicity per event for calomuons before angular cut",10,0,10);
+  hcalosameqmulz = new TH1D("NumberOfCaloMatchesBeforeAllCutsMultiplicityPerEventSameCharge","Background Z multiplicity per event for calomuons same q",10,0,10);
+
+  htmumulz = new TH1D("zmultracker","Z multiplicity per event in the tracker after all cuts",10,0,10);
+  htmumulzb = new TH1D("zmultrackerb","Z multiplicity per event in the tracker before phi cut",10,0,10);
+
+
+  hPtTrackMuons = new TH1D("TrackMuonsPt","Tracker Muons Pt",bins,start,end);
+  hPhiTrackMuons = new TH1D("TrackMuonsPhi","Tracker Muons Phi",bins,-5,5);	
+  hEtaTrackMuons = new TH1D("TrackMuonsEta","Tracker Muons Eta",bins,-5,5);
+
+  hPtRecoMuons = new TH1D("RecoMuonsPt","Reconstructed Muons Pt",bins,start,end);
+  hPhiRecoMuons = new TH1D("RecoMuonsPhi","Reconstructed Muons Phi",bins,-5,5);
+  hEtaRecoMuons = new TH1D("RecoMuonsEta","Reconstructed Muons Eta",bins,-5,5);
+
+  hPtCaloMuons = new TH1D("PtForCaloMuonsPassingTheAppliedCut","Calo Muons Pt",bins,start,end);
+  hPhiCaloMuons = new TH1D("PhiForCaloMuonsPassingTheAppliedCut","Calo Muons Phi",bins,-5,5);
+  hEtaCaloMuons = new TH1D("EtaForCaloMuonsPassingTheAppliedCut","Calo Muons Eta",bins,-5,5);
+
+  hCalocom = new TH1D("CaloCompatibilityForAllParticles","Total CaloCompatibility Distribution",100,0,1);
+  hCalocompion = new TH1D("CaloCompatibilityforpions","Pion CaloCompatibility Distribution",100,0,1);
+  hCalocommuon = new TH1D("CaloCompatibilityformuons","Muon CaloCompatibility Distribution",100,0,1);
+  hCalocomextra = new TH1D("CaloCompatibilityforotherparticles","Other particles CaloCompatibility Distribution",100,0,1);
+
+  occL1caloPt = new TH1D("OccL1CaloPt","Occ L1 calo Pt",bins,start,end);
+  occL1caloEta  = new TH1D("occL1caloEta","Occ L1 calo Eta",bins,-5,5);
+  occL1caloPhi = new TH1D("occL1caloPhi","Occ L1 calo Phi",bins,-5,5);
+
+  occL1trackPt = new TH1D("OccL1trackPt","Occ L1 track Pt",bins,start,end);
+  occL1trackEta  = new TH1D("occL1trackEta","Occ L1 track Eta",bins,-5,5);
+  occL1trackPhi = new TH1D("occL1trackPhi","Occ L1 track Phi",bins,-5,5);
+
+  occcaloL1Pt = new TH1D("OcccaloL1Pt","Occ calo L1 Pt",bins,start,end);
+  occcaloL1Eta  = new TH1D("occcaloL1Eta","Occ calo L1 Eta",bins,-5,5);
+  occcaloL1Phi = new TH1D("occcaloL1Phi","Occ calo L1 Phi",bins,-5,5);
+
+  occtrackL1Pt = new TH1D("OcctrackL1Pt","Occ track L1 Pt",bins,start,end);
+  occtrackL1Eta  = new TH1D("occtrackL1Eta","Occ track L1 Eta",bins,-5,5);
+  occtrackL1Phi = new TH1D("occtrackL1Phi","Occ track L1 Phi",bins,-5,5);
+
+  occcalotrackPt = new TH1D("OccCalotrackPt","Occ calo track Pt",bins,start,end);;
+  occcalotrackEta  = new TH1D("occcalotrackEta","Occ calo track Eta",bins,-5,5);
+  occcalotrackPhi = new TH1D("occcalotrackPhi","Occ calo track Phi",bins,-5,5);
+
+  occtrackcaloPt = new TH1D("OcctrackCaloPt","Occ track calo Pt",bins,start,end);
+  occtrackcaloEta  = new TH1D("occtrackcaloEta","Occ track calo Eta",bins,-5,5);
+  occtrackcaloPhi = new TH1D("occtrackcaloPhi","Occ track calo Phi",bins,-5,5);
+
+  exptrackPt = new TH1D("exptrackPt","exp track Pt",bins,start,end);
+  exptrackEta  = new TH1D("exptrackEta","exp track Eta",bins,-5,5);
+  exptrackPhi = new TH1D("exptrackPhi","exp track Phi",bins,-5,5);
+
+  expcaloPt = new TH1D("expcaloPt","exp track Pt",bins,start,end);
+  expcaloEta   = new TH1D("expcaloEta","exp calo Eta",bins,-5,5);
+  expcaloPhi  = new TH1D("expcaloPhi","exp calo Phi",bins,-5,5);
+
+  hDifStandTrackPt = new TH1D ("DifStanTrackPt","Difference Pt",100,-10,10);
+  hDifStandTrackPhi = new TH1D ("DifStanTrackPhi","Difference Phi",200,-3,3);
+  hDifStandTrackEta = new TH1D ("DifStanTrackEta","Difference Eta",200,-3,3);
+
+  hDifL1RecoPhi = new TH1D ("PhiDifferenceBetweenL1andRecoMuons","Difference Phi",200,-3,3);
+  hDifL1RecoEta = new TH1D ("EtaDifferenceBetweenL1andRecoMuons","Difference Eta",200,-3,3);
+
+  hZmassReco = new TH1D("trackerZMassReco","Reconstructed Z Invariant Mass with tracker muons",120,60,120);
+  hcaloZmassReco = new TH1D("ReconstructedZMassWithCaloMuonsMultiplicity1","Reconstructed Z after all the cuts using calomuons",120,60,120);
+  hsameqcaloZmassReco = new TH1D("ReconstructedInvariantMassSameChargeCaloMuonsMultiplcity1","Background same Charge events that passes all criteria",120,60,120);
+  hInvMass = new TH1D("InvMass","Invariant Reconstructed Masses",120,60,120);
+  hcaloInvMass = new TH1D("caloInvariantMassesForAllPossibilities","Invariant Reconstructed Masses inside the calorimeter All the possibilities",120,40,130);
+  htrackInvMass = new TH1D("InvariantMassforallTheTracks","Invariant Mass Reconstructed for all posible couple of Tracks",120,40,130);
+
+  hPtL1Mu = new TH1D ("L1MuonsPt","L1 Muons Pt",bins,start,end);
+  hPhiL1Mu = new TH1D ("L1MuonsPhi","L1 Muons Phi", bins,-5,5);
+  hEtaL1Mu = new TH1D ("L1MuonsEta","L1 Muons Eta", bins,-5,5);
+
+  hPtL1Mumatch = new TH1D ("PtL1MatchedMuons","L1 Matched Muons Pt",bins,start,end);
+  hPhiL1Mumatch = new TH1D ("PhiL1MatchedMuons","L1 Matched Muons Phi", bins,-5,5);
+  hEtaL1Mumatch = new TH1D ("EtaL1MatchedMuons","L1 Matched Muons Eta", bins,-5,5);
+
+  calomuonspions = new TH1D ("PionsInCaloMuonContainer","Number of pions inside the CaloMuon Container ",3,0,3);
+  calomuonsmuons = new TH1D ("MuonsInCaloMuonContainer","Number of Muons inside the CaloMuon Container ",3,0,3);
+  calomuonsextra = new TH1D ("ExtraParticlesInCaloMuonContainer","Number of Extra Particles inside the CaloMuon Container ",3,0,3);
+  calomuonstot = new TH1D ("TotalNumberOfParticlesInCaloMuonContainer","All the particles inside the CaloMuon Container ",3,0,3);
+
+  hmuonbackb = new TH1D ("ParticleIdForAllTracksCandidatesToBeCaloMuon","Particle Id for tracks before a calo compatibility cut",601,-300,300); 
+  hmuonbacka = new TH1D ("CaloCompatibilityforafterappliedcut","Particle Id for tracks after a calo compatibility cut > 0.6",601,-300,300); 
+  
+}
+
+// ------------ method called once each job just after ending the event loop  ------------
+void 
+Back::endJob() {
+  using namespace std;
+  theFile->cd();
+  
+  hmuonbackb->Write();
+  hmuonbacka->Write();
+ 
+  htracksmulz->Write();  
+  htracksmulbef->Write();  
+
+  hcalomulz->Write();
+  hcalomulzb->Write();
+  htmumulz->Write();
+  htmumulzb->Write();
+  hcalosameqmulz->Write();
+
+  hPtTrackMuons->Write();
+  hPtRecoMuons->Write();
+  hPtCaloMuons->Write();
+
+  hCalocom->Write();
+  hCalocommuon->Write();
+  hCalocompion->Write();
+  hCalocomextra->Write();
+
+  h2anglevsinv->Write();
+
+  calomuonspions->Write();
+  calomuonsmuons->Write();
+  calomuonsextra->Write();
+  calomuonstot->Write();
+
+  //	hPtStandAloneMu->Write();
+
+  occL1caloPt->Write();
+  occL1caloEta->Write();
+  occL1caloPhi->Write();
+  occL1trackPt->Write();
+  occL1trackEta->Write();
+  occL1trackPhi->Write();
+  occcaloL1Pt->Write();
+  occcaloL1Eta->Write();
+  occcaloL1Phi->Write();
+  occtrackL1Pt->Write();
+  occtrackL1Eta->Write();
+  occtrackL1Phi->Write();
+  occcalotrackPt->Write();
+  occcalotrackEta->Write();
+  occcalotrackPhi->Write();
+  occtrackcaloPt->Write();
+  occtrackcaloEta->Write();
+  occtrackcaloPhi->Write();
+
+  exptrackPt->Write();
+  exptrackEta->Write();
+  exptrackPhi->Write();
+  expcaloPt->Write();
+  expcaloEta->Write();
+  expcaloPhi->Write();
+
+  hPhiTrackMuons->Write();
+  hPhiRecoMuons->Write();
+  hPhiCaloMuons->Write();
+  hEtaTrackMuons->Write();
+  hEtaRecoMuons->Write();
+  hEtaCaloMuons->Write();
+  hDifStandTrackPt->Write();
+  hDifStandTrackPhi->Write();
+  hDifStandTrackEta->Write();
+  //	hDifStandRecoPt->Write();
+  hDifL1RecoPhi->Write();
+  hDifL1RecoEta->Write();
+  hZmassReco->Write();
+  hcaloZmassReco->Write();
+  hsameqcaloZmassReco->Write();
+
+  hPtL1Mu->Write();
+  hEtaL1Mu->Write();
+  hPhiL1Mu->Write();
+
+  hPtL1Mumatch->Write();
+  hEtaL1Mumatch->Write();
+  hPhiL1Mumatch->Write();
+
+  hcaloInvMass->Write();
+  hInvMass->Write();
+  htrackInvMass->Write();
+  theFile->Close(); 
+}
+
+double Back::InvMass(double e1, double px1, double py1, double pz1, double e2, double px2, double py2, double pz2){
+  double p1 = px1*px1 + py1*py1 + pz1*pz1;
+  double p2 = px2*px2 + py2*py2 + pz2*pz2;
+  double aux =  e1*e1 + e2*e2 + 2*e1*e2; 
+  double aux1 = 2*(px1*px2+py1*py2+pz1*pz2);
+  return sqrt(aux-p1-p2-aux1);
+}
+
+double Back::angle(double a1, double a2, double a3, double b1 , double b2 , double b3){
+  double norma = a1*a1+a2*a2+a3*a3;
+  double normb = b1*b1+b2*b2+b3*b3;
+  double dotprod = a1*b1+a2*b2+a3*b3;
+  return acos(dotprod/(norma*normb));
+}
+
+//define this as a plug-in
+DEFINE_FWK_MODULE(Back);
+

@@ -1,0 +1,21 @@
+#!/bin/tcsh
+#set echo on
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+cd /afs/cern.ch/user/a/aocampor/scratch0/CMSSW_1_6_12/src
+project CMSSW
+eval `scramv1 ru -csh`
+
+cd UserCode/Back/
+set a1 = `cat muonlist.txt`
+hadd /tmp/aocampor/w4_aux.root /castor/cern.ch/user/a/aocampor/results/Back/w4/back_zskim_1.root /castor/cern.ch/user/a/aocampor/results/Back/w4/back_zskim_2.root
+foreach fls ( $a1[*] )
+	hadd /tmp/aocampor/w4_out.root /tmp/aocampor/w4_aux.root /castor/cern.ch/user/a/aocampor/results/Back/w4/$fls
+	rm /tmp/aocampor/w4_aux.root
+	mv /tmp/aocampor/w4_out.root /tmp/aocampor/w4_aux.root
+end
+cp /tmp/aocampor/w4_aux.root /afs/cern.ch/user/a/aocampor/scratch0/CMSSW_1_6_12/src/UserCode/Back/w4.root
+rfcp /tmp/aocampor/w4_aux.root /castor/cern.ch/user/a/aocampor/results/Back/w4/w4.root
+rm /tmp/aocampor/w4_aux.root 
+exit 0
