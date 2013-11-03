@@ -1,0 +1,28 @@
+#!/bin/tcsh
+#set echo on
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+set user = aocampor
+set letter = a
+set RUN = 51993
+
+cd /afs/cern.ch/user/${letter}/${user}/scratch0/CMSSW_2_0_10/src/
+project CMSSW
+eval `scramv1 ru -csh`
+
+rm muonlist.txt
+rfdir /castor/cern.ch/user/c/ccmuon/RPC/minidaq/${RUN} | grep DQM | awk '{print $9}' > muonlist.txt   
+set a1 = `cat muonlist.txt`
+rm /tmp/${user}/merge_aux_${RUN}.root
+
+foreach fls ( $a1[*] )
+	rfcp /castor/cern.ch/user/c/ccmuon/RPC/minidaq/${RUN}/$fls /tmp/${user}/merge_aux_${RUN}.root
+	hadd -f /tmp/${user}/out_${RUN}.root /tmp/${user}/merge_*_${RUN}.root
+	rm /tmp/${user}/merge_ant_${RUN}.root
+	mv /tmp/${user}/out_${RUN}.root /tmp/${user}/merge_ant_${RUN}.root
+	rm /tmp/${user}/out_${RUN}.root 
+end
+rfcp /tmp/${user}/merge_ant_${RUN}.root /castor/cern.ch/user/c/ccmuon/RPC/minidaq/${RUN}/mergedDQM_${RUN}.root
+rm /tmp/${user}/merge_ant_${RUN}.root 
+

@@ -1,0 +1,84 @@
+################# D. Lomidze INFN NAPOLI ############$
+
+ process TEST = {
+
+	include "CondCore/DBCommon/data/CondDBSetup.cfi"
+	
+	source = PoolSource {
+	untracked vstring fileNames =   
+	 {
+	"rfio:file.root"
+	}
+        # untracked string moduleLogName= "RPCDigiDQM"
+	untracked string moduleLogName= "source"
+
+	}
+	untracked PSet maxEvents = {untracked int32 input = -1}
+
+        
+
+
+#service = DQMShipMonitoring{
+#	// event-period for shipping monitoring to collector (default: 25)
+#	untracked uint32 period = 5
+#}
+
+
+       	service = MessageLogger {
+#		 untracked vstring destinations = {"RpcMonitoring.log"}
+  #     	 	PSet RpcUnpacker.log     = {untracked bool noLineBreaks = true   }
+  #       	PSet detailedInfo.txt = {untracked int32  lineLength = 132    }        
+	}
+
+ #################    Raw To Digi:   #########################
+
+         include "EventFilter/RPCRawToDigi/data/RPCUnpacking.cfi"
+
+ #################    Data Quality Monitoring:   #########################
+        include "DQM/RPCMonitorDigi/data/RPCDigiMonitoring.cfi"
+	replace rpcdigidqm.DigiEventsInterval = 100
+	replace rpcdigidqm.DigiDQMSaveRootFile =true
+	replace rpcdigidqm.dqmshifter =true   	    	
+	replace rpcdigidqm.dqmexpert =true		
+	replace rpcdigidqm.dqmsuperexpert =true    	
+
+	replace rpcdigidqm.RootFileNameDigi="Cruzet1_CERN_out.root"
+
+include "DQMServices/Core/data/DQM.cfg"
+	replace DQM.collectorHost = "myhost"
+	replace DQM.collectorPort = 9090
+	replace DQM.debug = false
+
+service = ModuleWebRegistry {}
+service = LockService {untracked vstring labels = {"source"} }
+#service = DaqMonitorROOTBackEnd { }
+#service = MonitorDaemon {
+	
+#	untracked bool AutoInstantiate = false
+#	untracked int32 reconnect_delay = 5
+#	untracked string DestinationAddress = "localhost"
+#	untracked int32 SendPort = 9090
+#	untracked int32 UpdateDelay = 1000	
+#	untracked string NameAsSource = "FU0"
+#}	
+
+
+
+     #################   For RPCRecHits   #########################
+	include "Geometry/MuonNumbering/data/muonNumberingInitialization.cfi"
+        include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+        include "Geometry/MuonCommonData/data/muonIdealGeometryXML.cfi"
+        include "Geometry/RPCGeometry/data/rpcGeometry.cfi"
+
+     # The module for 1D RPC RecHit building
+     include "RecoLocalMuon/RPCRecHit/data/rpcRecHits.cfi"
+     replace rpcRecHits.rpcDigiLabel = "rpcunpacker"
+     #replace rpcRecHits.rpcDigiLabel = "muonRPCDigis"
+ #################   Output module  #########################
+	module out = PoolOutputModule {
+             untracked string fileName ="RPCDQM.root"
+     }
+      #################   Path   #########################
+
+     path p = {rpcRecHits,rpcdigidqm}
+ }

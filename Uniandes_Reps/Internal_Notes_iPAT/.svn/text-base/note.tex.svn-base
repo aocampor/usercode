@@ -1,0 +1,206 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{RPC Prompt Analysis Tool Description}
+\author{ S. Lee[1] , A. Ocampo[2] , R. Trentadue[3].\\ \textit{[1] University of Korea, [2] Universidad de los Andes, [3] Universita di Bari} }
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section{Abstract}
+During the Cosmic global runs done last year, a prompt analysis framework was developed for the RPC sub-detectors. It was created to manage the data workflow for RPC analysis and provide a fast response to the RPC community about the sub-detectors status during a given run or data taken period. This paper intends to describe the framework such that new RPC shifters and people involved in the RPC community have a guide for the existent tools. 
+\newpage
+
+\section{Introduction}
+During the CMS\cite{TDR} Cosmic global runs of 2008 and 2009 several million cosmic events were collected. The nominal rate was 300 Hz for L1 single muon trigger without HLT filter. These data were used to study and calibrate RPC detector before LHC collisions. The speed and amount of data that was being saved, required a fast feedback coming from the shifters, specially when decisions were needed based on the data output. Therefore a tool able to handle a complex analysis in an user friendly and fast way and to provide prompt feedback on several items concerning the RPC performance has been implemented.\\
+The framework has been written in C++, python and shell using a modular structure with allows it to be easily adaptable for any other sub-detector.  A graphical interface has been included to manage every analysis issue.
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[scale=0.4]{mainframe.jpg} % requires the graphicx package
+   \caption{Main window of the tool, with four sections used for the prompt analysis.}
+   \label{fig:mainframe}
+\end{figure} 
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[scale=0.6]{submissionsubframes.jpg} % requires the graphicx package
+   \caption{All the subframes included in the data search capabilities of the tool.}
+   \label{fig:searchsubframes}
+\end{figure} 
+\begin{figure}[htb]
+   \centering
+   \includegraphics[scale=0.6]{submissionframe.jpg} % requires the graphicx package
+   \caption{Submission frame in the main panel}
+   \label{fig:submission}
+\end{figure}
+\begin{figure}[htb]
+   \centering
+   \includegraphics[scale=0.33]{submissionmissingjobs.jpg} % requires the graphicx package
+   \caption{Submission frame for missing jobs}
+   \label{fig:missingjobs}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.5]{submissionfordetailednoise.jpg} 
+   \caption{Submission frame for detailed noise.}
+   \label{fig:detailednoise}
+\end{figure}
+\section{Framework Description}
+The framework works as an interface between \textit{CMS Dataset Bookkeeping System} (DBS)\cite{DBS} , \textit{CMS Software} (CMSSW), \textit{Offline Reconstruction Conditions data base OFFline} (ORCOFF)\cite{ORCOF}, and scripts created to produce specific diagnostic plots vital. The included modules are able to produce an off line DQM\cite{dqm} display an RPC trigger monitoring and different analysis related too noise, efficiency, trigger efficiency. The framework is divided in four principal sections described in the following paragraphs.\\
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.6]{MergeFrame.jpg} 
+   \caption{Frame used to submit the job that merges the results.}
+   \label{fig:mergeframe}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.6]{MergeSeveralRuns.jpg} 
+   \caption{Frame used to submit the jobs that merges several runs under identical conditions.}
+   \label{fig:mergeseveral}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.6]{currentMonitoring.jpg} 
+   \caption{Frame used to monitor the current in the RPC chambers in between two times previously selected by the user.}
+   \label{fig:currentmonitoring}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.5]{current.jpg} 
+   \caption{Example of current monitoring.}
+   \label{fig:currentmonitoring}
+\end{figure}
+\subsection{CMS Data Base searches}
+
+The tool can acces CMS DBS and determine the location of files corresponding to a given run number and the associated dataset. The dedicated section in the main panel is composed by the following application buttons.
+\begin{itemize}
+\item \textbf{Search Run:} clicking on this button a new window appears where the user can provide a dataset name and submit a query to display a list of all associated run numbers.\\
+\item \textbf{Search Dataset:}  this button prompts a window that allows the user to search and display the list of dataset names associated to a given  keyword.\\
+\item \textbf{Search Dataset from Run:} this button prompts a window which searchs for datasets associated to a associated run number given as an input.\\
+\item \textbf{Status Frame:} the status frame button yields a window that asks for the dataset name and the run number corresponding to some submitted analysis in order to provide a summary about the job status.\\
+\end{itemize}
+All the search frames can be visualised in figure 2.
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.6]{analysisoptions.jpg} 
+   \caption{Frame used to select the global or detailed analysis required specifying the dataset and the run number.}
+   \label{fig:analoptions}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.6]{openfile.jpg} 
+   \caption{Frame used to open and load the file needed in case a local file is used.}
+   \label{fig:openfile}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.6]{statusreport.jpg} 
+   \caption{Frame used to give the input intervals for the status report.}
+   \label{fig:statusreport}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.4]{statusreporttxt.jpg} 
+   \caption{Status report example.}
+   \label{fig:statustxt}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.5]{barrelbut_1.jpg} 
+   \caption{Window produced with the Global Plot button in the analysis frame. This image shows the global efficiency distribution for the barrel, and the menus for the available plots.}
+   \label{fig:gpbarrel}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.4]{anawheel.jpg} 
+   \caption{Display shown when the button corresponding to a wheel is clicked in the analysis frame.}
+   \label{fig:grapwheel}
+\end{figure}
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.5]{histcham.jpg} 
+   \caption{When a chamber is clicked a window with the relevant plots pops out.}
+   \label{fig:histcham}
+\end{figure}
+\subsection{Submission} 
+If the dataset exists, the tool is able to submit in batch mode to the CAF queue the analysis jobs related with the RPC working parameters such as noise, efficiency, trigger efficiency, and trigger rate. This is achieved using a dedicated section in the main panel.\\
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.4]{anend.jpg} 
+   \caption{Display shown when the button corresponding to a disk in the endcap is clicked.}
+   \label{fig:grapdisk}
+\end{figure}
+\begin{itemize}
+\item\textbf{Submission Frame:}
+the submission Frame button prompts a new window that requires basic information about the run to be analysed (figure \ref{fig:submission}) such as the CMSSW version, the run number, the complete name of the dataset, and the number of jobs that are going to be submitted.
+Besides the previously listed inputs, the submission frame has also 6 check boxes to select the desired packages to be lunched. The possible options are:\\
+\begin{itemize}
+\item A RPC efficiency calculation using a method that extrapolates the possible hit using tracks.\\ 
+\item A RPC efficiency calculation using a method that extrapolates the possible hit using DT segments.\\
+\item A button that  send the DQM off-line production in case it is not yet finish by Tier-0 and the results are needed immediately.\\
+\item A Noise button that submits a package that estimates the noise rate in the chambers using a method based on DT segment chamber tagging.\\ 
+\item A trigger monitoring button that monitors the performance of the RPC trigger off-line.\\
+\item A trigger efficiency using an extrapolation method counting the information of the DTs.\\
+\end{itemize}
+Once the jobs are successfully done the output files for each job are saved at the CMS CAF POOL at the directory \textit{/castor/cern.ch/cms/caf/user/ccmuon/RPC/ GlobalRuns/}, where only people with CAF user privileges can access. \\
+\item\textbf{Submission Frame for Missing jobs:}
+some times, there are jobs that fail do to factors such as lack of space on the host machine. For those cases a script  that looks in the CASTOR output directory for missing jobs and resubmits them has been created. This functionality is available through the missing jobs submission frame as seen in figure \ref{fig:missingjobs}.  This frame requires as input the CMSSW version, the dataset name, the run number, and the selection of the packages to be run implemented in check boxes.\\
+
+\item\textbf{Submission for detailed Noise:}
+the RPC noise measurement is performed by an off line CMSSW package which includes two modules, one for a general overview of  noise estimation and the other for a more detailed study at strip level. The noise submission panel shown in figure \ref{fig:detailednoise} requires the same inputs as the submission main frame, in addition it enables the selection of specific RPC wheels or disks. 
+\end{itemize}
+\subsection{Merge tool}
+In a normal submission process several jobs must be sent due to the large size of the runs taken. Therefore an algorithm that minimise the execution time  was implemented to merge the results and produce summary plots. \\
+\begin{figure}[htb] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[scale=0.5]{HVscan.jpg} 
+   \caption{Frame to submit the prompt analysis high voltage scan. The dataset, the run numbers and the corresponding threshold or high voltage values are required as inputs. }
+   \label{fig:hv}
+\end{figure}
+\begin{itemize}
+\item \textbf{Merge Frame}
+A merge frame shown in figure \ref{fig:mergeframe} was implemented in order to make the merge procedure user friendly using the minimal amount of information such as dataset name and run number.\\
+\item \textbf{Merge Frame for Several Jobs}
+When several runs with identical conditions are taken the user may be interested in gather all the statistics into one single result. For this reason a panel shown in figure \ref{fig:mergeseveral} that requires the dataset name and the list of run numbers to be merged was created.\\
+\end{itemize}
+
+\section{Analysis capabilities}
+Once a given run is analysed with the CMSSW packages described in the submission section, an analysis over the yielded results should be done in order to obtain the correct information about the detector performance. With this aim a complete set of scripts and code has been created to make the results easily accessible. In the following sub sections each of the analysis capabilities is going to be described. 
+
+\subsection{Current Monitoring Frame}
+This frame can be seen in figure \ref{fig:currentmonitoring}. It was created to perform a monitoring of the current in a given time window, for a specified wheel or disk. The desired plot is produce submitting a SQL query to ORCOFF.
+
+\subsection{Analysis Frame}
+When the analysis frame button is clicked, a panel is prompted as shows figure \ref{fig:analoptions}. Two sections can be distinguished in the panel: the first one is related with the run information needed to do the analysis, and the second one is related with the geometry of the RPC in the CMS.\\ 
+In the first section there are four buttons and one check box. The first button is called ``open and load file'' and is useful when the analysis root file is stored locally in the computer being used.  Both DQM Off line root file and the files produced after the merge procedure, which include more information, can be read. The frame yielded by this button can be seen in figure \ref{fig:openfile}.\\
+The next button in this frame is the Load Root File. It is used in case the submit and the merge procedure has been done but no file has been copied  to the local machine. The corresponding application looks in castor and loads the files needed following the inputs given with the dataset and the run number. The check box called RFIO enables the precedent option.\\
+The third button is called \textit{Save Status Report}. Its function is to run a script that looks chamber by chamber those that have performance parameters in ranges previously given by the user as it is shown in figure \ref{fig:statusreport}.\\
+Once the status report production is finished, a text file is produced with the information required. This report is saved in a file called StatusReport.txt located in the same place were the prompt analysis tool is installed, and looks as it is shown in figure \ref{fig:statustxt}.\\
+The next buttom in the analysis frame is called \textit{Global Plots}, it produces a canvas with several buttons at the right side of it. They buttons are named depending on its specific function: the first one is called \textit{barrel} and it prompts all the summary plots for the barrel, such as  the global distributions of bunch crossing, Cluster size, efficiency, and masked strips. This functionality appears as it is shown in figure \ref{fig:gpbarrel}.\\
+Following the \textit{barrel} button, there are five more buttons one per each wheel associated to a menu from where the distributions for bunch crossing, cluster size, efficiency, masked strips, noise and the efficiency chamber by chamber for far and near side can be drawn.  These functionalities are identically available for the endcap in the next 7 buttons of the Global Plots panel. \\
+The next set of buttons of the analysis frame shown in figure \ref{fig:analoptions} are meant to be used as a guide to spot problems directly from the geometry of the RPC detector. For example clicking on the button for wheel +2, a window that looks like figure \ref{fig:grapwheel} is opened. It shows the entire wheel + 2 drawn with a colour code which depends on the value of the parameters that are being monitored. In the upper part of the window, six buttons allow to obtain the performance information concerning the selected parameter. The legends written at right of the wheel, explain the colour code.\\
+Each chamber in the wheel is interactive and just by clicking over it several windows as it is shown in figure \ref{fig:histcham} will pop out depending on the number of chamber partitions. Each window contains all the relevant plots for the selected chamber.\\
+All this information is also available for the endcaps. The only thing that changes is the geometry.\\
+
+\subsection{High Voltage or Threshold Scan Frame}
+During CRAFT a threshold  and a high voltage scan were done to determine the working point of each chamber. An efficient tool to analyse the results has been created and included in the prompt analysis as is shown in figure \ref{fig:hv}. Its output is a root file which contains all the scans for noise and efficiency. 
+\section{Acknowledgements}
+We would like to thank Colciencias and the HELEN program for their economic support.
+%\bibliographystyle{plain}	% (uses file "plain.bst")
+%\bibliography{myrefs}	
+\begin{thebibliography}{99}
+\bibitem{TDR} CMS Collaboration, \emph{CMS experiment at CERN LHC}, Institute of physics publishing and SISSA, 2008
+\bibitem{DBS} CMS CR-2009/076 note or up-comming CHEP 2009 paper.
+\bibitem{ORCOF} M. De Gruttola et al., \textit{Persistent storage of non-event data in the CMS databases}, arXiv:1001.1674v2
+\bibitem{dqm} L. Tuura et al., \textit{CMS data quality monitoring: systems and experiences}, CHEP09 contribution
+
+\end{thebibliography}
+\end{document}  

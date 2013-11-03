@@ -1,0 +1,77 @@
+10
+
+dir
+1110
+svn+ssh://svn.cern.ch/reps/cmsuniandes/Users/aocampor/TrigEff
+svn+ssh://svn.cern.ch/reps/cmsuniandes
+
+
+
+2010-02-07T19:59:59.228086Z
+523
+aocampor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+test
+dir
+
+BuildFile
+file
+
+
+
+
+2013-11-03T22:43:39.000000Z
+86cd5cf34cc5c52929320ec767213708
+2010-02-07T19:53:55.542073Z
+516
+aocampor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+805
+
+interface
+dir
+
+python
+dir
+
+doc
+dir
+
+src
+dir
+

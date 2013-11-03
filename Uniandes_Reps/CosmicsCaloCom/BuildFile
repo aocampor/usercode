@@ -1,0 +1,39 @@
+<use name=FWCore/Framework>
+<use name=FWCore/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>
+<use name=DataFormats/MuonReco>
+<use name=DataFormats/TrackReco>
+<use name=DataFormats/TrajectorySeed>
+<use name=DataFormats/RecoCandidate>
+<use name=DataFormats/Common>
+<use name=MagneticField/Engine>
+<use name=MagneticField/Records>
+<use name=Geometry/Records>
+<use name=Geometry/CommonDetUnit>
+<use name=TrackingTools/TransientTrack>
+<use name=TrackingTools/TrackAssociator>
+<use name=TrackingTools/Records>
+<use name=RecoMuon/TrackingTools>
+<use name=RecoMuon/MuonIdentification>
+<use name=PhysicsTools/UtilAlgos>
+<use name=DQMServices/Core>
+<use name=DataFormats/CSCDigi>
+<use name=DataFormats/EcalRecHit>
+<use name=DataFormats/EcalDigi>
+<use name=Geometry/EcalMapping>
+<use name=DataFormats/EcalDetId>
+<use name=Geometry/CaloTopology>
+<use name=Geometry/CaloEventSetup>
+<use name=CaloOnlineTools/EcalTools>
+<use name=DataFormats/HcalRecHit>
+<use name=DataFormats/HcalDigi>
+<use name=DataFormats/HcalDetId>
+
+<flags EDM_PLUGIN=1>
+<export>
+   <lib name=UserCodeCosmicsCaloCom>
+   <use name=FWCore/Framework>
+   <use name=FWCore/PluginManager>
+   <use name=FWCore/ParameterSet>
+</export>

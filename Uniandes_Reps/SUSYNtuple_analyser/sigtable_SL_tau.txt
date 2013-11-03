@@ -1,0 +1,18 @@
+Significance table for SLtau.
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root        230.417 +- 81.4648
+../root/OUT/Salida_QCD_Pt170.root         73.261 +- 7.67984
+../root/OUT/Salida_QCD_Pt300.root         19.169 +- 0.85641
+../root/OUT/Salida_QCD_Pt470.root        3.18594 +- 0.113929
+../root/OUT/Salida_QCD_Pt800.root       0.154101 +- 0.00392946
+../root/OUT/Salida_QCD_Pt1400.root     0.00125485 +- 3.54081e-05
+../root/OUT/Salida_TTbar_temp.root        30.0024 +- 0.747261
+../root/OUT/Salida_WJets_temp.root              0 +- 0
+../root/OUT/Salida_ZJets_temp.root        1.82794 +- 0.609313
+../root/OUT/Salida_ww_pat_1.root        2.59259 +- 1.83324
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root       0.218941 +- 0.218941
+../root/OUT/Salida_LM0_temp.root        35.8693 +- 0.722463
+Significancy                              1.8883
+QCD Significancy                          1.98604

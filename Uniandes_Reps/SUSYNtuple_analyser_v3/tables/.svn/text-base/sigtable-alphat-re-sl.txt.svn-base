@@ -1,0 +1,18 @@
+Significance table for Events_after_alphat_re_and_SL_cuts
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt15.root           9581 +- 6775
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt30.root            388 +- 388
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt80.root          107.3 +- 32.34
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt170.root           10.9 +- 1.724
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt300.root         0.1813 +- 0.04847
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt470.root       0.001379 +- 0.001379
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt800.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt1400.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_TTbar_temp.root          55.48 +- 0.5912
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_WJets_temp.root          278.2 +- 31.1
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_ZJets_temp.root          5.088 +- 0.5915
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_ww_pat_1.root           3.95 +- 1.317
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_wz_pat_1.root          3.291 +- 0.5563
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_zz_pat_1.root          1.482 +- 0.3315
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_LM0_temp.root          49.71 +- 0.4949
+Significancy                              0.4866
+QCD Significancy                           0.4949

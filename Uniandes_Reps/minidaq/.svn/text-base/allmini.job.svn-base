@@ -1,0 +1,38 @@
+#!/bin/tcsh
+#set echo on
+
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+set user = "aocampor"
+set letter = "a"
+set heim = "/afs/cern.ch/user/${letter}/${user}/scratch0/"
+cd $heim
+set run = "53407"
+project CMSSW
+
+rm datos.txt
+rfdir /castor/cern.ch/user/c/ccmuon/RPC/minidaq/${run}/ | grep $run | grep dat | grep -v DQM | grep -v Digis | awk '{print $9}' > datos.txt
+
+set a1 = `cat datos.txt`
+
+foreach fls ( $a1[*] )
+
+	cd ${heim}/CMSSW_2_0_10/src/minidaq/
+	eval `scramv1 ru -csh`
+	set par = `echo $fls | awk -F"." '{print $3}'`
+	cp minidaq.job ${heim}/CMSSW_2_0_10/src/trabajos/minidaq_${run}_${par}.job
+	cd ${heim}/CMSSW_2_0_10/src/trabajos
+	replace "identificador" "${par}" -- minidaq_${run}_${par}.job
+	replace "heim" "${heim}" -- minidaq_${run}_${par}.job
+	replace "letter" "${letter}" -- minidaq_${run}_${par}.job
+	replace "name" "${user}" -- minidaq_${run}_${par}.job
+	replace "nrun" "${run}" -- minidaq_${run}_${par}.job
+	replace "nombre" "$fls" -- minidaq_${run}_${par}.job
+	chmod a+x minidaq_${run}_${par}.job
+        ./minidaq_${run}_${par}.job
+	#bsub -q cmscaf minidaq_${run}_${par}.job
+	#bsub minidaq_${run}_${par}.job
+	#Edit the last three lines depending if you want to run interactively in caf or in normal batch 
+
+end

@@ -1,0 +1,26 @@
+#!bin/tcsh
+set user = aocampor
+set letter = a
+cd /afs/cern.ch/user/$letter/$user/scratch0
+project CMSSW
+scramv1 project CMSSW CMSSW_2_0_10
+cd CMSSW_2_0_10/src
+eval `scramv1 ru -csh`
+addpkg EventFilter/RPCRawToDigi
+addpkg DQM/RPCMonitorDigi
+cd EventFilter/
+eval `scramv1 ru -csh`
+scramv1 b
+cd ..
+cd DQM
+scramv1 b
+cd /afs/cern.ch/user/$letter/$user/scratch0
+cp r2d.cfg CMSSW_2_0_10/src/EventFilter/RPCRawToDigi/test
+cp dqm_digi.cfg CMSSW_2_0_10/src/DQM/RPCMonitorDigi/test
+mkdir CMSSW_2_0_10/src/minidaq/
+cp allmini.job CMSSW_2_0_10/src/minidaq
+cp minidaq.job CMSSW_2_0_10/src/minidaq
+cp addig.job CMSSW_2_0_10/src/minidaq
+#rfmkdir /castor/cern.ch/user/$letter/$user/cruzet3
+#rfchmod +777 /castor/cern.ch/user/$letter/$user/cruzet3
+

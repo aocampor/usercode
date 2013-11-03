@@ -1,0 +1,61 @@
+\documentclass{beamer}
+
+ \usepackage{beamerthemesplit} 
+
+\title{Table example}
+\author{Alberto Ocampo}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section[Outline]{}
+\frame{\tableofcontents}
+
+\section{Introduction}
+\subsection{Overview of the Beamer Class}
+% Requires the booktabs if the memoir class is not being used
+\begin{table}[htbp]
+   \centering
+   %\topcaption{Table captions are better up top} % requires the topcapt package
+   \begin{tabular}{@{} llll @{}} % Column formatting, @{} suppresses leading/trailing space
+   %   \toprule
+      %\multicolumn{3}{c}{Item} \\
+     % \cmidrule(r){1-2} % Partial rule. (r) trims the line a little bit on the right; (l) & \tiny (lr) also possible
+
+\tiny SL  & \tiny \tiny Significance table for SLe & \tiny Significance table for SLmu & \tiny Significance table for SLtau \\
+\tiny QCD_Pt15.root & \tiny   0 +- 0 & \tiny   0 +- 0 & \tiny   0 +- 0\\
+\tiny QCD_Pt30.root & \tiny   4584.73 +- 2292.37 & \tiny   2292.37 +- 1620.95 & \tiny   0 +- 0\\
+\tiny QCD_Pt80.root & \tiny   3715.48 +- 327.129 & \tiny 806.46 +- 152.407 & \tiny   230.417 +- 81.4648\\
+\tiny QCD_Pt170.root & \tiny   1877.39 +- 38.8773 & \tiny   474.986 +- 19.555 & \tiny 73.261 +- 7.67984\\
+\tiny QCD_Pt300.root & \tiny   602.444 +- 4.80072 & \tiny   143.292 +- 2.34147 & \tiny 19.169 +- 0.85641\\
+\tiny QCD_Pt470.root & \tiny   127.833 +- 0.721667 & \tiny   29.6391 +- 0.347494 & \tiny   3.18594 +- 0.113929\\
+\tiny QCD_Pt800.root & \tiny   7.91141 +- 0.0281604 & \tiny   1.99227 +- 0.0141267 & \tiny  0.154101 +- 0.00392946\\
+\tiny QCD_Pt1400.root & \tiny 0.0722952 +- 0.000268828 & \tiny 0.0226609 +- 0.000150476 & \tiny   0.00125485 +- 3.54081e-05\\
+\tiny TTbar_temp.root & \tiny   298.129 +- 2.35549 & \tiny   247.047 +- 2.14425 & \tiny   30.0024 +- 0.747261\\
+\tiny WJets_temp.root & \tiny   554.676 +- 75.4818 & \tiny   246.523 +- 50.3212 & \tiny   0 +- 0\\
+\tiny ZJets_temp.root & \tiny   13.4049 +- 1.65003 & \tiny   6.90555 +- 1.18429 & \tiny   1.82794 +- 0.609313\\
+\tiny ww_pat_1.root & \tiny   6.48148 +- 2.89861 & \tiny   6.48148 +- 2.89861 & \tiny   2.59259 +- 1.83324\\
+\tiny wz_pat_1.root & \tiny 2.5 +- 0.833333 & \tiny   1.38889 +- 0.62113 & \tiny   0 +- 0\\
+\tiny zz_pat_1.root & \tiny   1.53259 +- 0.579263 & \tiny   0 +- 0 & \tiny  0.218941 +- 0.218941\\
+\tiny LM0_temp.root & \tiny   512.362 +- 2.73014 & \tiny   197.745 +- 1.69623 & \tiny   35.8693 +- 0.722463\\
+\tiny Significancy & \tiny   4.71815 & \tiny   3.03073 & \tiny 1.8883\\
+\tiny QCD significancy & \tiny   4.90397 & \tiny   3.22969 & \tiny   1.98604\\
+
+%      Animal    & \tiny Description & \tiny Price (\$)\\
+%      \midrule
+	%\hline
+	
+	
+    %  Gnat      & \tiny per gram & \tiny 13.65 \\
+             %   & \tiny each     & \tiny  0.01 \\
+%      Gnu       & \tiny stuffed  & \tiny 92.50 \\
+    %  Emu       & \tiny stuffed  & \tiny 33.33 \\
+     % Armadillo & \tiny frozen   & \tiny  8.99 \\
+   %   \bottomrule
+   \end{tabular}
+   \caption{Remember, \emph{never} use vertical lines in tables.}
+   \label{tab:booktabs}
+\end{table}
+\end{document}

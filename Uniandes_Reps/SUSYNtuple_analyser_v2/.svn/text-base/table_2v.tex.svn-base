@@ -1,0 +1,39 @@
+\documentclass[4pt]{article}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\usepackage{rotating}
+\usepackage{lscape}
+\title{Brief Article}
+\author{The Author}
+%\date{}                                           % Activate to display a given date or no date
+\usepackage{anysize}
+\marginsize{0.5cm}{0.5cm}{0.5cm}{0.5cm}
+\usepackage[left=2cm,top=1cm,right=3cm,nohead,nofoot]{geometry}
+\begin{document}
+%\maketitle
+%\section{}
+%\subsection{}
+
+% Requires the booktabs if the memoir class is not being used
+\begin{landscape}
+\begin{table}[hbtp]
+   \centering
+   %\topcaption{Table captions are better up top} % requires the topcapt package
+   \caption{Significance table.}
+   \begin{tabular}{lllllll } % Column formatting, @{} suppresses leading/trailing space
+   %   \toprule
+      %\multicolumn{3}{c}{Item} \\
+     % \cmidrule(r){1-2} % Partial rule. (r) trims the line a little bit on the right; (l) & \tiny (lr) also possible
+     \input{tab_temp.txt}
+   \end{tabular}
+
+   \label{tab:booktabs}
+\end{table}
+\end{landscape}
+\end{document}  

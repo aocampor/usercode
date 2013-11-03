@@ -1,0 +1,18 @@
+\small  & \small  PFSLe. & \small  PFSLmu. & \small  PFSLtau.\\
+\small QCD_Pt15 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small QCD_Pt30 & \small   0 +- 0 & \small   0 +- 0 & \small   1146.18 +- 1146.18\\
+\small QCD_Pt80 & \small   28.8021 +- 28.8021 & \small 403.23 +- 107.768 & \small   230.417 +- 81.4648\\
+\small QCD_Pt170 & \small 49.109 +- 6.28776 & \small 233.47 +- 13.7098 & \small   92.5826 +- 8.63337\\
+\small QCD_Pt300 & \small   21.5412 +- 0.907857 & \small   90.6413 +- 1.86228 & \small   29.4231 +- 1.06103\\
+\small QCD_Pt470 & \small   6.13966 +- 0.158157 & \small   18.6838 +- 0.275898 & \small   7.34967 +- 0.173041\\
+\small QCD_Pt800 & \small  0.535345 +- 0.00732399 & \small   1.11945 +- 0.0105906 & \small  0.576525 +- 0.00760046\\
+\small QCD_Pt1400 & \small   0.00612986 +- 7.82555e-05 & \small 0.0101351 +- 0.000100622 & \small   0.00605491 +- 7.77757e-05\\
+\small TTbar_temp & \small   53.0998 +- 0.994125 & \small   224.801 +- 2.04544 & \small   37.9869 +- 0.840837\\
+\small WJets_temp & \small   71.9024 +- 27.1766 & \small   277.338 +- 53.3737 & \small   20.5436 +- 14.5265\\
+\small ZJets_temp & \small  0.812417 +- 0.406209 & \small   5.89003 +- 1.09375 & \small   1.01552 +- 0.454155\\
+\small ww_pat_1 & \small   0 +- 0 & \small   2.59259 +- 1.83324 & \small   0 +- 0\\
+\small wz_pat_1 & \small   0 +- 0 & \small   1.11111 +- 0.555556 & \small  0.277778 +- 0.277778\\
+\small zz_pat_1 & \small   0 +- 0 & \small  0.218941 +- 0.218941 & \small  0.218941 +- 0.218941\\
+\small LM0_temp & \small   87.4538 +- 1.12809 & \small   303.369 +- 2.10086 & \small   92.3715 +- 1.15938\\
+\small Significancy & \small   5.74227 & \small 8.5495 & \small   2.33379\\
+\small QCD Significancy & \small   8.48892 & \small   11.0986 & \small   2.37984\\

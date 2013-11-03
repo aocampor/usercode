@@ -1,0 +1,57 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\usepackage{rotating}
+\usepackage{lscape}
+\title{Brief Article}
+\author{The Author}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+% Requires the booktabs if the memoir class is not being used
+\begin{landscape}
+\begin{table}[hbtp]
+   \centering
+   %\topcaption{Table captions are better up top} % requires the topcapt package
+   \caption{Remember, \emph{never} use vertical lines in tables.}
+   \begin{tabular}{llll } % Column formatting, @{} suppresses leading/trailing space
+   %   \toprule
+      %\multicolumn{3}{c}{Item} \\
+     % \cmidrule(r){1-2} % Partial rule. (r) trims the line a little bit on the right; (l) & \tiny (lr) also possible
+\small  & \small  SLe. & \small  SLmu. & \small  SLtau.\\
+\small QCD_Pt15 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small QCD_Pt30 & \small   4584.73 +- 2292.37 & \small   2292.37 +- 1620.95 & \small   0 +- 0\\
+\small QCD_Pt80 & \small   3715.48 +- 327.129 & \small 806.46 +- 152.407 & \small   230.417 +- 81.4648\\
+\small QCD_Pt170 & \small   1877.39 +- 38.8773 & \small   474.986 +- 19.555 & \small 73.261 +- 7.67984\\
+\small QCD_Pt300 & \small   602.444 +- 4.80072 & \small   143.292 +- 2.34147 & \small 19.169 +- 0.85641\\
+\small QCD_Pt470 & \small   127.833 +- 0.721667 & \small   29.6391 +- 0.347494 & \small   3.18594 +- 0.113929\\
+\small QCD_Pt800 & \small   7.91141 +- 0.0281604 & \small   1.99227 +- 0.0141267 & \small  0.154101 +- 0.00392946\\
+\small QCD_Pt1400 & \small 0.0722952 +- 0.000268828 & \small 0.0226609 +- 0.000150476 & \small   0.00125485 +- 3.54081e-05\\
+\small TTbar_temp & \small   298.129 +- 2.35549 & \small   247.047 +- 2.14425 & \small   30.0024 +- 0.747261\\
+\small WJets_temp & \small   554.676 +- 75.4818 & \small   246.523 +- 50.3212 & \small   0 +- 0\\
+\small ZJets_temp & \small   13.4049 +- 1.65003 & \small   6.90555 +- 1.18429 & \small   1.82794 +- 0.609313\\
+\small ww_pat_1 & \small   6.48148 +- 2.89861 & \small   6.48148 +- 2.89861 & \small   2.59259 +- 1.83324\\
+\small wz_pat_1 & \small 2.5 +- 0.833333 & \small   1.38889 +- 0.62113 & \small   0 +- 0\\
+\small zz_pat_1 & \small   1.53259 +- 0.579263 & \small   0 +- 0 & \small  0.218941 +- 0.218941\\
+\small LM0_temp & \small   512.362 +- 2.73014 & \small   197.745 +- 1.69623 & \small   35.8693 +- 0.722463\\
+\small Significancy & \small   4.71815 & \small   3.03073 & \small 1.8883\\
+\small QCD Significancy & \small   4.90397 & \small   3.22969 & \small   1.98604\\
+
+
+   \end{tabular}
+
+   \label{tab:booktabs}
+\end{table}
+\end{landscape}
+\end{document}  

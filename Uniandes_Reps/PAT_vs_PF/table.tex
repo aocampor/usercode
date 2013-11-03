@@ -1,0 +1,43 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Tables Isolation PF2PAT}
+\author{Alberto Ocampo}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+% Requires the booktabs if the memoir class is not being used
+% Requires the booktabs if the memoir class is not being used
+\begin{table}[htbp]
+   \centering
+   %\topcaption{Table captions are better up top} % requires the topcapt package
+   \begin{tabular}{@{} lcr @{}} % Column formatting, @{} suppresses leading/trailing space
+     % \toprule
+   %   \multicolumn{2}{c}{Item} \\
+   %   \cmidrule(r){1-2} % Partial rule. (r) trims the line a little bit on the right; (l) & (lr) also possible
+      Sample    & Number of events & $\sigma$ \\
+   %   \midrule
+      QCD pt 15 to 3000 & 95023 & unknown \\
+            ttbar                     &   1808 &  94.3 \\
+      wmunu      & 58519  & 7899 \\
+      zmumu      & stuffed  & 33.33 \\
+      Armadillo & frozen   &  8.99 \\
+  %    \bottomrule
+   \end{tabular}
+   \caption{Remember, \emph{never} use vertical lines in tables.}
+   \label{tab:booktabs}
+\end{table}
+
+
+\end{document}  

@@ -1,0 +1,29 @@
+<use name=FWCore/Framework>
+<use name=FWCore/PluginManager>
+<use name=FWCore/ParameterSet>
+
+<use name=CondFormats/L1TObjects>
+<use name=DataFormats/LTCDigi>
+<use name=DataFormats/L1Trigger>
+<use name=DataFormats/L1GlobalTrigger>
+<use name=DataFormats/L1CSCTrackFinder>
+<use name=DataFormats/L1DTTrackFinder>
+<use name=DataFormats/L1CaloTrigger>
+<use name=DataFormats/L1GlobalCaloTrigger>
+<use name=DataFormats/L1GlobalMuonTrigger>
+<use name=DataFormats/L1GlobalTrigger>
+<use name=L1Trigger/RegionalCaloTrigger>
+
+<use name=DataFormats/RPCDigi>
+<use name=DataFormats/RPCRecHit>
+<use name=boost>
+<use name=CLHEP>
+<use name=rootgraphics>
+
+<flags EDM_PLUGIN=1>
+<export>
+   <lib name=UserCodeTrigEff>
+   <use name=FWCore/Framework>
+   <use name=FWCore/PluginManager>
+   <use name=FWCore/ParameterSet>
+</export>

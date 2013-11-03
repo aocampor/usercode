@@ -1,0 +1,28 @@
+#!/bin/tcsh
+#set echo on
+
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+cd heimCMSSW_2_0_10/src
+project CMSSW
+eval `scramv1 ru -csh`
+cd EventFilter/RPCRawToDigi/test/
+set NOM = "rfio:/castor/cern.ch/user/c/ccmuon/RPC/minidaq/nrun/nombre"
+cp r2d.cfg r2d_nrun_identificador.cfg
+replace "file:input.dat" "${NOM}" -- r2d_nrun_identificador.cfg
+replace "digis2.root" "/tmp/name/Digis.nombre.root" -- r2d_nrun_identificador.cfg
+cmsRun r2d_nrun_identificador.cfg
+rm r2d_nrun_identificador.cfg
+rfcp /tmp/name/Digis.nombre.root /castor/cern.ch/user/c/ccmuon/RPC/minidaq/nrun/
+cd heimCMSSW_2_0_10/src/DQM/RPCMonitorDigi/test
+cp dqm_digi.cfg dqm_digi_nrun_identificador.cfg
+set NOM1 = "file:/tmp/name/Digis.nombre.root"
+replace "rfio:file.root" "$NOM1" -- dqm_digi_nrun_identificador.cfg
+replace "Cruzet1_CERN_out.root" "/tmp/name/RPCDQM.nombre.root" -- dqm_digi_nrun_identificador.cfg
+cmsRun dqm_digi_nrun_identificador.cfg
+rm dqm_digi_nrun_identificador.cfg
+rfcp /tmp/name/RPCDQM.nombre.root /castor/cern.ch/user/c/ccmuon/RPC/minidaq/nrun/
+rm /tmp/name/RPCDQM.nombre.root
+rm /tmp/name/Digis.nombre.root
+

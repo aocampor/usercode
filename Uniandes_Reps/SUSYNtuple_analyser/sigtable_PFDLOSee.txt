@@ -1,0 +1,18 @@
+Significance table for PFDLOSee.
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root              0 +- 0
+../root/OUT/Salida_QCD_Pt170.root        5.63546 +- 2.13
+../root/OUT/Salida_QCD_Pt300.root        1.64525 +- 0.250898
+../root/OUT/Salida_QCD_Pt470.root       0.252594 +- 0.0320795
+../root/OUT/Salida_QCD_Pt800.root      0.0159314 +- 0.00126344
+../root/OUT/Salida_QCD_Pt1400.root    7.59314e-05 +- 8.70993e-06
+../root/OUT/Salida_TTbar_temp.root        1.58201 +- 0.171593
+../root/OUT/Salida_WJets_temp.root              0 +- 0
+../root/OUT/Salida_ZJets_temp.root              0 +- 0
+../root/OUT/Salida_ww_pat_1.root              0 +- 0
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root        3.23042 +- 0.216812
+Significancy                             1.06904
+QCD Significancy                          1.17573

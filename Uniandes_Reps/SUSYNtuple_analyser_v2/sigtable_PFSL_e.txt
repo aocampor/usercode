@@ -1,0 +1,18 @@
+Significance table for PFSLe
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root          86.41 +- 49.89
+../root/OUT/Salida_QCD_Pt170.root          88.56 +- 8.444
+../root/OUT/Salida_QCD_Pt300.root          31.26 +- 1.094
+../root/OUT/Salida_QCD_Pt470.root          8.531 +- 0.1864
+../root/OUT/Salida_QCD_Pt800.root         0.7202 +- 0.008495
+../root/OUT/Salida_QCD_Pt1400.root       0.008364 +- 9.141e-05
+../root/OUT/Salida_TTbar_temp.root          76.16 +- 1.191
+../root/OUT/Salida_WJets_temp.root          184.9 +- 43.58
+../root/OUT/Salida_ZJets_temp.root          2.437 +- 0.7036
+../root/OUT/Salida_ww_pat_1.root          2.593 +- 1.833
+../root/OUT/Salida_wz_pat_1.root          1.111 +- 0.5556
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root          108.8 +- 1.259
+Significancy                               4.954
+QCD Significancy                            7.415

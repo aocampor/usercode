@@ -1,0 +1,18 @@
+Significance table for DLSSee
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root       1.49e+04 +- 4133
+../root/OUT/Salida_QCD_Pt80.root      1.069e+04 +- 554.8
+../root/OUT/Salida_QCD_Pt170.root           6257 +- 70.97
+../root/OUT/Salida_QCD_Pt300.root           1150 +- 6.634
+../root/OUT/Salida_QCD_Pt470.root            159 +- 0.8047
+../root/OUT/Salida_QCD_Pt800.root          6.223 +- 0.02497
+../root/OUT/Salida_QCD_Pt1400.root        0.03901 +- 0.0001975
+../root/OUT/Salida_TTbar_temp.root          85.39 +- 1.261
+../root/OUT/Salida_WJets_temp.root          82.17 +- 29.05
+../root/OUT/Salida_ZJets_temp.root          2.843 +- 0.7599
+../root/OUT/Salida_ww_pat_1.root          2.593 +- 1.833
+../root/OUT/Salida_wz_pat_1.root         0.2778 +- 0.2778
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root          123.4 +- 1.34
+Significancy                              0.6762
+QCD Significancy                           0.6779

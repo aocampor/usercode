@@ -1,0 +1,18 @@
+Significance table for DLOSmutau
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root              0 +- 0
+../root/OUT/Salida_QCD_Pt170.root          14.49 +- 3.416
+../root/OUT/Salida_QCD_Pt300.root          2.831 +- 0.3291
+../root/OUT/Salida_QCD_Pt470.root          0.383 +- 0.0395
+../root/OUT/Salida_QCD_Pt800.root        0.02154 +- 0.001469
+../root/OUT/Salida_QCD_Pt1400.root      8.992e-06 +- 2.997e-06
+../root/OUT/Salida_TTbar_temp.root         0.5025 +- 0.09671
+../root/OUT/Salida_WJets_temp.root              0 +- 0
+../root/OUT/Salida_ZJets_temp.root              0 +- 0
+../root/OUT/Salida_ww_pat_1.root              0 +- 0
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root         0.3783 +- 0.0742
+Significancy                             0.08861
+QCD Significancy                          0.08986

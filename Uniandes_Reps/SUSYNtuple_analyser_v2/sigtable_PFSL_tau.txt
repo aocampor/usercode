@@ -1,0 +1,18 @@
+Significance table for PFSLtau
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root              0 +- 0
+../root/OUT/Salida_QCD_Pt170.root         0.8051 +- 0.8051
+../root/OUT/Salida_QCD_Pt300.root         0.8418 +- 0.1795
+../root/OUT/Salida_QCD_Pt470.root         0.2811 +- 0.03384
+../root/OUT/Salida_QCD_Pt800.root        0.00992 +- 0.0009969
+../root/OUT/Salida_QCD_Pt1400.root      0.0001559 +- 1.248e-05
+../root/OUT/Salida_TTbar_temp.root          6.961 +- 0.3599
+../root/OUT/Salida_WJets_temp.root              0 +- 0
+../root/OUT/Salida_ZJets_temp.root         0.8124 +- 0.4062
+../root/OUT/Salida_ww_pat_1.root              0 +- 0
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root          5.879 +- 0.2925
+Significancy                               1.886
+QCD Significancy                            4.223

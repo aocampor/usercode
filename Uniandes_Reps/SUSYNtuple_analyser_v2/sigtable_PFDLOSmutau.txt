@@ -1,0 +1,18 @@
+Significance table for PFDLOSmutau
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root              0 +- 0
+../root/OUT/Salida_QCD_Pt170.root              0 +- 0
+../root/OUT/Salida_QCD_Pt300.root         0.2296 +- 0.09372
+../root/OUT/Salida_QCD_Pt470.root        0.02444 +- 0.009979
+../root/OUT/Salida_QCD_Pt800.root      0.0002004 +- 0.0001417
+../root/OUT/Salida_QCD_Pt1400.root      4.995e-06 +- 2.234e-06
+../root/OUT/Salida_TTbar_temp.root          0.577 +- 0.1036
+../root/OUT/Salida_WJets_temp.root              0 +- 0
+../root/OUT/Salida_ZJets_temp.root              0 +- 0
+../root/OUT/Salida_ww_pat_1.root              0 +- 0
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root          0.844 +- 0.1108
+Significancy                              0.9257
+QCD Significancy                            1.674

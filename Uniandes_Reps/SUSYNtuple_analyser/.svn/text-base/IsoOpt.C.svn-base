@@ -1,0 +1,2132 @@
+////Root includes
+#include "Riostream.h"
+#include <math.h>
+#include "TROOT.h"
+#include "TChain.h"
+#include "TFile.h"
+#include "TGraph.h"
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TH2.h"
+#include "TStyle.h"
+#include "TMath.h"
+#include "TCanvas.h"
+#include <iostream>
+#include <fstream>
+
+///Class Definition
+class IsolOpt {
+public :
+  TTree  *fChain;   //!pointer to the analyzed TTree or TChain 
+  Int_t  fCurrent; //!current Tree number in a TChain
+
+  // Declaration of leaf types
+  UInt_t        Nel;
+  UInt_t          Nmu;
+  UInt_t          pfNel;
+  UInt_t          Npfmu;
+
+  Double_t        elPt[30];   //[Nel]
+  Double_t        elPhi[30];   //[Nel]
+  Double_t        elEta[30];   //[Nel]
+
+
+  Double_t        pfelPt[30];   //[Nel]
+  Double_t        pfelPhi[30];   //[Nel]
+  Double_t        pfelEta[30];   //[Nel]
+  Double_t        pfelhoe[30];   //[Nel]
+
+  Double_t        elIsoGamma[30];   //[Nel]
+  Double_t        elIsoNHad[30];   //[Nel]
+  Double_t        elIsoChHad[30];   //[Nel]
+
+  Double_t        elIsotrack[30];   //[Nel]
+  Double_t        elIsoHcal[30];   //[Nel]
+  Double_t        elIsoEcal[30];   //[Nel]
+  
+  Double_t        elDrMuon[30];   //[Nel]
+  Double_t        elIdLoose[30];   //[Nel]
+  Double_t        elIdTight[30];   //[Nel]
+  Double_t        elIdRobLoose[30];   //[Nel]
+  Double_t        elIdRobTight[30];   //[Nel]
+  //  Double_t        elIdPf[30];   //[Nel]
+  Double_t        elGsfCharge[30];   //[Nel]
+  Double_t        elKfCharge[30];   //[Nel]
+  Double_t        elD0[30];   //[Nel]
+
+  Double_t        pfelDrMuon[30];   //[Nel]
+  Double_t        pfelIdLoose[30];   //[Nel]
+  Double_t        pfelIdTight[30];   //[Nel]
+  Double_t        pfelIdRobLoose[30];   //[Nel]
+  Double_t        pfelIdRobTight[30];   //[Nel]
+  Double_t        pfelIdPfpi[30];   //[Nel]
+  Double_t        pfelGsfCharge[30];   //[Nel]
+  Double_t        pfelKfCharge[30];   //[Nel]
+  Double_t        pfelD0[30];   //[Nel]
+
+  Double_t        elMC[30];   //[Nel]
+  Double_t        pfelMC[30];   //[Nel]
+
+  Double_t        muPt[30];   //[Nmu]
+  Double_t        muPhi[30];   //[Nmu]
+  Double_t        muEta[30];   //[Nmu]
+
+  Double_t        pfmuPt[30];   //[Nmu]
+  Double_t        pfmuPhi[30];   //[Nmu]
+  Double_t        pfmuEta[30];   //[Nmu]
+
+  Double_t        muIsoGamma[30];   //[Nmu]
+  Double_t        muIsoNHad[30];   //[Nmu]
+  Double_t        muIsoChHad[30];   //[Nmu]
+  
+  Double_t        muIsotrack[30];   //[Nmu]
+  Double_t        muIsoHcal[30];   //[Nmu]
+  Double_t        muIsoEcal[30];   //[Nmu]
+  
+  Double_t        muDrElec[30];   //[Nmu]
+  Double_t        muIdGlobalTight[30];   //[Nmu]
+  Double_t        muIsGlobal[30];   //[Nmu]
+  Double_t        muCharge[30];   //[Nmu]
+  Double_t        muD0[30];   //[Nmu]
+  Double_t        muTkHits[30];   //[Nmu]
+  Double_t        muGlobChi2[30];   //[Nmu]
+  Double_t        muMC[30];   //[Nmu]
+
+  Double_t        pfmuDrElec[30];   //[Nmu]
+  Double_t        pfmuIdGlobalTight[30];   //[Nmu]
+  Double_t        pfmuIsGlobal[30];   //[Nmu]
+  Double_t        pfmuCharge[30];   //[Nmu]
+  Double_t        pfmuD0[30];   //[Nmu]
+  Double_t        pfmuTkHits[30];   //[Nmu]
+  Double_t        pfmuGlobChi2[30];   //[Nmu]
+  Double_t        pfmuMC[30];   //[Nmu]
+  
+  // Pointers to the Branches
+  TBranch  *b_Nel;
+  TBranch  *b_Nmu;
+  TBranch  *b_pfNel;
+  TBranch  *b_Npfmu;
+
+  TBranch        *b_elPt;   //!
+  TBranch        *b_elPhi;   //!
+  TBranch        *b_elEta;   //!
+
+  TBranch        *b_pfelPt;   //!
+  TBranch        *b_pfelPhi;   //!
+  TBranch        *b_pfelEta;   //!
+  TBranch        *b_pfelhoe;   //!
+
+  TBranch        *b_elIsoGamma;   //!
+  TBranch        *b_elIsoNHad;   //!
+  TBranch        *b_elIsoChHad;   //!
+  
+  TBranch        *b_elIsotrack;   //!
+  TBranch        *b_elIsoHcal;   //!
+  TBranch        *b_elIsoEcal;   //!
+  
+  TBranch        *b_elDrMuon;   //!
+  TBranch        *b_elIdLoose;   //!
+  TBranch        *b_elIdTight;   //!
+  TBranch        *b_elIdRobLoose;   //!
+  TBranch        *b_elIdRobTight;   //!
+  //  TBranch        *b_elIdPf;   //!
+  TBranch        *b_elGsfCharge;   //!
+  TBranch        *b_elKfCharge;   //!
+  TBranch        *b_elD0;   //!
+  TBranch        *b_elMC;   //!
+
+  TBranch        *b_pfelDrMuon;   //!
+  TBranch        *b_pfelIdLoose;   //!
+  TBranch        *b_pfelIdTight;   //!
+  TBranch        *b_pfelIdRobLoose;   //!
+  TBranch        *b_pfelIdRobTight;   //!
+  TBranch        *b_pfelIdPfpi;   //!
+  TBranch        *b_pfelGsfCharge;   //!
+  TBranch        *b_pfelKfCharge;   //!
+  TBranch        *b_pfelD0;   //!
+  TBranch        *b_pfelMC;   //!
+
+  TBranch        *b_muPt;   //!
+  TBranch        *b_muPhi;   //!
+  TBranch        *b_muEta;   //!
+
+  TBranch        *b_pfmuPt;   //!
+  TBranch        *b_pfmuPhi;   //!
+  TBranch        *b_pfmuEta;   //!
+  
+  TBranch        *b_muIsoGamma;   //!
+  TBranch        *b_muIsoNHad;   //!
+  TBranch        *b_muIsoChHad;   //!
+  
+  TBranch        *b_muIsotrack;   //!
+  TBranch        *b_muIsoHcal;   //!
+  TBranch        *b_muIsoEcal;   //!
+  
+  TBranch        *b_muDrElec;   //!
+  TBranch        *b_muIdGlobalTight;   //!
+  TBranch        *b_muIsGlobal;   //!
+  TBranch        *b_muCharge;   //!
+  TBranch        *b_muD0;   //!
+  TBranch        *b_muTkHits;   //!
+  TBranch        *b_muGlobChi2;   //!
+
+  TBranch        *b_pfmuDrElec;   //!
+  TBranch        *b_pfmuIdGlobalTight;   //!
+  TBranch        *b_pfmuIsGlobal;   //!
+  TBranch        *b_pfmuCharge;   //!
+  TBranch        *b_pfmuD0;   //!
+  TBranch        *b_pfmuTkHits;   //!
+  TBranch        *b_pfmuGlobChi2;   //!
+
+  TBranch        *b_muMC;   //!
+  TBranch        *b_pfmuMC;   //!
+  
+//functions, constructors and destructors
+  
+  IsolOpt(TTree *tree=0);
+
+  virtual ~IsolOpt();
+
+  virtual Int_t    GetEntry(Long64_t entry);
+  virtual Long64_t LoadTree(Long64_t entry);
+  virtual void     Init(TTree *tree);
+  virtual void     Loop();
+  //  virtual void     PFLoop();
+  virtual Bool_t   Notify();
+  virtual void     Show(Long64_t entry = -1);
+
+  float dzero(float, float);
+
+  //output file
+  TFile *f2;
+
+};
+
+int main(int argc, char *argv[]){
+  std::cout << "Begining!!!!" << std::endl;
+  std::cout << "input : " << argv[1] <<  std::endl;
+  TFile * f1 = new TFile(argv[1]);
+  f1->cd("demo");
+  TTree * g1 = (TTree*)gDirectory->FindObjectAny("allData");
+  IsolOpt * iso = new IsolOpt(g1);
+  iso->Loop();
+  return 0;
+}
+
+void IsolOpt::Loop(){
+
+  ///Histograms for muons and electrons
+  TH1F *nel = new TH1F("nel","nel",20, 0,20);
+  TH1F *nmu = new TH1F("nmu","nmu",20, 0,20);
+
+  TH1F* pfnmu = new TH1F("pfnmu","pfnmu",20, 0,20);
+  TH1F* pfnel = new TH1F("pfnel","pfnel",20, 0,20);
+
+  TH1F *MCel = new TH1F("MCel","MCel",3, -0.5,2.5);
+  TH1F *MCmu = new TH1F("MCmu","MCmu",3, -0.5,2.5);
+
+  TH1F *MCpfel = new TH1F("MCpfel","MCpfel",3, -0.5,2.5);
+  TH1F *MCpfmu = new TH1F("MCpfmu","MCpfmu",3, -0.5,2.5);
+
+  TH1F* recEl[3][4][10]; 
+  TH1F* recMu[3][4][10]; 
+
+  TH1F* recpfEl[3][4][10]; 
+  TH1F* recpfMu[3][4][10]; 
+
+  TH1F* recEls[3][4]; 
+  TH1F* recMus[3][4]; 
+
+  TH1F* recpfEls[3][4]; 
+  TH1F* recpfMus[3][4]; 
+
+  TH1F* effEl[3][4][10]; 
+  TH1F* effMu[3][4][10]; 
+
+  TH1F* effpfEl[3][4][10]; 
+  TH1F* effpfMu[3][4][10]; 
+
+  TH1F* effEls[3][4]; 
+  TH1F* effMus[3][4]; 
+
+  TH1F* effpfEls[3][4]; 
+  TH1F* effpfMus[3][4]; 
+
+  TH2F* rejh[2][2][4];
+
+  TH2F* rejpfh[2][2][4];
+
+  TH1F* optEffEl[4];
+  TH1F* optEffMu[4];
+
+  TH1F* optEffpfEl[4];
+  TH1F* optEffpfMu[4];
+
+  TH2F* CombIsovsPtMu[3];
+  TH2F* CombIsovsPtEl[3];
+
+  TH2F* CombIsovsPtpfMu[3];
+  TH2F* CombIsovsPtpfEl[3];
+
+  TH1F* optpureHFel[4];
+  TH1F* optpurefakeel[4];
+  TH1F* optoptimalel[4];
+  
+  TH1F* optpureHFpfel[4];
+  TH1F* optpurefakepfel[4];
+  TH1F* optoptimalpfel[4];
+
+  TH1F* optpureHFmu[4];
+  TH1F* optpurefakemu[4];
+  TH1F* optoptimalmu[4];
+
+  TH1F* optpureHFpfmu[4];
+  TH1F* optpurefakepfmu[4];
+  TH1F* optoptimalpfmu[4];
+
+  TH1F* signalpfel = new TH1F("SignalNpfEl","Number of prompt pf electrons",2,0,2);
+  TH1F* signalpfmu = new TH1F("SignalNpfMu","Number of prompt pf electrons",2,0,2);
+  TH1F* backpfel = new TH1F("BackNpfEl","Number of fake and hf pf electrons",2,0,2);
+  TH1F* backpfmu= new TH1F("BackNpfMu","Number of fake and hf pf muons",2,0,2);
+
+  std::vector<float> srelphip;
+  std::vector<float> sreletap;
+  std::vector<float> srelcombinedp;
+  std::vector<float> sreleventp;
+  std::vector<float> pfelphip;
+  std::vector<float> pfeletap;
+  std::vector<float> pfelcombinedp;
+  std::vector<float> pfeleventp;
+
+  std::vector<float> srelphif;
+  std::vector<float> sreletaf;
+  std::vector<float> srelcombinedf;
+  std::vector<float> sreleventf;
+  std::vector<float> pfelphif;
+  std::vector<float> pfeletaf;
+  std::vector<float> pfelcombinedf;
+  std::vector<float> pfeleventf;
+
+  std::vector<float> srelphihf;
+  std::vector<float> sreletahf;
+  std::vector<float> srelcombinedhf;
+  std::vector<float> sreleventhf;
+  std::vector<float> pfelphihf;
+  std::vector<float> pfeletahf;
+  std::vector<float> pfelcombinedhf;
+  std::vector<float> pfeleventhf;
+
+  std::vector<float> srmuphip;
+  std::vector<float> srmuetap;
+  std::vector<float> srmucombinedp;
+  std::vector<float> srmueventp;
+  std::vector<float> pfmuphip;
+  std::vector<float> pfmuetap;
+  std::vector<float> pfmucombinedp;
+  std::vector<float> pfmueventp;
+
+  std::vector<float> srmuphif;
+  std::vector<float> srmuetaf;
+  std::vector<float> srmucombinedf;
+  std::vector<float> srmueventf;
+  std::vector<float> pfmuphif;
+  std::vector<float> pfmuetaf;
+  std::vector<float> pfmucombinedf;
+  std::vector<float> pfmueventf;
+
+  std::vector<float> srmuphihf;
+  std::vector<float> srmuetahf;
+  std::vector<float> srmucombinedhf;
+  std::vector<float> srmueventhf;
+  std::vector<float> pfmuphihf;
+  std::vector<float> pfmuetahf;
+  std::vector<float> pfmucombinedhf;
+  std::vector<float> pfmueventhf;
+
+  TH2F *promptIso = new TH2F("elpromptIsolationCorrelation","Prompt electrons Isolation pf vs sr",1000,0,10,1000,0,10);
+  TH2F *fakeIso = new TH2F("elfakeIsolationCorrelation","Fake electrons Isolation pf vs sr",1000,0,10,1000,0,10);
+  TH2F *HFIso = new TH2F("elHFIsolationCorrelation","HF electrons Isolation pf vs sr",1000,0,10,1000,0,10);
+  TH2F *promptIsomu = new TH2F("mupromptIsolationCorrelation","Prompt muons Isolation pf vs sr",1000,0,10,1000,0,10);
+  TH2F *fakeIsomu = new TH2F("mufakeIsolationCorrelation","Fake muons Isolation pf vs sr",1000,0,10,1000,0,10);
+  TH2F *HFIsomu = new TH2F("muHFIsolationCorrelation","HF muons Isolation pf vs sr",1000,0,10,1000,0,10);
+
+  string mc[3] ={"prompt","fake","HF"};
+  string pfisol[4] ={"_ChHad_","_NeHad_","_Gam_","_tot_"}; 
+  string isol[4] ={"_ecal_","_hcal_","_track_","_tot_"}; 
+  char elrec[20], murec[20], eleff[20], mueff[20],combisoel[20],combisomu[20],rej[20];
+  char effOptel[20], effOptmu[20];
+
+  ///creating histograms
+
+  for (int i2=0; i2<4; i2++){
+
+    sprintf(effOptel,"%s%s","optEffEl",isol[i2].c_str());
+    optEffEl[i2] = new TH1F(effOptel,effOptel,10,0,30);
+
+    sprintf(effOptmu,"%s%s","optEffMu",isol[i2].c_str());
+    optEffMu[i2] = new TH1F(effOptmu,effOptmu,10,0,30);
+
+    sprintf(effOptel,"%s%s","optEffpfEl",pfisol[i2].c_str());
+    optEffpfEl[i2] = new TH1F(effOptel,effOptel,10,0,30);
+
+    sprintf(effOptmu,"%s%s","optEffpfMu",pfisol[i2].c_str());
+    optEffpfMu[i2] = new TH1F(effOptmu,effOptmu,10,0,30);
+
+    sprintf(effOptmu,"%s%s","optoptimalpfmu",pfisol[i2].c_str());
+    optoptimalpfmu[i2] = new TH1F(effOptmu,effOptmu,10,0,30);
+
+    sprintf(effOptel,"%s%s","optPureHFEl",isol[i2].c_str());
+    optpureHFel[i2] = new TH1F(effOptel,effOptel,10,0,30);
+
+    sprintf(effOptmu,"%s%s","optPureHFMu",isol[i2].c_str());
+    optpureHFmu[i2] = new TH1F(effOptmu,effOptmu,10,0,30);
+
+    sprintf(effOptel,"%s%s","optPureFakeEl",isol[i2].c_str());
+    optpurefakeel[i2] = new TH1F(effOptel,effOptel,10,0,30);
+
+    sprintf(effOptmu,"%s%s","optPureFakeMu",isol[i2].c_str());
+    optpurefakemu[i2] = new TH1F(effOptmu,effOptmu,10,0,30);
+
+    sprintf(effOptel,"%s%s","optOptimalEl",isol[i2].c_str());
+    optoptimalel[i2] = new TH1F(effOptel,effOptel,10,0,30);
+
+    sprintf(effOptmu,"%s%s","optOptimalMu",isol[i2].c_str());
+    optoptimalmu[i2] = new TH1F(effOptmu,effOptmu,10,0,30);
+
+    sprintf(effOptel,"%s%s","optPureHFpfEl",pfisol[i2].c_str());    
+    optpureHFpfel[i2] = new TH1F(effOptel,effOptel,10,0,30);
+
+    sprintf(effOptmu,"%s%s","optPureHFpfMu",pfisol[i2].c_str());
+    optpureHFpfmu[i2] = new TH1F(effOptmu,effOptmu,10,0,30);
+
+    sprintf(effOptel,"%s%s","optPureFakepfEl",pfisol[i2].c_str());
+    optpurefakepfel[i2] = new TH1F(effOptel,effOptel,10,0,30);
+
+    sprintf(effOptmu,"%s%s","optPureFakepfMu",pfisol[i2].c_str());
+    optpurefakepfmu[i2] = new TH1F(effOptmu,effOptmu,10,0,30);
+
+    sprintf(effOptel,"%s%s","optOptimalpfEl",pfisol[i2].c_str());
+    optoptimalpfel[i2] = new TH1F(effOptel,effOptel,10,0,30);
+  }
+
+  for(int i1 = 0; i1 < 3; i1++){
+    if(i1 != 0 ){
+      for(int i2 = 0; i2 < 4 ; i2++){
+	sprintf(rej,"%s%s%s%s%s","ele_",mc[i1].c_str(),"_",isol[i2].c_str(),"_rej");
+	rejh[0][i1-1][i2] = new TH2F(rej,rej,50,0,1,50,0,1);
+	sprintf(rej,"%s%s%s%s%s","muo_",mc[i1].c_str(),"_",isol[i2].c_str(),"_rej");
+	rejh[1][i1-1][i2] = new TH2F(rej,rej,50,0,1,50,0,1);
+	sprintf(rej,"%s%s%s%s%s","pfele_",mc[i1].c_str(),"_",pfisol[i2].c_str(),"_rej");
+	rejpfh[0][i1-1][i2] = new TH2F(rej,rej,50,0,1,50,0,1);
+	sprintf(rej,"%s%s%s%s%s","pfmuo_",mc[i1].c_str(),"_",pfisol[i2].c_str(),"_rej");
+	rejpfh[1][i1-1][i2] = new TH2F(rej,rej,50,0,1,50,0,1);
+      }
+    }
+    sprintf(combisoel,"%s%s%s","ele_",mc[i1].c_str(),"_CombinedIsovsPt");
+    CombIsovsPtEl[i1] = new TH2F(combisoel,combisoel,60,0,30,50,0,1);
+    sprintf(combisomu,"%s%s%s","mu_",mc[i1].c_str(),"_CombinedIsovsPt");
+    CombIsovsPtMu[i1] = new TH2F(combisomu,combisomu,60,0,30,50,0,1);
+    sprintf(combisoel,"%s%s%s","pfele_",mc[i1].c_str(),"_CombinedIsovsPt");
+    CombIsovsPtpfEl[i1] = new TH2F(combisoel,combisoel,60,0,30,50,0,1);
+    sprintf(combisomu,"%s%s%s","pfmu_",mc[i1].c_str(),"_CombinedIsovsPt");
+    CombIsovsPtpfMu[i1] = new TH2F(combisomu,combisomu,60,0,30,50,0,1);
+
+    /////////////////////////////////////
+    for (int i2=0; i2<4; i2++){
+      for (int i3=0; i3<10; i3++){
+	sprintf(elrec,"%s%s%s%d","ele_",mc[i1].c_str(),isol[i2].c_str(),i3);
+ 	recEl[i1][i2][i3] = new TH1F(elrec,elrec,100,0,50);//30,0,15);
+       	sprintf(murec,"%s%s%s%d","mu_",mc[i1].c_str(),isol[i2].c_str(),i3);
+	recMu[i1][i2][i3] = new TH1F(murec,murec,100,0,50);//30,0,15);
+	sprintf(eleff,"%s%s%s%d","effele_",mc[i1].c_str(),isol[i2].c_str(),i3);
+	effEl[i1][i2][i3] = new TH1F(eleff,eleff,100,0,50);//30,0,15);
+	sprintf(mueff,"%s%s%s%d","effmu_",mc[i1].c_str(),isol[i2].c_str(),i3);
+	effMu[i1][i2][i3] = new TH1F(mueff,mueff,100,0,50);//30,0,15);
+	sprintf(elrec,"%s%s%s%d","pfele_",mc[i1].c_str(),pfisol[i2].c_str(),i3);
+ 	recpfEl[i1][i2][i3] = new TH1F(elrec,elrec,100,0,50);//30,0,15);
+       	sprintf(murec,"%s%s%s%d","pfmu_",mc[i1].c_str(),pfisol[i2].c_str(),i3);
+	recpfMu[i1][i2][i3] = new TH1F(murec,murec,100,0,50);//30,0,15);
+	sprintf(eleff,"%s%s%s%d","pfeffele_",mc[i1].c_str(),pfisol[i2].c_str(),i3);
+	effpfEl[i1][i2][i3] = new TH1F(eleff,eleff,100,0,50);//30,0,15);
+	sprintf(mueff,"%s%s%s%d","pfeffmu_",mc[i1].c_str(),pfisol[i2].c_str(),i3);
+	effpfMu[i1][i2][i3] = new TH1F(mueff,mueff,100,0,50);//30,0,15);
+      }
+      sprintf(elrec,"%s%s%s","ele_",mc[i1].c_str(),isol[i2].c_str());
+      recEls[i1][i2] = new TH1F(elrec,elrec,100,0,50);//30,0,15);
+      sprintf(murec,"%s%s%s","mu_",mc[i1].c_str(),isol[i2].c_str());
+      recMus[i1][i2] = new TH1F(murec,murec,100,0,50);//30,0,15);
+      sprintf(eleff,"%s%s%s","effele_",mc[i1].c_str(),isol[i2].c_str());
+      effEls[i1][i2] = new TH1F(eleff,eleff,100,0,50);//30,0,15);
+      sprintf(mueff,"%s%s%s","effmu_",mc[i1].c_str(),isol[i2].c_str());
+      effMus[i1][i2] = new TH1F(mueff,mueff,100,0,50);//30,0,15);
+      sprintf(elrec,"%s%s%s","pfele_",mc[i1].c_str(),pfisol[i2].c_str());
+      recpfEls[i1][i2] = new TH1F(elrec,elrec,100,0,50);//30,0,15);
+      sprintf(murec,"%s%s%s","pfmu_",mc[i1].c_str(),pfisol[i2].c_str());
+      recpfMus[i1][i2] = new TH1F(murec,murec,100,0,50);//30,0,15);
+      sprintf(eleff,"%s%s%s","pfeffele_",mc[i1].c_str(),pfisol[i2].c_str());
+      effpfEls[i1][i2] = new TH1F(eleff,eleff,100,0,50);//30,0,15);
+      sprintf(mueff,"%s%s%s","pfeffmu_",mc[i1].c_str(),pfisol[i2].c_str());
+      effpfMus[i1][i2] = new TH1F(mueff,mueff,100,0,50);//30,0,15);
+    }
+  }
+
+  ///getting the entries
+  if (fChain == 0) return; 
+  Long64_t nentries = fChain->GetEntriesFast();   
+  cout<<"EVENTS "<< nentries<<endl; 
+  Long64_t nbytes = 0, nb = 0; 
+  int srfel = 0;
+  int pffel = 0;
+  ////Loop over the tree
+  for (Long64_t jentry=0; jentry<nentries; jentry++) {
+    if (jentry%1000 ==0) cout<<jentry<<" EVENTS ANALYZED"<<endl; 
+    Long64_t ientry = LoadTree(jentry);
+    if (ientry < 0) break;      
+    nb = fChain->GetEntry(jentry);   nbytes += nb;
+    //number of lepton histograms 
+    nmu->Fill(Nmu);
+    nel->Fill(Nel);
+    pfnmu->Fill(Npfmu);  
+    pfnel->Fill(pfNel);           
+    //// loop over electrons
+    for (int ie=0; ie< (int)Nel; ie++){
+      unsigned int imc = 4;
+      if (elMC[ie]==0){ 
+	imc=1; 
+	srfel++;
+      }
+      else if (fabs(elMC[ie])==2)
+	imc=0;
+      else if (fabs(elMC[ie])==3) 
+	imc=2;
+      else if (imc==4) continue;
+      if (elPt[ie]>30 || elPt[ie] < 5) continue; //PT cut
+      if (fabs(elEta[ie])>2.4) continue; //eta cut 
+      if (fabs(dzero(elD0[ie],elPhi[ie]))>0.2) continue;
+      if (elIdRobTight[ie]<0.1) continue;
+      if (elGsfCharge[ie]*elKfCharge[ie]<1) continue;
+      //      cout<<"EL "<<elPt[ie]<< " "<<elEta[ie]<<" "<<dzero(elD0[ie],elPhi[ie])<<" "<<elIdRobTight[ie]<<endl;
+      int ptb=int(elPt[ie]/3);
+      if (ptb>9) continue;
+      recEl[imc][0][ptb]->Fill(elIsoEcal[ie]);
+      recEl[imc][1][ptb]->Fill(elIsoHcal[ie]);  
+      recEl[imc][2][ptb]->Fill(elIsotrack[ie]);  
+      recEl[imc][3][ptb]->Fill(elIsotrack[ie]+elIsoHcal[ie]+elIsoEcal[ie]);
+      if(elPt[ie]>5 && elPt[ie]<30){
+      	recEls[imc][0]->Fill(elIsoEcal[ie]);
+      	recEls[imc][1]->Fill(elIsoHcal[ie]);  
+      	recEls[imc][2]->Fill(elIsotrack[ie]);  
+      	recEls[imc][3]->Fill(elIsotrack[ie]+elIsoHcal[ie]+elIsoEcal[ie]);
+      }
+      CombIsovsPtEl[imc]->Fill(elPt[ie],(elIsotrack[ie]+elIsoHcal[ie]+elIsoEcal[ie])/elPt[ie]);  
+      MCel->Fill(imc);
+      if(imc == 0){
+	srelphip.push_back(elPhi[ie]);
+	sreletap.push_back(elEta[ie]);
+	srelcombinedp.push_back((elIsotrack[ie]+elIsoHcal[ie]+elIsoEcal[ie])/elPt[ie]);
+	sreleventp.push_back(jentry);
+      }
+      else if(imc == 1){
+	srelphif.push_back(elPhi[ie]);
+	sreletaf.push_back(elEta[ie]);
+	srelcombinedf.push_back((elIsotrack[ie]+elIsoHcal[ie]+elIsoEcal[ie])/elPt[ie]);
+	sreleventf.push_back(jentry);
+      }
+      else if(imc == 2){
+	srelphihf.push_back(elPhi[ie]);
+	sreletahf.push_back(elEta[ie]);
+	srelcombinedhf.push_back((elIsotrack[ie]+elIsoHcal[ie]+elIsoEcal[ie])/elPt[ie]);
+	sreleventhf.push_back(jentry);
+      }
+    }
+    for (int ie=0; ie< (int)pfNel; ie++){
+      unsigned int imc = 4;
+      if (pfelMC[ie]==0){
+	imc=1; 
+	pffel++;
+      }
+      else if (fabs(pfelMC[ie])==2) imc=0;   
+      else if (fabs(pfelMC[ie])==3) imc=2;
+      else if (imc==4) continue;
+      if (pfelPt[ie]>30 || pfelPt[ie]<2) continue; //PT cut
+      if (fabs(pfelEta[ie])>2.4) continue; //eta cut 
+      if (fabs(dzero(pfelD0[ie],pfelPhi[ie]))>0.2) continue;
+      //      if (pfelIdRobTight[ie]<0.1) continue;
+      if (pfelIdPfpi[ie] < 0.6 ) continue;
+      if (pfelhoe[ie] > 0.06) continue;
+      if (pfelGsfCharge[ie]*pfelKfCharge[ie]<1) continue;
+      int ptb=int(pfelPt[ie]/3);
+      if (ptb>9) continue;
+      if (elIsoGamma[ie]+elIsoNHad[ie]+elIsoChHad[ie] == 0 && pfelPt[ie] < 5 ) continue;
+      recpfEl[imc][0][ptb]->Fill(elIsoChHad[ie]);
+      recpfEl[imc][1][ptb]->Fill(elIsoNHad[ie]);  
+      recpfEl[imc][2][ptb]->Fill(elIsoGamma[ie]);  
+      recpfEl[imc][3][ptb]->Fill(elIsoGamma[ie]+elIsoNHad[ie]+elIsoChHad[ie]);
+      if(pfelPt[ie]>2 && pfelPt[ie]<30){
+      	recpfEls[imc][0]->Fill(elIsoChHad[ie]);
+      	recpfEls[imc][1]->Fill(elIsoNHad[ie]);  
+      	recpfEls[imc][2]->Fill(elIsoGamma[ie]);  
+      	recpfEls[imc][3]->Fill(elIsoGamma[ie]+elIsoNHad[ie]+elIsoChHad[ie]);
+      }
+      CombIsovsPtpfEl[imc]->Fill(pfelPt[ie],(elIsoGamma[ie]+elIsoNHad[ie]+elIsoChHad[ie])/pfelPt[ie]);  
+      MCpfel->Fill(imc);
+      if(imc == 0){
+	pfelphip.push_back(pfelPhi[ie]);
+	pfeletap.push_back(pfelEta[ie]);
+	pfelcombinedp.push_back((elIsoGamma[ie]+elIsoNHad[ie]+elIsoChHad[ie])/pfelPt[ie]);
+	pfeleventp.push_back(jentry);
+      }
+      else if(imc == 1){
+	pfelphif.push_back(pfelPhi[ie]);
+	pfeletaf.push_back(pfelEta[ie]);
+	pfelcombinedf.push_back((elIsoGamma[ie]+elIsoNHad[ie]+elIsoChHad[ie])/pfelPt[ie]);
+	pfeleventf.push_back(jentry);
+      }
+      else if(imc == 2){
+	pfelphihf.push_back(pfelPhi[ie]);
+	pfeletahf.push_back(pfelEta[ie]);
+	pfelcombinedhf.push_back((elIsoGamma[ie]+elIsoNHad[ie]+elIsoChHad[ie])/pfelPt[ie]);
+	pfeleventhf.push_back(jentry);
+      }
+    }
+    signalpfel->Fill(1,pfelphip.size());
+    backpfel->Fill(1,pfelphif.size()+pfelphihf.size());      
+    for (int im=0; im< (int)Nmu; im++){
+      unsigned int imcm = 4;
+      if (muMC[im]==0) imcm=1; 
+      else if (fabs(muMC[im])==2) imcm=0;   
+      else if (fabs(muMC[im])==3) imcm=2;
+      else if (imcm==4) continue;
+      //      if(imcm == 1)
+      //	cout << "The muon is a fake " << endl;
+      if (muPt[im] > 30 || muPt[im] < 3) continue; //PT cut
+      //      if(imcm == 1)
+      //	cout << "pt cut fine " << endl;
+      if (fabs(muEta[im])>2.4) continue; //eta cut 
+      //      if(imcm == 1)
+      //cout << "eta cut fine " << endl;
+      if (fabs(dzero(muD0[im],muPhi[im]))>0.2) continue;
+      //if(imcm == 1)
+      //cout << "d0 cut fine " << endl;
+      if (muIdGlobalTight[im]<0.1) continue;
+      //if(imcm == 1)
+      //cout << "globaltight cut fine " << endl;
+      if (muGlobChi2[im]>=10) continue;
+      //if(imcm == 1)
+      //cout << "chi2 cut is fine" << endl;
+      if (muTkHits[im]<=11) continue;
+      //if(imcm == 1)
+      //cout << "traker hits cut fine " << endl;
+      int ptbm=int(muPt[im]/3);
+      if (ptbm>9) continue;
+      recMu[imcm][0][ptbm]->Fill(muIsoEcal[im]);
+      recMu[imcm][1][ptbm]->Fill(muIsoHcal[im]);  
+      recMu[imcm][2][ptbm]->Fill(muIsotrack[im]);  
+      recMu[imcm][3][ptbm]->Fill(muIsotrack[im]+muIsoHcal[im]+muIsoEcal[im]);  
+      if(muPt[im]>3 && muPt[im]<30){
+	recMus[imcm][0]->Fill(muIsoEcal[im]);
+	recMus[imcm][1]->Fill(muIsoHcal[im]);  
+	recMus[imcm][2]->Fill(muIsotrack[im]);  
+	//if(imcm == 1)
+	//cout << "Filling the histogram: " << recMus[imcm][2]->GetName() << " with: " << muIsotrack[im] << endl;
+	recMus[imcm][3]->Fill(muIsotrack[im]+muIsoHcal[im]+muIsoEcal[im]);  
+      }
+      CombIsovsPtMu[imcm]->Fill(muPt[im],(muIsotrack[im]+muIsoHcal[im]+muIsoEcal[im])/muPt[im]);  
+      MCmu->Fill(imcm);
+      if(imcm == 0){
+	srmuphip.push_back(muPhi[im]);
+	srmuetap.push_back(muEta[im]);
+	srmucombinedp.push_back((muIsotrack[im]+muIsoHcal[im]+muIsoEcal[im])/muPt[im]);
+	srmueventp.push_back(jentry);
+      }
+      else if(imcm == 1){
+	srmuphif.push_back(muPhi[im]);
+	srmuetaf.push_back(muEta[im]);
+	srmucombinedf.push_back((muIsotrack[im]+muIsoHcal[im]+muIsoEcal[im])/muPt[im]);
+	srmueventf.push_back(jentry);
+      }
+      else if(imcm == 2){
+	srmuphihf.push_back(muPhi[im]);
+	srmuetahf.push_back(muEta[im]);
+	srmucombinedhf.push_back((muIsotrack[im]+muIsoHcal[im]+muIsoEcal[im])/muPt[im]);
+	srmueventhf.push_back(jentry);
+      }
+    }
+    for (int im=0; im<(int)Npfmu; im++){
+      unsigned int imcm = 4;
+      if (pfmuMC[im]==0) imcm=1; 
+      else if (fabs(pfmuMC[im])==2) imcm=0;   
+      else if (fabs(pfmuMC[im])==3) imcm=2;
+      else if (imcm==4) continue;
+      if (pfmuPt[im] > 30 || pfmuPt[im]< 3) continue; //PT cut
+      if (fabs(pfmuEta[im])>2.4) continue; //eta cut 
+      if (fabs(dzero(pfmuD0[im],pfmuPhi[im]))>0.2) continue;
+      //if (pfmuIdGlobalTight[im]<0.1) continue;
+      if (pfmuGlobChi2[im]>=10) continue;
+      if (pfmuTkHits[im]<=11) continue;
+      int ptbm=int(pfmuPt[im]/3);
+      if (ptbm>9) continue;
+      recpfMu[imcm][0][ptbm]->Fill(muIsoChHad[im]);
+      recpfMu[imcm][1][ptbm]->Fill(muIsoNHad[im]);  
+      recpfMu[imcm][2][ptbm]->Fill(muIsoGamma[im]);  
+      recpfMu[imcm][3][ptbm]->Fill(muIsoGamma[im]+muIsoNHad[im]+muIsoChHad[im]);  
+      if(pfmuPt[im]>3 && pfmuPt[im]<30){
+	recpfMus[imcm][0]->Fill(muIsoChHad[im]);
+	recpfMus[imcm][1]->Fill(muIsoNHad[im]);  
+	recpfMus[imcm][2]->Fill(muIsoGamma[im]);  
+	recpfMus[imcm][3]->Fill(muIsoGamma[im]+muIsoNHad[im]+muIsoChHad[im]);  
+      }
+      CombIsovsPtpfMu[imcm]->Fill(pfmuPt[im],(muIsoGamma[im]+muIsoNHad[im]+muIsoChHad[im])/pfmuPt[im]);  
+      MCpfmu->Fill(imcm);
+      if(imcm == 0){
+	pfmuphip.push_back(pfmuPhi[im]);
+	pfmuetap.push_back(pfmuEta[im]);
+	pfmucombinedp.push_back((muIsoGamma[im]+muIsoNHad[im]+muIsoChHad[im])/pfmuPt[im]);
+	pfmueventp.push_back(jentry);
+      }
+      else if(imcm == 1){
+	pfmuphif.push_back(pfmuPhi[im]);
+	pfmuetaf.push_back(pfmuEta[im]);
+	pfmucombinedf.push_back((muIsoGamma[im]+muIsoNHad[im]+muIsoChHad[im])/pfmuPt[im]);
+	pfmueventf.push_back(jentry);
+      }
+      else if(imcm == 2){
+	pfmuphihf.push_back(pfmuPhi[im]);
+	pfmuetahf.push_back(pfmuEta[im]);
+	pfmucombinedhf.push_back((muIsoGamma[im]+muIsoNHad[im]+muIsoChHad[im])/pfmuPt[im]);
+	pfmueventhf.push_back(jentry);
+      }
+    }
+    signalpfmu->Fill(1,pfmuphip.size());
+    backpfmu->Fill(1,pfmuphif.size()+pfmuphihf.size());
+    //////////////////////////////
+    for(int i=0;i < srelphip.size();i++){
+      for(int j=0;j < pfelphip.size();j++){
+	float dr = sqrt(pow(( pfelphip[j] - srelphip[i] ),2)+pow((pfeletap[j] - sreletap[i]),2));
+	float ev = pfeleventp[j] - sreleventp[i];
+	if(dr < 0.3 && ev == 0 )
+	  promptIso->Fill(srelcombinedp[i],pfelcombinedp[j]);
+      }
+    }
+    for(int i=0;i < srelphif.size();i++){
+      for(int j=0;j < pfelphif.size();j++){
+	float dr = sqrt(pow(( pfelphif[j] - srelphif[i] ),2)+pow((pfeletaf[j] - sreletaf[i]),2));
+	float ev = pfeleventf[j] - sreleventf[i];
+	if(dr < 0.3 && ev == 0 )
+	  fakeIso->Fill(srelcombinedf[i],pfelcombinedf[j]);
+      }
+    }
+    for(int i=0;i < srelphihf.size();i++){
+      for(int j=0;j < pfelphihf.size();j++){
+	float dr = sqrt(pow(( pfelphihf[j] - srelphihf[i] ),2)+pow((pfeletahf[j] - sreletahf[i]),2));
+	float ev = pfeleventhf[j] - sreleventhf[i];
+	if(dr < 0.3 && ev == 0 )
+	  HFIso->Fill(srelcombinedhf[i],pfelcombinedhf[j]);
+      }
+    }
+    for(int i=0;i < srmuphip.size();i++){
+      for(int j=0;j < pfmuphip.size();j++){
+	float dr = sqrt(pow(( pfmuphip[j] - srmuphip[i] ),2)+pow((pfmuetap[j] - srmuetap[i]),2));
+	float ev = pfmueventp[j] - srmueventp[i];
+	if(dr < 0.3 && ev == 0 )
+	  promptIsomu->Fill(srmucombinedp[i],pfmucombinedp[j]);
+      }
+    }
+    for(int i=0;i < srmuphif.size();i++){
+      for(int j=0;j < pfmuphif.size();j++){
+	float dr = sqrt(pow(( pfmuphif[j] - srmuphif[i] ),2)+pow((pfmuetaf[j] - srmuetaf[i]),2));
+	float ev = pfmueventf[j] - srmueventf[i];
+	if(dr < 0.3 && ev == 0 )
+	  fakeIsomu->Fill(srmucombinedf[i],pfmucombinedf[j]);
+      }
+    }
+    for(int i=0;i < srmuphihf.size();i++){
+      for(int j=0;j < pfmuphihf.size();j++){
+	float dr = sqrt(pow(( pfmuphihf[j] - srmuphihf[i] ),2)+pow((pfmuetahf[j] - srmuetahf[i]),2));
+	float ev = pfmueventhf[j] - srmueventhf[i];
+	if(dr < 0.3 && ev == 0 ){
+	  HFIsomu->Fill(srmucombinedhf[i],pfmucombinedhf[j]);
+	  //	  std::cout << "Esta es la prueba hermano: "<<pfmucombinedhf[j] << std::endl;
+	}
+      }
+    }
+    srelphip.clear();
+    sreletap.clear();
+    srelcombinedp.clear();
+    sreleventp.clear();
+    pfelphip.clear();
+    pfeletap.clear();
+    pfelcombinedp.clear();
+    pfeleventp.clear();
+    
+    srelphif.clear();
+    sreletaf.clear();
+    srelcombinedf.clear();
+    sreleventf.clear();
+    pfelphif.clear();
+    pfeletaf.clear();
+    pfelcombinedf.clear();
+    pfeleventf.clear();
+    
+    srelphihf.clear();
+    sreletahf.clear();
+    srelcombinedhf.clear();
+    sreleventhf.clear();
+    pfelphihf.clear();
+    pfeletahf.clear();
+    pfelcombinedhf.clear();
+    pfeleventhf.clear();
+    
+    srmuphip.clear();
+    srmuetap.clear();
+    srmucombinedp.clear();
+    srmueventp.clear();
+    pfmuphip.clear();
+    pfmuetap.clear();
+    pfmucombinedp.clear();
+    pfmueventp.clear();
+    
+    srmuphif.clear();
+    srmuetaf.clear();
+    srmucombinedf.clear();
+    srmueventf.clear();
+    pfmuphif.clear();
+    pfmuetaf.clear();
+    pfmucombinedf.clear();
+    pfmueventf.clear();
+    
+    srmuphihf.clear();
+    srmuetahf.clear();
+    srmucombinedhf.clear();
+    srmueventhf.clear();
+    pfmuphihf.clear();
+    pfmuetahf.clear();
+    pfmucombinedhf.clear();
+    pfmueventhf.clear();
+    
+  }
+  cout << "pf fake electrons: " << pffel << std::endl;
+  cout << "SR fake electrons: " << srfel << std::endl;
+  ///fillling efficiency histograms
+  for (int i1=0; i1<3; i1++){
+    for (int i2=0; i2<4; i2++){
+      for (int i3=0; i3<10; i3++){
+	double Integ=recEl[i1][i2][i3]->Integral(0,recEl[i1][i2][i3]->GetNbinsX()+1);   
+ 	for (int i4=0; i4<recEl[i1][i2][i3]->GetNbinsX(); i4++){
+	  double Part=recEl[i1][i2][i3]->Integral(0,i4);
+	  double eff=Part/Integ;
+	  effEl[i1][i2][i3]->SetBinContent(i4+1,eff);
+	  double err=sqrt((eff*(1-eff))/Integ);
+	  effEl[i1][i2][i3]->SetBinError(i4+1,err);
+	}
+	double Integm=recMu[i1][i2][i3]->Integral(0,recMu[i1][i2][i3]->GetNbinsX()+1);   
+ 	for (int i4=0; i4<recMu[i1][i2][i3]->GetNbinsX(); i4++){
+	  double Partm=recMu[i1][i2][i3]->Integral(0,i4);
+	  double effm=Partm/Integm;
+	  effMu[i1][i2][i3]->SetBinContent(i4+1,effm);
+	  double errm=sqrt((effm*(1-effm))/Integm);
+	  effMu[i1][i2][i3]->SetBinError(i4+1,errm);
+	}
+	Integ=recpfEl[i1][i2][i3]->Integral(0,recpfEl[i1][i2][i3]->GetNbinsX()+1);   
+ 	for (int i4=0; i4<recpfEl[i1][i2][i3]->GetNbinsX(); i4++){
+	  double Part=recpfEl[i1][i2][i3]->Integral(0,i4);
+	  double eff=Part/Integ;
+	  effpfEl[i1][i2][i3]->SetBinContent(i4+1,eff);
+	  double err=sqrt((eff*(1-eff))/Integ);
+	  effpfEl[i1][i2][i3]->SetBinError(i4+1,err);
+	}
+	Integm=recpfMu[i1][i2][i3]->Integral(0,recpfMu[i1][i2][i3]->GetNbinsX()+1);   
+ 	for (int i4=0; i4<recpfMu[i1][i2][i3]->GetNbinsX(); i4++){
+	  double Partm=recpfMu[i1][i2][i3]->Integral(0,i4);
+	  double effm=Partm/Integm;
+	  effpfMu[i1][i2][i3]->SetBinContent(i4+1,effm);
+	  double errm=sqrt((effm*(1-effm))/Integm);
+	  effpfMu[i1][i2][i3]->SetBinError(i4+1,errm);
+	}
+      }
+      double Integ=recEls[i1][i2]->Integral(0,recEls[i1][i2]->GetNbinsX()+1);   
+      for (int i4=0; i4<recEls[i1][i2]->GetNbinsX(); i4++){
+	double Part=recEls[i1][i2]->Integral(0,i4);
+	double eff=Part/Integ;
+	effEls[i1][i2]->SetBinContent(i4+1,eff);
+	double err=sqrt((eff*(1-eff))/Integ);
+	effEls[i1][i2]->SetBinError(i4+1,err);
+      }
+      double Integm=recMus[i1][i2]->Integral(0,recMus[i1][i2]->GetNbinsX()+1);   
+      //if( i1 == 1 && i2 == 2 ) 
+      //cout << recMus[i1][i2]->GetName() << " number of muons: " << Integm << endl; 
+      for (int i4=0; i4<recMus[i1][i2]->GetNbinsX(); i4++){
+	double Partm=recMus[i1][i2]->Integral(0,i4);
+	double effm=Partm/Integm;
+	//if( i1 == 1 && i2 == 2 ) 
+	//cout << "The histogram " << effMus[i1][i2]->GetName() << " has an efficiency of: " << effm << " and reaches until: " << i4 << " and is being filled by " <<recMus[i1][i2]->GetName() << endl;  
+	effMus[i1][i2]->SetBinContent(i4+1,effm);
+	double errm=sqrt((effm*(1-effm))/Integm);
+	effMus[i1][i2]->SetBinError(i4+1,errm);
+      }
+      Integ=recpfEls[i1][i2]->Integral(0,recpfEls[i1][i2]->GetNbinsX()+1);   
+      for (int i4=0; i4<recpfEls[i1][i2]->GetNbinsX(); i4++){
+	double Part=recpfEls[i1][i2]->Integral(0,i4);
+	double eff=Part/Integ;
+	effpfEls[i1][i2]->SetBinContent(i4+1,eff);
+	double err=sqrt((eff*(1-eff))/Integ);
+	effpfEls[i1][i2]->SetBinError(i4+1,err);
+      }
+      Integm=recpfMus[i1][i2]->Integral(0,recpfMus[i1][i2]->GetNbinsX()+1);   
+      for (int i4=0; i4<recpfMus[i1][i2]->GetNbinsX(); i4++){
+	double Partm=recpfMus[i1][i2]->Integral(0,i4);
+	double effm=Partm/Integm;
+	effpfMus[i1][i2]->SetBinContent(i4+1,effm);
+	double errm=sqrt((effm*(1-effm))/Integm);
+	effpfMus[i1][i2]->SetBinError(i4+1,errm);
+      }
+      if(i1!=0){
+	for (int i4=0; i4<effEls[i1][i2]->GetNbinsX(); i4++){
+	  rejh[0][i1-1][i2]->Fill(1-effEls[i1][i2]->GetBinContent(i4),effEls[0][i2]->GetBinContent(i4));	
+	  rejh[1][i1-1][i2]->Fill(1-effMus[i1][i2]->GetBinContent(i4),effMus[0][i2]->GetBinContent(i4));
+	  rejpfh[0][i1-1][i2]->Fill(1-effpfEls[i1][i2]->GetBinContent(i4),effpfEls[0][i2]->GetBinContent(i4));	
+	  rejpfh[1][i1-1][i2]->Fill(1-effpfMus[i1][i2]->GetBinContent(i4),effpfMus[0][i2]->GetBinContent(i4));
+	}
+      }
+    }
+  }
+  std::cout << "The number of pf fake electrons is: " << pffel << std::endl;
+  ////Efficiency bigger than 90% prompt electrons histograms
+  float elCutEff[3][4][10];
+  float thrEff=0.9;
+  float muCutEff[3][4][10];
+  float thrEffm=0.9;
+  
+  float pfelCutEff[3][4][10];
+  float pfthrEff=0.9;
+  float pfmuCutEff[3][4][10];
+  float pfthrEffm=0.9;
+
+
+  for (int i2=0; i2<4; i2++){
+    for (int i3=0; i3<10; i3++){
+      for (int i4=1; i4<effEl[0][i2][i3]->GetNbinsX(); i4++){
+	if ((effEl[0][i2][i3]->GetBinContent(i4) < thrEff ) &&
+	    (effEl[0][i2][i3]->GetBinContent(i4+1) >= thrEff)) {
+	  optEffEl[i2]->SetBinContent(i3+1,0.5*(i4));
+	  optEffEl[i2]->SetBinError(i3+1,0.5);
+	  for (int i1 =0; i1<3;i1++){
+	    elCutEff[i1][i2][i3]=effEl[i1][i2][i3]->GetBinContent(i4+1);
+	  }
+	}
+      }
+      for (int i4=1; i4<effpfEl[0][i2][i3]->GetNbinsX(); i4++){
+	if ((effpfEl[0][i2][i3]->GetBinContent(i4) < pfthrEff ) &&
+	    (effpfEl[0][i2][i3]->GetBinContent(i4+1) >= pfthrEff)) {
+	  optEffpfEl[i2]->SetBinContent(i3+1,0.5*(i4));
+	  optEffpfEl[i2]->SetBinError(i3+1,0.5);
+	  for (int i1 =0; i1<3;i1++){
+	    pfelCutEff[i1][i2][i3]=effpfEl[i1][i2][i3]->GetBinContent(i4+1);
+	  }
+	}
+      }
+      for (int i4=1; i4<effMu[0][i2][i3]->GetNbinsX(); i4++){
+	if ((effMu[0][i2][i3]->GetBinContent(i4) < thrEffm ) &&
+	    (effMu[0][i2][i3]->GetBinContent(i4+1) >= thrEffm)) {
+	  optEffMu[i2]->SetBinContent(i3+1,0.5*(i4));
+	  optEffMu[i2]->SetBinError(i3+1,0.5);
+	  for (int i1 =0; i1<3;i1++){
+	    muCutEff[i1][i2][i3]=effMu[i1][i2][i3]->GetBinContent(i4+1);
+	  }
+	}
+      }      
+      for (int i4=1; i4<effpfMu[0][i2][i3]->GetNbinsX(); i4++){
+	if ((effpfMu[0][i2][i3]->GetBinContent(i4) < pfthrEffm ) &&
+	    (effpfMu[0][i2][i3]->GetBinContent(i4+1) >= pfthrEffm)) {
+	  optEffpfMu[i2]->SetBinContent(i3+1,0.5*(i4));
+	  optEffpfMu[i2]->SetBinError(i3+1,0.5);
+	  for (int i1 =0; i1<3;i1++){
+	    pfmuCutEff[i1][i2][i3]=effpfMu[i1][i2][i3]->GetBinContent(i4+1);
+	  }
+	}
+      }      
+    }
+    optEffEl[i2]->Fit("pol1");
+    optEffMu[i2]->Fit("pol1");
+    optEffpfEl[i2]->Fit("pol1");
+    optEffpfMu[i2]->Fit("pol1");
+  }
+
+  ///other optimisation escenarios
+
+  float hf_thr = 0.9;
+  float fake_thr_el = 0.9;
+  float fake_thr = 0.9;
+  for (int i2=0; i2<4;i2++){
+    for (int i3=0; i3<10; i3++){
+      for (int i4=1; i4<effEl[2][i2][i3]->GetNbinsX(); i4++){
+	if (((1-effEl[2][i2][i3]->GetBinContent(i4)) > hf_thr ) &&
+	    ((1-effEl[2][i2][i3]->GetBinContent(i4+1)) <= hf_thr)) {
+	  optpureHFel[i2]->SetBinContent(i3+1,0.5*i4);
+	  optpureHFel[i2]->SetBinError(i3+1,0.5);
+	}
+      }
+      for (int i4=1; i4<effMu[2][i2][i3]->GetNbinsX(); i4++){
+	if (((1-effMu[2][i2][i3]->GetBinContent(i4)) > hf_thr ) &&
+	    ((1-effMu[2][i2][i3]->GetBinContent(i4+1)) <= hf_thr)) {
+	  optpureHFmu[i2]->SetBinContent(i3+1,0.5*i4);
+	  optpureHFmu[i2]->SetBinError(i3+1,0.5);
+	}
+      }
+      for (int i4=1; i4<effEl[1][i2][i3]->GetNbinsX(); i4++){
+	if (((1-effEl[1][i2][i3]->GetBinContent(i4)) > fake_thr_el ) &&
+	    ((1-effEl[1][i2][i3]->GetBinContent(i4+1)) <= fake_thr_el)) {
+	  optpurefakeel[i2]->SetBinContent(i3+1,0.5*i4);
+	  optpurefakeel[i2]->SetBinError(i3+1,0.5);
+	}
+      }
+      for (int i4=1; i4<effMu[2][i2][i3]->GetNbinsX(); i4++){
+	if (((1-effMu[1][i2][i3]->GetBinContent(i4)) > fake_thr ) &&
+	    ((1-effMu[1][i2][i3]->GetBinContent(i4+1)) <= fake_thr)) {
+	  optpurefakemu[i2]->SetBinContent(i3+1,0.5*i4);
+	  optpurefakemu[i2]->SetBinError(i3+1,0.5);
+	}
+      }
+      for (int i4=1; i4<effpfEl[2][i2][i3]->GetNbinsX(); i4++){
+	if (((1-effpfEl[2][i2][i3]->GetBinContent(i4)) > hf_thr ) &&
+	    ((1-effpfEl[2][i2][i3]->GetBinContent(i4+1)) <= hf_thr)) {
+	  optpureHFpfel[i2]->SetBinContent(i3+1,0.5*i4);
+	  optpureHFpfel[i2]->SetBinError(i3+1,0.5);
+	}
+      }
+      for (int i4=1; i4<effpfMu[2][i2][i3]->GetNbinsX(); i4++){
+	if (((1-effpfMu[2][i2][i3]->GetBinContent(i4)) > hf_thr ) &&
+	    ((1-effpfMu[2][i2][i3]->GetBinContent(i4+1)) <= hf_thr)) {
+	  optpureHFpfmu[i2]->SetBinContent(i3+1,0.5*i4);
+	  optpureHFpfmu[i2]->SetBinError(i3+1,0.5);
+	}
+      }
+      for (int i4=1; i4<effpfEl[1][i2][i3]->GetNbinsX(); i4++){
+	if (((1-effpfEl[1][i2][i3]->GetBinContent(i4)) > fake_thr_el ) &&
+	    ((1-effpfEl[1][i2][i3]->GetBinContent(i4+1)) <= fake_thr_el)) {
+	  optpurefakepfel[i2]->SetBinContent(i3+1,0.5*i4);
+	  optpurefakepfel[i2]->SetBinError(i3+1,0.5);
+	}
+      }
+      for (int i4=1; i4<effpfMu[2][i2][i3]->GetNbinsX(); i4++){
+	if (((1-effpfMu[1][i2][i3]->GetBinContent(i4)) > fake_thr ) &&
+	    ((1-effpfMu[1][i2][i3]->GetBinContent(i4+1)) <= fake_thr)) {
+	  optpurefakepfmu[i2]->SetBinContent(i3+1,0.5*i4);
+	  optpurefakepfmu[i2]->SetBinError(i3+1,0.5);
+	}
+      }
+      float min;
+      float temp;
+      float iso_min;
+      float pfmin;
+      float pftemp;
+      float pfiso_min;
+      for (int i4=1; i4<=effEl[1][i2][i3]->GetNbinsX(); i4++){
+	temp = sqrt((1-effEl[0][i2][i3]->GetBinContent(i4))*(1-effEl[0][i2][i3]->GetBinContent(i4))+effEl[1][i2][i3]->GetBinContent(i4)*effEl[1][i2][i3]->GetBinContent(i4));
+	if(i4==1){
+	  min = temp;
+	  iso_min = 0.5*i4;
+	}
+	else if(temp <  min){
+	    min = temp;
+	    iso_min = 0.5*i4;
+	  }
+      }
+      for (int i4=1; i4<effpfEl[1][i2][i3]->GetNbinsX(); i4++){
+	pftemp = sqrt((1-effpfEl[0][i2][i3]->GetBinContent(i4))*(1-effpfEl[0][i2][i3]->GetBinContent(i4))+effpfEl[1][i2][i3]->GetBinContent(i4)*effpfEl[1][i2][i3]->GetBinContent(i4));
+	//cout << " deposit: " << 0.5*i4 << " Dx: " << pftemp << endl;
+	if(i4==1){
+	  pfmin = pftemp;
+	  pfiso_min = 0.5*i4;
+	}
+	else{
+	  if(pftemp <  pfmin){
+	    pfmin = pftemp;
+	    pfiso_min = 0.5*i4;
+	  }
+	}
+      }
+      //cout << "!!!!!!!!!!the minimum deposit is: " << pfiso_min << " Dx: " << pftemp << endl;
+      optoptimalel[i2]->SetBinContent(i3+1,iso_min);
+      optoptimalel[i2]->SetBinError(i3+1,0.5);
+      optoptimalpfel[i2]->SetBinContent(i3+1,pfiso_min);
+      optoptimalpfel[i2]->SetBinError(i3+1,0.5);
+
+      for (int i4=1; i4<effMu[1][i2][i3]->GetNbinsX(); i4++){
+	temp = sqrt((1-effMu[0][i2][i3]->GetBinContent(i4))*(1-effMu[0][i2][i3]->GetBinContent(i4))+effMu[1][i2][i3]->GetBinContent(i4)*effMu[1][i2][i3]->GetBinContent(i4));
+	if(i4==1){
+	  min = temp;
+	  iso_min = 0.5*i4;
+	}
+	else{
+	  if(temp <  min){
+	    min = temp;
+	    iso_min = 0.5*i4;
+	  }
+	}
+      }
+      optoptimalmu[i2]->SetBinContent(i3+1,iso_min);
+      optoptimalmu[i2]->SetBinError(i3+1,0.5);
+      for (int i4=1; i4<effpfMu[1][i2][i3]->GetNbinsX(); i4++){
+	temp = sqrt((1-effpfMu[0][i2][i3]->GetBinContent(i4))*(1-effpfMu[0][i2][i3]->GetBinContent(i4))+effpfMu[1][i2][i3]->GetBinContent(i4)*effpfMu[1][i2][i3]->GetBinContent(i4));
+	if(i4==1){
+	  min = temp;
+	  iso_min = 0.5*i4;
+	}
+	else{
+	  if(temp <  min){
+	    min = temp;
+	    iso_min = 0.5*i4;
+	  }
+	}
+      }
+      optoptimalpfmu[i2]->SetBinContent(i3+1,iso_min);
+      optoptimalpfmu[i2]->SetBinError(i3+1,0.5);
+    }
+
+    optpureHFel[i2]->Fit("pol1");
+    optpureHFmu[i2]->Fit("pol1");
+    optpurefakeel[i2]->Fit("pol1");
+    optpurefakemu[i2]->Fit("pol1");
+    optoptimalel[i2]->Fit("pol1");
+    optoptimalmu[i2]->Fit("pol1");
+    optpureHFpfel[i2]->Fit("pol1");
+    optpureHFpfmu[i2]->Fit("pol1");
+    optpurefakepfel[i2]->Fit("pol1");
+    optpurefakepfmu[i2]->Fit("pol1");
+    optoptimalpfel[i2]->Fit("pol1");
+    optoptimalpfmu[i2]->Fit("pol1");
+
+  }
+
+  ofstream fout("Tables.txt");
+  if(!fout) {
+    cout << "Cannot open output file.\n";
+  }
+  fout << "Prompt Efficiency > 0.9" << endl;
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "Electron Prompt efficiency > 0.9 Values Ecal isolation" << endl;
+    if(i2==1) fout << "Electron Prompt efficiency > 0.9 Values Hcal isolation" << endl;
+    if(i2==2) fout << "Electron Prompt efficiency > 0.9 Values Track isolation" << endl;
+    if(i2==3) fout << "Electron Prompt efficiency > 0.9 Values Combined isolation" << endl;
+    fout.width(15);
+    fout << "pt Range (GeV)";
+    fout.width(30);
+    fout << "efficiency cut";
+    fout.width(30);
+    fout << "Prompt Efficiency";
+    fout.width(30);
+    fout << "rej HF";
+    fout.width(30);
+    fout <<"rej fake" << endl;
+    fout.setf(ios::fixed, ios::floatfield);
+    fout.precision(2);
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) { fout << "0-3  " << " & ";}
+      if(i1==1) { fout << "3-6  " << " & ";}
+      if(i1==2) { fout << "6-9  " << " & ";}
+      if(i1==3) { fout << "9-12 " << " & ";}
+      if(i1==4) { fout << "12-15" << " & ";}
+      if(i1==5) { fout << "15-18" << " & ";}
+      if(i1==6) { fout << "18-21" << " & ";}
+      if(i1==7) { fout << "21-24" << " & ";}
+      if(i1==8) { fout << "24-27" << " & ";}
+      if(i1==9) { fout << "27-30" << " & ";}
+      //      fout.width(8);
+      fout << optEffEl[i2]->GetBinContent(i1+1) << " $\\pm$ "; 
+      //      fout.width(12);
+      fout << optEffEl[i2]->GetBinError(i1+1) << " & ";
+      //      fout.width(13);
+      fout <<  effEl[0][i2][i1]->GetBinContent(optEffEl[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //      fout.width(12);
+      fout << effEl[0][i2][i1]->GetBinError(optEffEl[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //      fout.width(13);
+      fout << 1-effEl[2][i2][i1]->GetBinContent(optEffEl[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ "; 
+      //      fout.width(12);
+      fout << effEl[2][i2][i1]->GetBinError(optEffEl[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //      fout.width(13);
+      fout << 1-effEl[1][i2][i1]->GetBinContent(optEffEl[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //      fout.width(12);
+      fout << effEl[1][i2][i1]->GetBinError(optEffEl[i2]->GetBinContent(i1+1)*2+1) << " \\\\" << endl;
+    }
+  }
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "Muon Prompt efficiency > 0.9 Values Ecal isolation" << endl;
+    if(i2==1) fout << "Muon Prompt efficiency > 0.9 Values Hcal isolation" << endl;
+    if(i2==2) fout << "Muon Prompt efficiency > 0.9 Values Track isolation" << endl;
+    if(i2==3) fout << "Muon Prompt efficiency > 0.9 Values Combined isolation" << endl;
+    fout.width(30);
+    fout << "pt Range (GeV)";
+    fout.width(30);
+    fout << "efficiency cut";
+    fout.width(30);
+    fout << "Prompt Efficiency";
+    fout.width(30);
+    fout << "rej HF";
+    fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {// fout.width(30);
+	fout << "0-3   & ";}
+      if(i1==1) {// fout.width(30); 
+	fout << "3-6   & ";}
+      if(i1==2) { //fout.width(30); 
+	fout << "6-9   & ";}
+      if(i1==3) {  
+	fout << "9-12  & ";}
+      if(i1==4) {  fout << "12-15 & ";}
+      if(i1==5) {  fout << "15-18 & ";}
+      if(i1==6) {  fout << "18-21 & ";}
+      if(i1==7) {  fout << "21-24 & ";}
+      if(i1==8) {  fout << "24-27 & ";}
+      if(i1==9) {  fout << "27-30 & ";}
+      //fout.width(13);
+      fout << optEffMu[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optEffMu[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effMu[0][i2][i1]->GetBinContent(optEffMu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[0][i2][i1]->GetBinError(optEffMu[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effMu[2][i2][i1]->GetBinContent(optEffMu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[2][i2][i1]->GetBinError(optEffMu[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effMu[1][i2][i1]->GetBinContent(optEffMu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[1][i2][i1]->GetBinError(optEffMu[i2]->GetBinContent(i1+1)*2+1)  << " \\\\"<< endl;
+    }
+  }
+
+
+  //////////////Particle Flow
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "PF Electron Prompt efficiency > 0.9 Values Charged Hadron isolation" << endl;
+    if(i2==1) fout << "PF Electron Prompt efficiency > 0.9 Values Neutral Hadron isolation" << endl;
+    if(i2==2) fout << "PF Electron Prompt efficiency > 0.9 Values Gamma isolation" << endl;
+    if(i2==3) fout << "PF Electron Prompt efficiency > 0.9 Values Combined isolation" << endl;
+    fout.width(30);
+    fout << "pt Range (GeV)";
+    fout.width(30);
+    fout << "efficiency cut";
+    fout.width(30);
+    fout << "Prompt Efficiency";
+    fout.width(30);
+    fout << "rej HF";
+    fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optEffpfEl[i2]->GetBinContent(i1+1) << " $\\pm$ " ;
+      //fout.width(12);      
+      fout << optEffpfEl[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effpfEl[0][i2][i1]->GetBinContent(optEffpfEl[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);      
+      fout << effpfEl[0][i2][i1]->GetBinError(optEffpfEl[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effpfEl[2][i2][i1]->GetBinContent(optEffpfEl[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[2][i2][i1]->GetBinError(optEffpfEl[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effpfEl[1][i2][i1]->GetBinContent(optEffpfEl[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ "; 
+      //fout.width(12);
+      fout << effpfEl[1][i2][i1]->GetBinError(optEffpfEl[i2]->GetBinContent(i1+1)*2+1) << " \\\\";
+      fout << endl;
+    }
+  }
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "PF Muon Prompt efficiency > 0.9 Values Charged Hadron isolation" << endl;
+    if(i2==1) fout << "PF Muon Prompt efficiency > 0.9 Values Neutral Hadron isolation" << endl;
+    if(i2==2) fout << "PF Muon Prompt efficiency > 0.9 Values Gamma isolation" << endl;
+    if(i2==3) fout << "PF Muon Prompt efficiency > 0.9 Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optEffpfMu[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optEffpfMu[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effpfMu[0][i2][i1]->GetBinContent(optEffpfMu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[0][i2][i1]->GetBinError(optEffpfMu[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effpfMu[2][i2][i1]->GetBinContent(optEffpfMu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[2][i2][i1]->GetBinError(optEffpfMu[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effpfMu[1][i2][i1]->GetBinContent(optEffpfMu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ "; 
+      //fout.width(12);
+      fout << effpfMu[1][i2][i1]->GetBinError(optEffpfMu[i2]->GetBinContent(i1+1)*2+1) << " \\\\";
+      fout << endl;
+    }
+  }
+
+
+  ////////////   optimal cut
+
+  fout <<"Optima cut"<< endl;
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "Electron Optimal cut Values Ecal isolation" << endl;
+    if(i2==1) fout << "Electron Optimal cut Values Hcal isolation" << endl;
+    if(i2==2) fout << "Electron Optimal cut Values Track isolation" << endl;
+    if(i2==3) fout << "Electron Optimal cut Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optoptimalel[i2]->GetBinContent(i1+1) << " $\\pm$ "; 
+      //fout.width(12);      
+      fout << optoptimalel[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effEl[0][i2][i1]->GetBinContent(optoptimalel[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effEl[0][i2][i1]->GetBinError(optoptimalel[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effEl[2][i2][i1]->GetBinContent(optoptimalel[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effEl[2][i2][i1]->GetBinError(optoptimalel[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effEl[1][i2][i1]->GetBinContent(optoptimalel[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ "; 
+      //fout.width(12);
+      fout << effEl[1][i2][i1]->GetBinError(optoptimalel[i2]->GetBinContent(i1+1)*2+1) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "Muon Optimal cut Values Ecal isolation" << endl;
+    if(i2==1) fout << "Muon Optimal cut Values Hcal isolation" << endl;
+    if(i2==2) fout << "Muon Optimal cut Values Track isolation" << endl;
+    if(i2==3) fout << "Muon Optimal cut Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optoptimalmu[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optoptimalmu[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effMu[0][i2][i1]->GetBinContent(optoptimalmu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[0][i2][i1]->GetBinError(optoptimalmu[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effMu[2][i2][i1]->GetBinContent(optoptimalmu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[2][i2][i1]->GetBinError(optoptimalmu[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effMu[1][i2][i1]->GetBinContent(optoptimalmu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[1][i2][i1]->GetBinError(optoptimalmu[i2]->GetBinContent(i1+1)*2+1) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+
+  //////////////Particle Flow
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "PF Electron Optimal cut Values Charged Hadron isolation" << endl;
+    if(i2==1) fout << "PF Electron Optimal cut Values Neutral Hadron isolation" << endl;
+    if(i2==2) fout << "PF Electron Optimal cut Values Gamma isolation" << endl;
+    if(i2==3) fout << "PF Electron Optimal cut Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optoptimalpfel[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optoptimalpfel[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effpfEl[0][i2][i1]->GetBinContent(optoptimalpfel[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[0][i2][i1]->GetBinError(optoptimalpfel[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effpfEl[2][i2][i1]->GetBinContent(optoptimalpfel[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[2][i2][i1]->GetBinError(optoptimalpfel[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effpfEl[1][i2][i1]->GetBinContent(optoptimalpfel[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[1][i2][i1]->GetBinError(optoptimalpfel[i2]->GetBinContent(i1+1)*2+1) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "PF Muon Optimal cut Values Charged Hadron isolation" << endl;
+    if(i2==1) fout << "PF Muon Optimal cut Values Neutral Hadron isolation" << endl;
+    if(i2==2) fout << "PF Muon Optimal cut Values Gamma isolation" << endl;
+    if(i2==3) fout << "PF Muon Optimal cut Values Combined isolation" << endl;
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optoptimalpfmu[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optoptimalpfmu[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effpfMu[0][i2][i1]->GetBinContent(optoptimalpfmu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[0][i2][i1]->GetBinError(optoptimalpfmu[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effpfMu[2][i2][i1]->GetBinContent(optoptimalpfmu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout  << effpfMu[2][i2][i1]->GetBinError(optoptimalpfmu[i2]->GetBinContent(i1+1)*2+1) << " & ";
+      //fout.width(13);
+      fout <<1-effpfMu[1][i2][i1]->GetBinContent(optoptimalpfmu[i2]->GetBinContent(i1+1)*2+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[1][i2][i1]->GetBinError(optoptimalpfmu[i2]->GetBinContent(i1+1)*2+1) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+
+  ////// pure fake
+
+  fout <<" Fake rejection > 0.9 cut"<< endl;
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "Electron fake rejection cut Values Ecal isolation" << endl;
+    if(i2==1) fout << "Electron fake rejection Values Hcal isolation" << endl;
+    if(i2==2) fout << "Electron fake rejection Values Track isolation" << endl;
+    if(i2==3) fout << "Electron fake rejection Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optpurefakeel[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optpurefakeel[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effEl[0][i2][i1]->GetBinContent(optpurefakeel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effEl[0][i2][i1]->GetBinError(optpurefakeel[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effEl[2][i2][i1]->GetBinContent(optpurefakeel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effEl[2][i2][i1]->GetBinError(optpurefakeel[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effEl[1][i2][i1]->GetBinContent(optpurefakeel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effEl[1][i2][i1]->GetBinError(optpurefakeel[i2]->GetBinContent(i1+1)*2) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "Muon fake rejection Values Ecal isolation" << endl;
+    if(i2==1) fout << "Muon fake rejection Values Hcal isolation" << endl;
+    if(i2==2) fout << "Muon fake rejection Values Track isolation" << endl;
+    if(i2==3) fout << "Muon fake rejection Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  "  << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optpurefakemu[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optpurefakemu[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effMu[0][i2][i1]->GetBinContent(optpurefakemu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[0][i2][i1]->GetBinError(optpurefakemu[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout << 1-effMu[2][i2][i1]->GetBinContent(optpurefakemu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[2][i2][i1]->GetBinError(optpurefakemu[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout << 1-effMu[1][i2][i1]->GetBinContent(optpurefakemu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[1][i2][i1]->GetBinError(optpurefakemu[i2]->GetBinContent(i1+1)*2) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+
+  //////////////Particle Flow
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "PF Electron fake rejection Values Charged Hadron isolation" << endl;
+    if(i2==1) fout << "PF Electron fake rejection Values Neutral Hadron isolation" << endl;
+    if(i2==2) fout << "PF Electron fake rejection Values Gamma isolation" << endl;
+    if(i2==3) fout << "PF Electron fake rejection Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optpurefakepfel[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optpurefakepfel[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effpfEl[0][i2][i1]->GetBinContent(optpurefakepfel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[0][i2][i1]->GetBinError(optpurefakepfel[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effpfEl[2][i2][i1]->GetBinContent(optpurefakepfel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[2][i2][i1]->GetBinError(optpurefakepfel[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effpfEl[1][i2][i1]->GetBinContent(optpurefakepfel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[1][i2][i1]->GetBinError(optpurefakepfel[i2]->GetBinContent(i1+1)*2) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "PF Muon fake rejection Values Charged Hadron isolation" << endl;
+    if(i2==1) fout << "PF Muon fake rejection Values Neutral Hadron isolation" << endl;
+    if(i2==2) fout << "PF Muon fake rejection Values Gamma isolation" << endl;
+    if(i2==3) fout << "PF Muon fake rejection Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optpurefakepfmu[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optpurefakepfmu[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effpfMu[0][i2][i1]->GetBinContent(optpurefakepfmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[0][i2][i1]->GetBinError(optpurefakepfmu[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout << 1-effpfMu[2][i2][i1]->GetBinContent(optpurefakepfmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[2][i2][i1]->GetBinError(optpurefakepfmu[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout << 1-effpfMu[1][i2][i1]->GetBinContent(optpurefakepfmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[1][i2][i1]->GetBinError(optpurefakepfmu[i2]->GetBinContent(i1+1)*2) << " \\\\";
+      fout << endl;
+    }
+  }
+
+
+  /////////////pure hf
+
+
+  fout <<" HF rejection > 0.9 cut"<< endl;
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "Electron HF rejection cut Values Ecal isolation" << endl;
+    if(i2==1) fout << "Electron HF rejection Values Hcal isolation" << endl;
+    if(i2==2) fout << "Electron HF rejection Values Track isolation" << endl;
+    if(i2==3) fout << "Electron HF rejection Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optpureHFel[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optpureHFel[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effEl[0][i2][i1]->GetBinContent(optpureHFel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effEl[0][i2][i1]->GetBinError(optpureHFel[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout << 1-effEl[2][i2][i1]->GetBinContent(optpureHFel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effEl[2][i2][i1]->GetBinError(optpureHFel[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effEl[1][i2][i1]->GetBinContent(optpureHFel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effEl[1][i2][i1]->GetBinError(optpureHFel[i2]->GetBinContent(i1+1)*2) << " \\\\";
+      fout << endl;
+    }
+  }
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "Muon HF rejection Values Ecal isolation" << endl;
+    if(i2==1) fout << "Muon HF rejection Values Hcal isolation" << endl;
+    if(i2==2) fout << "Muon HF rejection Values Track isolation" << endl;
+    if(i2==3) fout << "Muon HF rejection Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optpureHFmu[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optpureHFmu[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effMu[0][i2][i1]->GetBinContent(optpureHFmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[0][i2][i1]->GetBinError(optpureHFmu[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effMu[2][i2][i1]->GetBinContent(optpureHFmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[2][i2][i1]->GetBinError(optpureHFmu[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effMu[1][i2][i1]->GetBinContent(optpureHFmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effMu[1][i2][i1]->GetBinError(optpureHFmu[i2]->GetBinContent(i1+1)*2) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+
+  //////////////Particle Flow
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "PF Electron HF rejection Values Charged Hadron isolation" << endl;
+    if(i2==1) fout << "PF Electron HF rejection Values Neutral Hadron isolation" << endl;
+    if(i2==2) fout << "PF Electron HF rejection Values Gamma isolation" << endl;
+    if(i2==3) fout << "PF Electron HF rejection Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optpureHFpfel[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optpureHFpfel[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effpfEl[0][i2][i1]->GetBinContent(optpureHFpfel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[0][i2][i1]->GetBinError(optpureHFpfel[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effpfEl[2][i2][i1]->GetBinContent(optpureHFpfel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[2][i2][i1]->GetBinError(optpureHFpfel[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effpfEl[1][i2][i1]->GetBinContent(optpureHFpfel[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfEl[1][i2][i1]->GetBinError(optpureHFpfel[i2]->GetBinContent(i1+1)*2) << " \\\\ ";
+      fout << endl;
+    }
+  }
+
+  for(int i2 = 0; i2<4; i2++){
+    if(i2==0) fout << "PF Muon HF rejection Values Charged Hadron isolation" << endl;
+    if(i2==1) fout << "PF Muon HF rejection Values Neutral Hadron isolation" << endl;
+    if(i2==2) fout << "PF Muon HF rejection Values Gamma isolation" << endl;
+    if(i2==3) fout << "PF Muon HF rejection Values Combined isolation" << endl;
+    //fout.width(30);
+    fout << "pt Range (GeV)";
+    //fout.width(30);
+    fout << "efficiency cut";
+    //fout.width(30);
+    fout << "Prompt Efficiency";
+    //fout.width(30);
+    fout << "rej HF";
+    //fout.width(30);
+    fout <<"rej fake" << endl;
+    for(int i1 = 0; i1<10;i1++){
+      if(i1==0) {  fout << "0-3  " << " & ";}
+      if(i1==1) {  fout << "3-6  " << " & ";}
+      if(i1==2) {  fout << "6-9  " << " & ";}
+      if(i1==3) {  fout << "9-12 " << " & ";}
+      if(i1==4) {  fout << "12-15" << " & ";}
+      if(i1==5) {  fout << "15-18" << " & ";}
+      if(i1==6) {  fout << "18-21" << " & ";}
+      if(i1==7) {  fout << "21-24" << " & ";}
+      if(i1==8) {  fout << "24-27" << " & ";}
+      if(i1==9) {  fout << "27-30" << " & ";}
+      //fout.width(13);
+      fout << optpureHFpfmu[i2]->GetBinContent(i1+1) << " $\\pm$ ";
+      //fout.width(12);
+      fout << optpureHFpfmu[i2]->GetBinError(i1+1) << " & ";
+      //fout.width(13);
+      fout << effpfMu[0][i2][i1]->GetBinContent(optpureHFpfmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[0][i2][i1]->GetBinError(optpureHFpfmu[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effpfMu[2][i2][i1]->GetBinContent(optpureHFpfmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[2][i2][i1]->GetBinError(optpureHFpfmu[i2]->GetBinContent(i1+1)*2) << " & ";
+      //fout.width(13);
+      fout <<1-effpfMu[1][i2][i1]->GetBinContent(optpureHFpfmu[i2]->GetBinContent(i1+1)*2) << " $\\pm$ ";
+      //fout.width(12);
+      fout << effpfMu[1][i2][i1]->GetBinError(optpureHFpfmu[i2]->GetBinContent(i1+1)*2) << " \\\\";
+      fout << endl;
+    }
+  }
+
+  fout.close(); 
+
+  ////writing the outputs
+  f2->cd();
+
+  promptIso->Write();
+  fakeIso->Write();
+  HFIso->Write();
+  promptIsomu->Write();
+  fakeIsomu->Write();
+  HFIsomu->Write();
+  nel->Write();
+  nmu->Write();
+  MCel->Write();
+  MCmu->Write();
+  MCpfel->Write();
+  MCpfmu->Write();
+
+  pfnmu->Write();
+  pfnel->Write();
+
+  signalpfel->Write();
+  signalpfmu->Write();
+  backpfel->Write();
+  backpfmu->Write();
+
+  for(int i1 = 0; i1 < 3; i1++){
+    for (int i2=0; i2<4; i2++){
+      for (int i3=0; i3<10; i3++){
+	recEl[i1][i2][i3]->Write();
+	recMu[i1][i2][i3]->Write();
+	effEl[i1][i2][i3]->Write();
+	effMu[i1][i2][i3]->Write();
+	recpfEl[i1][i2][i3]->Write();
+	recpfMu[i1][i2][i3]->Write();
+	effpfEl[i1][i2][i3]->Write();
+	effpfMu[i1][i2][i3]->Write();
+      }
+      recEls[i1][i2]->Write();
+      recMus[i1][i2]->Write();
+      effEls[i1][i2]->Write();
+      effMus[i1][i2]->Write();
+      recpfEls[i1][i2]->Write();
+      recpfMus[i1][i2]->Write();
+      effpfEls[i1][i2]->Write();
+      effpfMus[i1][i2]->Write();
+    }
+  }
+  for(int i1 = 0; i1 < 2; i1++){
+    for (int i2=0; i2<2; i2++){
+      for (int i3=0; i3<4; i3++){
+	rejh[i1][i2][i3]->Write();
+	rejpfh[i1][i2][i3]->Write();
+      }
+    }
+  }
+  for (int i3=0; i3<4; i3++){
+    if(i3 < 3){
+      CombIsovsPtMu[i3]->Write();
+      CombIsovsPtEl[i3]->Write();
+      CombIsovsPtpfMu[i3]->Write();
+      CombIsovsPtpfEl[i3]->Write();
+    }
+    optEffEl[i3]->Write();
+    optEffMu[i3]->Write();
+    optEffpfEl[i3]->Write();
+    optEffpfMu[i3]->Write();
+    optpureHFel[i3]->Write();
+    optpureHFmu[i3]->Write();
+    optpurefakeel[i3]->Write();
+    optpurefakemu[i3]->Write();
+    optoptimalel[i3]->Write();
+    optoptimalmu[i3]->Write();
+    optpureHFpfel[i3]->Write();
+    optpureHFpfmu[i3]->Write();
+    optpurefakepfel[i3]->Write();
+    optpurefakepfmu[i3]->Write();
+    optoptimalpfel[i3]->Write();
+    optoptimalpfmu[i3]->Write();
+  }
+  f2->Close();
+}
+
+float IsolOpt::dzero(float d0, float phi){
+  return d0+0.0322* cos(phi);
+}
+
+IsolOpt::IsolOpt(TTree *tree)
+{
+  // if parameter tree is not specified (or zero), connect the file
+  // used to generate this class and read the Tree.
+  if (tree == 0) {
+    TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../prov1a.root");
+    if (!f) {
+      f = new TFile("/Users/aocampor/Desktop/PAT_vs_PF/root_files/nutples/LM0_pfandpat_ntuple.root");
+      f->cd("/Users/aocampor/Desktop/PAT_vs_PF/root_files/nutples/LM0_pfandpat_ntuple.root:/demo");
+    }
+    tree = (TTree*)gDirectory->Get("allData");
+
+  }
+  Init(tree);
+  f2=new TFile("bbb.root","recreate");
+}
+
+IsolOpt::~IsolOpt()
+{
+  if (!fChain) return;
+  delete fChain->GetCurrentFile();
+}
+
+Int_t IsolOpt::GetEntry(Long64_t entry)
+{
+  // Read contents of entry.
+  if (!fChain) return 0;
+  return fChain->GetEntry(entry);
+}
+Long64_t IsolOpt::LoadTree(Long64_t entry)
+{
+  // Set the environment to read one entry 
+  if (!fChain) return -5;
+  Long64_t centry = fChain->LoadTree(entry);
+  if (centry < 0) return centry;
+  if (!fChain->InheritsFrom(TChain::Class()))  return centry;
+  TChain *chain = (TChain*)fChain;
+  if (chain->GetTreeNumber() != fCurrent) {
+    fCurrent = chain->GetTreeNumber();
+    Notify();
+  }
+  return centry;
+}
+
+void IsolOpt::Init(TTree *tree)
+{
+  // The Init() function is called when the selector needs to initialize
+  // a new tree or chain. Typically here the branch addresses and branch
+  // pointers of the tree will be set.
+  // It is normally not necessary to make changes to the generated                                                                        
+  // code, but the routine can be extended by the user if needed.
+  // Init() will be called many times when running on PROOF  
+  // (once per file to be processed).
+  // Set branch addresses and branch pointers 
+  if (!tree) return;
+  fChain = tree;
+  fCurrent = -1;
+  fChain->SetMakeClass(1);
+  fChain->SetBranchAddress("Nel", &Nel, &b_Nel);
+  fChain->SetBranchAddress("Nmu", &Nmu, &b_Nmu);
+
+  fChain->SetBranchAddress("pfNel", &pfNel, &b_pfNel);
+  fChain->SetBranchAddress("Npfmu", &Npfmu, &b_Npfmu);
+  
+  fChain->SetBranchAddress("elPt", elPt, &b_elPt);
+  fChain->SetBranchAddress("elPhi", elPhi, &b_elPhi);
+  fChain->SetBranchAddress("elEta", elEta, &b_elEta);
+
+  fChain->SetBranchAddress("pfelPt", pfelPt, &b_pfelPt);
+  fChain->SetBranchAddress("pfelPhi", pfelPhi, &b_pfelPhi);
+  fChain->SetBranchAddress("pfelEta", pfelEta, &b_pfelEta);
+  fChain->SetBranchAddress("pfelhoe", pfelhoe, &b_pfelhoe);
+  
+  fChain->SetBranchAddress("elIsoGamma", elIsoGamma, &b_elIsoGamma);
+  fChain->SetBranchAddress("elIsoNHad", elIsoNHad, &b_elIsoNHad);
+  fChain->SetBranchAddress("elIsoChHad", elIsoChHad, &b_elIsoChHad);
+  
+  fChain->SetBranchAddress("elIsotrack", elIsotrack, &b_elIsotrack);
+  fChain->SetBranchAddress("elIsoHcal", elIsoHcal, &b_elIsoHcal);
+  fChain->SetBranchAddress("elIsoEcal", elIsoEcal, &b_elIsoEcal);
+
+  fChain->SetBranchAddress("elDrMuon", elDrMuon, &b_elDrMuon);
+
+  fChain->SetBranchAddress("pfelDrMuon", pfelDrMuon, &b_pfelDrMuon);
+ 
+  fChain->SetBranchAddress("elIdLoose", elIdLoose, &b_elIdLoose);
+  fChain->SetBranchAddress("elIdTight", elIdTight, &b_elIdTight);
+  fChain->SetBranchAddress("elIdRobLoose", elIdRobLoose, &b_elIdRobLoose);
+  fChain->SetBranchAddress("elIdRobTight", elIdRobTight, &b_elIdRobTight);
+  //  fChain->SetBranchAddress("elIdPf", elIdPf, &b_elIdPf);
+  fChain->SetBranchAddress("elIdPfpi", pfelIdPfpi, &b_pfelIdPfpi);
+
+  fChain->SetBranchAddress("pfelIdLoose", pfelIdLoose, &b_pfelIdLoose);
+  fChain->SetBranchAddress("pfelIdTight", pfelIdTight, &b_pfelIdTight);
+  fChain->SetBranchAddress("pfelIdRobLoose", pfelIdRobLoose, &b_pfelIdRobLoose);
+  fChain->SetBranchAddress("pfelIdRobTight", pfelIdRobTight, &b_pfelIdRobTight);
+  
+  fChain->SetBranchAddress("elGsfCharge", elGsfCharge, &b_elGsfCharge);
+  fChain->SetBranchAddress("elKfCharge", elKfCharge, &b_elKfCharge);
+
+  fChain->SetBranchAddress("pfelGsfCharge", pfelGsfCharge, &b_pfelGsfCharge);
+  fChain->SetBranchAddress("pfelKfCharge", pfelKfCharge, &b_pfelKfCharge);
+  
+  fChain->SetBranchAddress("elD0", elD0, &b_elD0);
+  fChain->SetBranchAddress("pfelD0", pfelD0, &b_pfelD0);
+  fChain->SetBranchAddress("elMC", elMC, &b_elMC);
+  fChain->SetBranchAddress("pfelMC", pfelMC, &b_pfelMC);
+
+  fChain->SetBranchAddress("muPt", muPt, &b_muPt);
+  fChain->SetBranchAddress("muPhi", muPhi, &b_muPhi);
+  fChain->SetBranchAddress("muEta", muEta, &b_muEta);
+
+  fChain->SetBranchAddress("pfmuPt", pfmuPt, &b_pfmuPt);
+  fChain->SetBranchAddress("pfmuPhi", pfmuPhi, &b_pfmuPhi);
+  fChain->SetBranchAddress("pfmuEta", pfmuEta, &b_pfmuEta);
+  
+  fChain->SetBranchAddress("muIsoGamma", muIsoGamma, &b_muIsoGamma);
+  fChain->SetBranchAddress("muIsoNHad", muIsoNHad, &b_muIsoNHad);
+  fChain->SetBranchAddress("muIsoChHad", muIsoChHad, &b_muIsoChHad);
+
+  fChain->SetBranchAddress("muIsotrack", muIsotrack, &b_muIsotrack);
+  fChain->SetBranchAddress("muIsoHcal", muIsoHcal, &b_muIsoHcal);
+  fChain->SetBranchAddress("muIsoEcal", muIsoEcal, &b_muIsoEcal);
+
+  fChain->SetBranchAddress("muDrElec", muDrElec, &b_muDrElec);
+
+  fChain->SetBranchAddress("pfmuDrElec", pfmuDrElec, &b_pfmuDrElec);
+  
+  fChain->SetBranchAddress("muIdGlobalTight", muIdGlobalTight, &b_muIdGlobalTight);
+  fChain->SetBranchAddress("muIsGlobal", muIsGlobal, &b_muIsGlobal);
+
+  fChain->SetBranchAddress("pfmuIdGlobalTight", pfmuIdGlobalTight, &b_pfmuIdGlobalTight);
+  fChain->SetBranchAddress("pfmuIsGlobal", pfmuIsGlobal, &b_pfmuIsGlobal);
+  
+  fChain->SetBranchAddress("muCharge", muCharge, &b_muCharge);
+  fChain->SetBranchAddress("muD0", muD0, &b_muD0);
+  fChain->SetBranchAddress("muTkHits", muTkHits, &b_muTkHits);
+  fChain->SetBranchAddress("muGlobChi2", muGlobChi2, &b_muGlobChi2);
+
+  fChain->SetBranchAddress("pfmuCharge", pfmuCharge, &b_pfmuCharge);
+  fChain->SetBranchAddress("pfmuD0", pfmuD0, &b_pfmuD0);
+  fChain->SetBranchAddress("pfmuTkHits", pfmuTkHits, &b_pfmuTkHits);
+  fChain->SetBranchAddress("pfmuGlobChi2", pfmuGlobChi2, &b_pfmuGlobChi2);
+
+  fChain->SetBranchAddress("muMC", muMC, &b_muMC);
+  fChain->SetBranchAddress("pfmuMC", pfmuMC, &b_pfmuMC);
+  Notify();
+}
+
+Bool_t IsolOpt::Notify()
+{
+  // The Notify() function is called when a new file is opened. This 
+  // can be either for a new TTree in a TChain or when when a new TTree
+  // is started when using PROOF. It is normally not necessary to make changes
+  // to the generated code, but the routine can be extended by the
+  // user if needed. The return value is currently not used.
+  return kTRUE;
+}
+
+void IsolOpt::Show(Long64_t entry)
+{
+  // Print contents of entry.                               
+  // If entry is not specified, print current entry 
+  if (!fChain) return;
+  fChain->Show(entry);
+}
+/*
+Int_t IsolOpt::Cut(Long64_t entry)
+{
+  // This function may be called from Loop.                                                                                                                                                                        
+  // returns  1 if entry is accepted.                                                                                                                                                                              
+  // returns -1 otherwise.                                                                                                                                                                                         
+  return 1;
+}
+*/

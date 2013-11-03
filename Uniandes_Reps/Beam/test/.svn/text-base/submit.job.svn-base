@@ -1,0 +1,13 @@
+#!/bin/tcsh
+#set echo on
+
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+set home = ${HOME}/scratch0/CMSSW_2_1_7/src/UserCode/Beam/
+cd ${home}
+cmsenv
+
+cmsRun beam_cfg.py
+
+exit

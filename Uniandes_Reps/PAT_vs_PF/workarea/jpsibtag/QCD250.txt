@@ -1,0 +1,217 @@
+
+Processing analysis_macro_leptons.CC...
+this point0
+ FCN=7016.84 FROM MIGRAD    STATUS=CONVERGED      83 CALLS          84 TOTAL
+                     EDM=3.65608e-11    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     4.85868e+03   1.39614e+01   4.41386e-01   1.56586e-07
+   2  Mean        -1.30992e+01   4.14234e-02   1.50503e-03  -1.27712e-04
+   3  Sigma        1.65644e+01   3.02049e-02   1.71644e-05  -1.36562e-02
+Total number of entries: 209786
+Statistics of 100 pb-1.
+
+
+
+Single Leptons selection............
+
+
+Single Lepton Electrons!!!!!!!!!!!!!!!!!
+
+Standard Reco Jets and MET and Standard Reco leptons.
+Single Lepton Electron vj + 10: 0
+Single Lepton Electron opt 10: 0
+Single Lepton Electron opt 5: 0
+Single Lepton Electron opt 2: 0
+Standard Reco Jets and MET and Particle Flow leptons.
+Single Lepton Electron vj + 10: 0
+Single Lepton Electron opt 10: 0
+Single Lepton Electron opt 5: 0
+Single Lepton Electron opt 2: 0
+Particle Flow Jets and MET and Standard Reco leptons.
+Single Lepton Electron vj + 10: 0
+Single Lepton Electron opt 10: 0
+Single Lepton Electron opt 5: 0
+Single Lepton Electron opt 2: 0
+Particle Flow Jets and MET and Particle Flow leptons.
+Single Lepton Electron vj + 10: 0
+Single Lepton Electron opt 10: 0
+Single Lepton Electron opt 5: 0
+Single Lepton Electron opt 2: 0
+
+
+Single Lepton Muons!!!!!!!!!!!!!!!!!
+
+Standard Reco Jets and MET and Standard Reco leptons.
+Single Lepton Muon vj + 10: 0
+Single Lepton Muon opt 10: 0
+Single Lepton Muon opt 5: 0
+Single Lepton Muon opt 2: 0
+Standard Reco Jets and MET and Particle Flow leptons.
+Single Lepton Muon vj + 10: 0
+Single Lepton Muon opt 10: 0
+Single Lepton Muon opt 5: 0
+Single Lepton Muon opt 2: 0
+Particle Flow Jets and MET and Standard Reco leptons.
+Single Lepton Muon vj + 10: 0
+Single Lepton Muon opt 10: 0
+Single Lepton Muon opt 5: 0
+Single Lepton Muon opt 2: 0
+Particle Flow Jets and MET and Particle Flow leptons.
+Single Lepton Muon vj + 10: 0
+Single Lepton Muon opt 10: 0
+Single Lepton Muon opt 5: 0
+Single Lepton Muon opt 2: 0
+
+
+
+Double Leptons Same Sign selection............
+
+
+Two Electrons!!!!!!!!!!!!!!!!!
+
+Standard Reco Jets and MET and Standard Reco leptons.
+Double Lepton Electron vj + 10: 0
+Double Lepton Electron opt 10: 0
+Double Lepton Electron opt 5: 0
+Double Lepton Electron opt 2: 0
+Standard Reco Jets and MET and Particle Flow leptons.
+Double Lepton Electron vj + 10: 0
+Double Lepton Electron opt 10: 0
+Double Lepton Electron opt 5: 0
+Double Lepton Electron opt 2: 0
+Particle Flow Jets and MET and Standard Reco leptons.
+Double Lepton Electron vj + 10: 0
+Double Lepton Electron opt 10: 0
+Double Lepton Electron opt 5: 0
+Double Lepton Electron opt 2: 0
+Particle Flow Jets and MET and Particle Flow leptons.
+Double Lepton Electron vj + 10: 0
+Double Lepton Electron opt 10: 0
+Double Lepton Electron opt 5: 0
+Double Lepton Electron opt 2: 0
+
+
+Two Muons!!!!!!!!!!!!!!!!!
+
+Standard Reco Jets and MET and Standard Reco leptons.
+Double Lepton Muon vj + 10: 0
+Double Lepton Muon opt 10: 0
+Double Lepton Muon opt 5: 0
+Double Lepton Muon opt 2: 0
+Standard Reco Jets and MET and Particle Flow leptons.
+Double Lepton Muon vj + 10: 0
+Double Lepton Muon opt 10: 0
+Double Lepton Muon opt 5: 0
+Double Lepton Muon opt 2: 0
+Particle Flow Jets and MET and Standard Reco leptons.
+Double Lepton Muon vj + 10: 0
+Double Lepton Muon opt 10: 0
+Double Lepton Muon opt 5: 0
+Double Lepton Muon opt 2: 0
+Particle Flow Jets and MET and Particle Flow leptons.
+Double Lepton Muon vj + 10: 0
+Double Lepton Muon opt 10: 0
+Double Lepton Muon opt 5: 0
+Double Lepton Muon opt 2: 0
+
+
+Electron and Muon!!!!!!!!!!!!!!!!!
+
+Standard Reco Jets and MET and Standard Reco leptons.
+Double Lepton Electron and Muon vj + 10: 0
+Double Lepton Electron and Muon opt 10: 0
+Double Lepton Electron and Muon opt 5: 0
+Double Lepton Electron and Muon opt 2: 0
+Standard Reco Jets and MET and Particle Flow leptons.
+Double Lepton Electron and Muon vj + 10: 0
+Double Lepton Electron and Muon opt 10: 0
+Double Lepton Electron and Muon opt 5: 0
+Double Lepton Electron and Muon opt 2: 0
+Particle Flow Jets and MET and Standard Reco leptons.
+Double Lepton Electron and Muon vj + 10: 0
+Double Lepton Electron and Muon opt 10: 0
+Double Lepton Electron and Muon opt 5: 0
+Double Lepton Electron and Muon opt 2: 0
+Particle Flow Jets and MET and Particle Flow leptons.
+Double Lepton Electron and Muon vj + 10: 0
+Double Lepton Electron and Muon opt 10: 0
+Double Lepton Electron and Muon opt 5: 0
+Double Lepton Electron and Muon opt 2: 0
+
+
+
+Double Leptons Opposite Sign selection............
+
+
+Two Electrons!!!!!!!!!!!!!!!!!
+
+Standard Reco Jets and MET and Standard Reco leptons.
+Double Lepton Electron vj + 10: 0
+Double Lepton Electron opt 10: 0
+Double Lepton Electron opt 5: 0
+Double Lepton Electron opt 2: 0
+Standard Reco Jets and MET and Particle Flow leptons.
+Double Lepton Electron vj + 10: 0
+Double Lepton Electron opt 10: 0
+Double Lepton Electron opt 5: 0
+Double Lepton Electron opt 2: 0
+Particle Flow Jets and MET and Standard Reco leptons.
+Double Lepton Electron vj + 10: 0
+Double Lepton Electron opt 10: 0
+Double Lepton Electron opt 5: 0
+Double Lepton Electron opt 2: 0
+Particle Flow Jets and MET and Particle Flow leptons.
+Double Lepton Electron vj + 10: 0
+Double Lepton Electron opt 10: 0
+Double Lepton Electron opt 5: 0
+Double Lepton Electron opt 2: 0
+
+
+Two Muons!!!!!!!!!!!!!!!!!
+
+Standard Reco Jets and MET and Standard Reco leptons.
+Double Lepton Muon vj + 10: 0
+Double Lepton Muon opt 10: 0
+Double Lepton Muon opt 5: 0
+Double Lepton Muon opt 2: 0
+Standard Reco Jets and MET and Particle Flow leptons.
+Double Lepton Muon vj + 10: 0
+Double Lepton Muon opt 10: 0
+Double Lepton Muon opt 5: 0
+Double Lepton Muon opt 2: 0
+Particle Flow Jets and MET and Standard Reco leptons.
+Double Lepton Muon vj + 10: 0
+Double Lepton Muon opt 10: 0
+Double Lepton Muon opt 5: 0
+Double Lepton Muon opt 2: 0
+Particle Flow Jets and MET and Particle Flow leptons.
+Double Lepton Muon vj + 10: 0
+Double Lepton Muon opt 10: 0
+Double Lepton Muon opt 5: 0
+Double Lepton Muon opt 2: 0
+
+
+Electron and Muon!!!!!!!!!!!!!!!!!
+
+Standard Reco Jets and MET and Standard Reco leptons.
+Double Lepton Electron and Muon vj + 10: 0
+Double Lepton Electron and Muon opt 10: 0
+Double Lepton Electron and Muon opt 5: 0
+Double Lepton Electron and Muon opt 2: 0
+Standard Reco Jets and MET and Particle Flow leptons.
+Double Lepton Electron and Muon vj + 10: 0
+Double Lepton Electron and Muon opt 10: 0
+Double Lepton Electron and Muon opt 5: 0
+Double Lepton Electron and Muon opt 2: 0
+Particle Flow Jets and MET and Standard Reco leptons.
+Double Lepton Electron and Muon vj + 10: 0
+Double Lepton Electron and Muon opt 10: 0
+Double Lepton Electron and Muon opt 5: 0
+Double Lepton Electron and Muon opt 2: 0
+Particle Flow Jets and MET and Particle Flow leptons.
+Double Lepton Electron and Muon vj + 10: 0
+Double Lepton Electron and Muon opt 10: 0
+Double Lepton Electron and Muon opt 5: 0
+Double Lepton Electron and Muon opt 2: 0
+

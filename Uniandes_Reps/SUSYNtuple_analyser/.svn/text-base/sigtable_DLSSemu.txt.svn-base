@@ -1,0 +1,18 @@
+Significance table for DLSSemu.
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root        2292.37 +- 1620.95
+../root/OUT/Salida_QCD_Pt80.root        2361.78 +- 260.815
+../root/OUT/Salida_QCD_Pt170.root        1652.78 +- 36.4776
+../root/OUT/Salida_QCD_Pt300.root        407.999 +- 3.95078
+../root/OUT/Salida_QCD_Pt470.root        65.9881 +- 0.5185
+../root/OUT/Salida_QCD_Pt800.root        3.52757 +- 0.0188013
+../root/OUT/Salida_QCD_Pt1400.root      0.0316103 +- 0.000177738
+../root/OUT/Salida_TTbar_temp.root        72.0078 +- 1.15768
+../root/OUT/Salida_WJets_temp.root        51.3589 +- 22.9684
+../root/OUT/Salida_ZJets_temp.root        2.64036 +- 0.732303
+../root/OUT/Salida_ww_pat_1.root         1.2963 +- 1.2963
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root        87.0464 +- 1.12546
+Significancy                             1.04702
+QCD Significancy                           1.0568

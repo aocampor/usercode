@@ -1,0 +1,18 @@
+Significance table for PFDLSSetau.
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root        57.6043 +- 40.7324
+../root/OUT/Salida_QCD_Pt170.root        9.66079 +- 2.78883
+../root/OUT/Salida_QCD_Pt300.root        2.48701 +- 0.308475
+../root/OUT/Salida_QCD_Pt470.root       0.362595 +- 0.038435
+../root/OUT/Salida_QCD_Pt800.root      0.0188371 +- 0.00137383
+../root/OUT/Salida_QCD_Pt1400.root    0.000151863 +- 1.23177e-05
+../root/OUT/Salida_TTbar_temp.root        1.17255 +- 0.147727
+../root/OUT/Salida_WJets_temp.root              0 +- 0
+../root/OUT/Salida_ZJets_temp.root       0.203104 +- 0.203104
+../root/OUT/Salida_ww_pat_1.root              0 +- 0
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root        2.53196 +- 0.191947
+Significancy                            0.299416
+QCD Significancy                         0.302338

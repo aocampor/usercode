@@ -1,0 +1,8 @@
+#!/bin/sh
+CLIDBS=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/cruzetDQM/CMSSW_2_0_6/src/Configuration/GlobalRuns/data/aSearchCLI
+echo replace PoolSource.fileNames = {
+
+$CLIDBS --input "find file where dataset like *Cosmics/CRUZET2_CRUZET2_V1_v2/RECO* and run = $1" --limit=0 | grep root | awk '{print a"\""$1"\"";  a=",";}'
+
+echo "}"
+

@@ -1,0 +1,18 @@
+Significance table for Events_after_alphat_re_and_PFSL_cuts
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root              0 +- 0
+../root/OUT/Salida_QCD_Pt170.root          7.246 +- 2.415
+../root/OUT/Salida_QCD_Pt300.root           1.99 +- 0.2759
+../root/OUT/Salida_QCD_Pt470.root         0.5174 +- 0.04591
+../root/OUT/Salida_QCD_Pt800.root        0.03056 +- 0.00175
+../root/OUT/Salida_QCD_Pt1400.root      0.0003187 +- 1.784e-05
+../root/OUT/Salida_TTbar_temp.root          43.96 +- 0.9045
+../root/OUT/Salida_WJets_temp.root          123.3 +- 35.58
+../root/OUT/Salida_ZJets_temp.root          1.828 +- 0.6093
+../root/OUT/Salida_ww_pat_1.root          1.296 +- 1.296
+../root/OUT/Salida_wz_pat_1.root         0.5556 +- 0.3928
+../root/OUT/Salida_zz_pat_1.root         0.4379 +- 0.3096
+../root/OUT/Salida_LM0_temp.root          60.68 +- 0.9397
+Significancy                               4.509
+QCD Significancy                             19.4

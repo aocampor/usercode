@@ -1,0 +1,18 @@
+Significance table for DLSSetau
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt15.root              0 +- 0
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt30.root              0 +- 0
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt80.root          145.6 +- 37.6
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt170.root           96.1 +- 5.122
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt300.root          10.82 +- 0.3743
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt470.root          1.098 +- 0.03888
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt800.root        0.05007 +- 0.001303
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt1400.root      0.0004257 +- 1.168e-05
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_TTbar_temp.root           6.91 +- 0.1629
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_WJets_temp.root          7.476 +- 0.7795
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_ZJets_temp.root          1.048 +- 0.2802
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_ww_pat_1.root         0.1156 +- 0.02985
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_wz_pat_1.root        0.05417 +- 0.01277
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_zz_pat_1.root       0.009032 +- 0.003011
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_LM5_temp.root         0.1138 +- 0.002741
+Significancy                            0.006938
+QCD Significancy                         0.007148

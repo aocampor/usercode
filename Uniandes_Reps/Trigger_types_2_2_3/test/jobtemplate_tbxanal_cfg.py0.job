@@ -1,0 +1,42 @@
+#!/bin/tcsh -x
+
+### Set CMSSW environment ###
+
+
+## generic ##
+# if ( ! ${?VO_CMS_SW_DIR} ) then
+#   setenv VO_CMS_SW_DIR /afs/cern.ch/cms/sw
+# endif
+source $VO_CMS_SW_DIR/cmsset_default.csh
+source /afs/cern.ch/cms/caf/setup.csh
+
+## CVS ##
+# alias cmscvsroot 'source $CMS_PATH/utils/cmscvsroot.csh'
+# alias project 'source $CMS_PATH/utils/projch.csh'
+# cmscvsroot CMSSW
+
+set me = `whoami`
+project CMSSW
+cd ${HOME}/CMSSW_2_1_9/src/
+eval `scramv1 runtime -csh`
+
+cd UserCode/Trigger/test/
+#mkdir /tmp/${me}/69046
+
+#cp $HOME/scratch0/69046/python/tbxanal_cfg.py_0.py /tmp/${me}/69046
+#cd /tmp/${me}/69046
+#chmod a+x tbxanal_cfg.py_0.py 
+
+EdmPluginRefresh
+setenv STAGE_SVCCLASS cmscaf
+
+#rm tbxanal_cfg.py_0.py.out
+cmsRun trigger_cfg.py 
+#rfmkdir /castor/cern.ch/user/a/aocampor/NOISE/69046/
+#rfmkdir /castor/cern.ch/cms/store/caf/user/aocampor/NOISE/69046/
+#rfcp tbxanal_cfg.py_0.py.out /castor/cern.ch/user/a/aocampor/NOISE/69046/
+#cmsStageOut tbxanal_cfg.py_0.py.out /store/caf/user/aocampor/NOISE/69046/tbxanal_cfg.py_0.py.out
+#rfcp RPC_0.root /castor/cern.ch/user/a/aocampor/NOISE/69046/
+#cmsStageOut RPC_0.root /store/caf/user/aocampor/NOISE/69046/RPC_0.root
+
+exit 0

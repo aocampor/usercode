@@ -1,0 +1,78 @@
+process RPCEff = {
+untracked PSet maxEvents = {untracked int32 input = -1}
+  source = NewEventStreamFileReader {
+	untracked vstring fileNames ={
+	cazzo
+	}
+	int32 max_event_size = 2000000
+	int32 max_queue_depth = 5
+	}
+
+ include "CondCore/DBCommon/data/CondDBSetup.cfi"
+ include "EventFilter/RPCRawToDigi/data/RPCFrontierCabling.cfi"
+
+
+ #################    Raw To Digi:   #########################
+ module rpcunpacker = RPCUnpackingModule{
+   untracked InputTag InputLabel = source
+ }
+
+
+   include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+   include "Geometry/RPCGeometry/data/rpcGeometry.cfi"
+   include "Geometry/CommonDetUnit/data/globalTrackingGeometry.cfi"
+   include "RecoMuon/DetLayers/data/muonDetLayerGeometry.cfi"
+   include "Geometry/MuonNumbering/data/muonNumberingInitialization.cfi"
+   include "Geometry/MuonCommonData/data/muonIdealGeometryXML.cfi"
+
+
+   # The module for 1D RPC RecHit building
+   include "RecoLocalMuon/RPCRecHit/data/rpcRecHits.cfi"
+   replace rpcRecHits.rpcDigiLabel = rpcunpacker
+
+
+   module rpclocal = RPCLocalMonitor{
+	#Cut on residuals in strips
+	double EfficiencyCut = 2.5
+	untracked int32 FiredPlanes = piani
+	untracked int32 wheel = 0	
+	untracked string recLabel = "rpcRecHits"
+	untracked string digiLabel = "rpcunpacker"
+	untracked int32 save = 0
+        InputTag gmtSource = gtDigis::
+	untracked string tableName =  "tableEfficiency_RUN.txt"
+	untracked string rejectedName =  "rejected_RUN.txt"
+
+	untracked bool useDTTrig = false
+	untracked string EffRootFileName = "file1"
+	untracked string GlobalEffFile = "file2"
+   }
+
+ #################    Data Quality Monitoring:   #########################
+        include "DQM/RPCMonitorDigi/data/RPCDigiMonitoring.cfi"
+	replace rpcdigidqm.DigiEventsInterval = 100
+	replace rpcdigidqm.DigiDQMSaveRootFile =true
+	replace rpcdigidqm.dqmshifter =true   	    	
+	replace rpcdigidqm.dqmexpert =true		
+	replace rpcdigidqm.dqmsuperexpert =true    	
+	replace rpcdigidqm.RootFileNameDigi="dqm_RUN.root"
+
+  include "DQMServices/Core/data/DQM.cfg"
+	replace DQM.collectorHost = "myhost"
+	replace DQM.collectorPort = 9090
+	replace DQM.debug = false
+
+  service = ModuleWebRegistry {}
+  service = LockService {untracked vstring labels = {"source"} }
+
+
+     #################   Path   #########################
+     module out = PoolOutputModule {
+             untracked string fileName ="RPC_recHits.root"
+     }
+
+     path p = {rpcunpacker,rpcRecHits,rpcdigidqm,rpclocal}
+   
+    #endpath e = {out }
+}
+

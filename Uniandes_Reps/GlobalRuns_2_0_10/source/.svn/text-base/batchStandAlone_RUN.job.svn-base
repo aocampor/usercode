@@ -1,0 +1,28 @@
+#!/bin/tcsh
+set casa = `pwd`
+echo $casa
+
+set CASTOR_HOME_A = "/castor/cern.ch/user/c/ccmuon/RPC/GlobalRuns"
+
+cd  ~/scratch0/CMSVER/src/GlobalRuns/GRN/PREFIX/RUN
+
+cp input $casa
+cd $casa
+
+
+cd ~/scratch0/CMSVER/src
+eval `scramv1 runtime -csh`
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+project CMSSW
+cd $casa
+
+cmsRun input>& input.log
+
+rfcp file1 $CASTOR_HOME_A/GRN/PREFIX/RUN/StandAlone
+rfcp file2 $CASTOR_HOME_A/GRN/PREFIX/RUN/StandAlone
+
+echo "Data Unpacker status" $status
+
+
+exit 0

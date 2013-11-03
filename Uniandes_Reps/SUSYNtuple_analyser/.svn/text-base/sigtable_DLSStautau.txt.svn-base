@@ -1,0 +1,18 @@
+Significance table for DLSStautau.
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root              0 +- 0
+../root/OUT/Salida_QCD_Pt170.root        15.2963 +- 3.5092
+../root/OUT/Salida_QCD_Pt300.root        1.91308 +- 0.27055
+../root/OUT/Salida_QCD_Pt470.root       0.142593 +- 0.0241027
+../root/OUT/Salida_QCD_Pt800.root     0.00310611 +- 0.000557874
+../root/OUT/Salida_QCD_Pt1400.root    2.39783e-05 +- 4.89456e-06
+../root/OUT/Salida_TTbar_temp.root       0.409461 +- 0.0872974
+../root/OUT/Salida_WJets_temp.root              0 +- 0
+../root/OUT/Salida_ZJets_temp.root              0 +- 0
+../root/OUT/Salida_ww_pat_1.root              0 +- 0
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root        0.59661 +- 0.0931749
+Significancy                            0.141551
+QCD Significancy                         0.143211

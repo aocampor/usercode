@@ -1,0 +1,20 @@
+#!/bin/tcsh
+#set echo on
+
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+set casa = `pwd`
+
+set a1 = `cat lista.txt` 
+
+foreach fls ( $a1[*] )
+	set label =  `echo $fls | awk -F"-" '{print $7}' | awk -F"." '{print $1}'`
+	eval `scramv1 ru -csh`
+	cp StandAloneEfficiency_RUN.cfg jobs/StandAloneEfficiency_${label}.cfg
+	
+	replace "la_joda" "${fls}" -- jobs/StandAloneEfficiency_${label}.cfg
+	replace "file1" "MCEffRoot_${label}.root" -- jobs/StandAloneEfficiency_${label}.cfg
+	replace "file2" "MCGlobEffRoot_${label}.root" -- jobs/StandAloneEfficiency_${label}.cfg
+	replace "piani" "5" -- jobs/StandAloneEfficiency_${label}.cfg
+ 
+end 

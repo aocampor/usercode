@@ -1,0 +1,18 @@
+Significance table for Events_after_alphat_njets_re_and_PFSL_cuts
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt15.root              0 +- 0
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt30.root              0 +- 0
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt80.root              0 +- 0
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt170.root          2.184 +- 0.7722
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt300.root         0.5052 +- 0.08089
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt470.root         0.1486 +- 0.0143
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt800.root        0.00865 +- 0.0005417
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_QCD_Pt1400.root      9.456e-05 +- 5.505e-06
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_TTbar_temp.root          11.71 +- 0.212
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_WJets_temp.root          11.54 +- 0.9684
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_ZJets_temp.root         0.4493 +- 0.1834
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_ww_pat_1.root         0.3006 +- 0.04814
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_wz_pat_1.root         0.1444 +- 0.02085
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_zz_pat_1.root        0.06322 +- 0.007965
+/Users/aocampor/Desktop/New_Alphat/root/OUT/Salida_LM10_temp.root        0.03248 +- 0.0005077
+Significancy                            0.006245
+QCD Significancy                          0.01925

@@ -1,0 +1,40 @@
+LM0                      No             
+LM1                      No 
+QCD 250 y 500            No /QCD_Pt250to500-madgraph/Summer09-MC_31X_V3_7TeV_preproduction-v1/GEN-SIM-RECO
+QCD 500 1000             No /QCD_Pt500to1000-madgraph/Summer09-MC_31X_V3_7TeV_preproduction-v1/GEN-SIM-RECO
+QCD 1000 inf             No /QCD_Pt1000toInf-madgraph/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+bbjets 250 500  Not for 31X 
+bbjets 500 1000 Not for 31X
+bbjets 1000 inf Not for 31X
+Wjets                   yes wmunu
+ttjets                  yes without jets
+
+QCD 80 170              yes QCD enriched different pt ranges  
+QCD 170 300
+QCD 300 470
+QCD 470 800
+QCD 800 1400
+QCD 1400 2200
+QCD 2200 3000
+QCD 3000 up
+z+jets	               yes
+WW                     No 
+/WWtoTauTau-mcatnlo/Summer09-MC_31X_V3_7TeV-v2/GEN-SIM-RECO
+/WWtoTauPlusMuMinus-mcatnlo/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+/WWtoTauPlusEMinus-mcatnlo/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+/WWtoMuPlusTauMinus-mcatnlo/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+/WWtoMuPlusEMinus-mcatnlo/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+/WWtoMuMu-mcatnlo/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+/WWtoEPlusTauMinus-mcatnlo/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+/WWtoEPlusMuMinus-mcatnlo/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+/WWtoEE-mcatnlo/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+/WW/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+ZZ                     No 
+/ZZ/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+WZ                     No 
+/WZ/Summer09-MC_31X_V3_7TeV-v1/GEN-SIM-RECO
+WW(same sign DPS)
+
+
+
+Datasets in bari

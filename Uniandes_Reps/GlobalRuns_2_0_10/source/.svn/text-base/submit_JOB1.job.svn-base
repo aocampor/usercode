@@ -1,0 +1,29 @@
+#!/bin/tcsh
+#set echo on
+
+set casa = "casa_t" 
+set prefix = "prefix_t"
+set Run = "run_t"
+set cas = "cas_t"
+set me = `whoami`
+
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+cd $casa
+
+project CMSSW
+
+eval `scramv1 ru -csh`
+
+cd trabajos/
+ 
+cmsRun  file1
+
+rfcp /tmp/${me}/file2 $cas/${prefix}/${Run}
+rfcp /tmp/${me}/file3 $cas/${prefix}/${Run}
+rfcp /tmp/${me}/file4 $cas/${prefix}/${Run}
+
+rm /tmp/${me}/file2
+rm /tmp/${me}/file3
+rm /tmp/${me}/file4

@@ -1,0 +1,18 @@
+\small  & \small  PFDLSSee & \small  PFDLSSemu & \small  PFDLSSetau & \small  PFDLSSmumu & \small  PFDLSSmutau & \small  PFDLSStautau\\
+\small QCD_Pt15 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small QCD_Pt30 & \small   1146 +- 1146 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small QCD_Pt80 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   57.6 +- 40.73 & \small   0 +- 0 & \small   0 +- 0\\
+\small QCD_Pt170 & \small  38.64 +- 5.578 & \small  20.13 +- 4.025 & \small   0 +- 0 & \small  24.96 +- 4.482 & \small   0 +- 0 & \small   0 +- 0\\
+\small QCD_Pt300 & \small  14.31 +- 0.7399 & \small  6.122 +- 0.484 & \small   0 +- 0 & \small   7.04 +- 0.519 & \small 0.1148 +- 0.06627 & \small   0 +- 0\\
+\small QCD_Pt470 & \small  3.703 +- 0.1228 & \small 0.9615 +- 0.06259 & \small 0.0163 +- 0.008148 & \small  1.076 +- 0.0662 & \small   0.02037 +- 0.00911 & \small   0 +- 0\\
+\small QCD_Pt800 & \small 0.2198 +- 0.004693 & \small   0.03777 +- 0.001945 & \small 0.0004008 +- 0.0002004 & \small   0.03948 +- 0.001989 & \small 0.0004008 +- 0.0002004 & \small   0 +- 0\\
+\small QCD_Pt1400 & \small  0.001515 +- 3.89e-05 & \small 0.0003127 +- 1.768e-05 & \small 2.997e-06 +- 1.73e-06 & \small 0.0002448 +- 1.564e-05 & \small 4.995e-06 +- 2.234e-06 & \small   0 +- 0\\
+\small TTbar_temp & \small  1.694 +- 0.1775 & \small  6.607 +- 0.3507 & \small   0.05584 +- 0.03224 & \small  9.641 +- 0.4236 & \small 0.2978 +- 0.07445 & \small   0.01861 +- 0.01861\\
+\small WJets_temp & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small ZJets_temp & \small 0.2031 +- 0.2031 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small ww_pat_1 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small wz_pat_1 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small zz_pat_1 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0 & \small   0 +- 0\\
+\small LM0_temp & \small  3.245 +- 0.2173 & \small  11.98 +- 0.4175 & \small 0.1164 +- 0.04116 & \small  19.19 +- 0.5285 & \small 0.5675 +- 0.09087 & \small   0.01455 +- 0.01455\\
+\small Significancy & \small   0.09348 & \small  2.058 & \small 0.4322 & \small  1.916 & \small 0.8621 & \small 0.1067\\
+\small QCD Significancy & \small   0.09356 & \small  2.294 & \small 0.9008 & \small  2.015 & \small  1.541 & \small   0\\

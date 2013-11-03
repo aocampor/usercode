@@ -1,0 +1,30 @@
+#!/bin/tcsh
+#set echo on
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+set rootses = '/afs/cern.ch/user/a/aocampor/CMSSW_1_6_12/src'
+#set rootses = '/afs/cern.ch/user/a/aocampor/CMSSW_2_1_9/src'
+set castor_dir = '/castor/cern.ch/user/c/ccmuon/RPC/GlobalRuns/CosmicMCBOn10GeVSummer08_COSMMC_21X_v4RECO/1/root/'
+#set castor_dir = '/castor/cern.ch/user/a/aocampor/results/CSA07MuonCMSSW_1_6_7-CSA07-Chowder-P1-PDMuon-Skims4-egammaWPlusEMOrJetRECOSIMUSER/tot/'
+
+set tomerge = 'Local'
+
+cd $rootses
+project CMSSW
+eval `scramv1 ru -csh`
+
+
+set a1 = `rfdir $castor_dir | grep ${tomerge} | awk '{print $9}'`
+echo $a1[1]
+hadd /tmp/aocampor/aux.root ${castor_dir}/$a1[1] ${castor_dir}/$a1[2]
+set a2 = `rfdir $castor_dir | grep ${tomerge} | grep -v $a1[1] | grep -v $a1[2] | awk '{print $9}'`
+foreach fls ( $a2[*] )
+	hadd /tmp/aocampor/out.root /tmp/aocampor/aux.root ${castor_dir}/$fls
+	rm /tmp/aocampor/aux.root
+	mv /tmp/aocampor/out.root /tmp/aocampor/aux.root
+end
+
+rfcp /tmp/aocampor/aux.root ${castor_dir}/${tomerge}Merge.root
+rm /tmp/aocampor/aux.root 
+exit 0

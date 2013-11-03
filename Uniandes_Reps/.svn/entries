@@ -1,0 +1,103 @@
+10
+
+dir
+1110
+svn+ssh://svn.cern.ch/reps/cmsuniandes/Users/aocampor
+svn+ssh://svn.cern.ch/reps/cmsuniandes
+
+
+
+2011-03-28T16:17:22.824677Z
+927
+aocampor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+PAT_vs_PF
+dir
+
+SUSYFilterRECO
+dir
+
+RPCDigiCleaning
+dir
+
+minidaq
+dir
+
+RPCOffLineNoise
+dir
+
+TrigEff
+dir
+
+RPCStripProfile
+dir
+
+scripts
+dir
+
+notes
+dir
+
+SUSYNtuple_analyser
+dir
+
+TBXanal
+dir
+
+FAKE_RATE_FLIP
+dir
+
+Digian
+dir
+
+iPAT
+dir
+
+CosmicsCaloCom
+dir
+
+SUSYNtuple_analyser_v2
+dir
+
+Internal_Notes_iPAT
+dir
+
+SUSYNtuple_analyser_v3
+dir
+
+Beam
+dir
+
+config
+dir
+
+RPCTriggerNoise
+dir
+
+GlobalRuns_2_0_10
+dir
+
+Trigger_types_2_2_3
+dir
+
+SUSYEVFILT
+dir
+
+Noise
+dir
+

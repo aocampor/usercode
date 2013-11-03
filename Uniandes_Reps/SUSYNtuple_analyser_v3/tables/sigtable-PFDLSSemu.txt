@@ -1,0 +1,18 @@
+Significance table for PFDLSSemu
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt15.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt30.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt80.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt170.root          7.631 +- 1.442
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt300.root           2.06 +- 0.1633
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt470.root         0.3255 +- 0.02119
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt800.root        0.01303 +- 0.0006647
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt1400.root      0.0001089 +- 6.069e-06
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_TTbar_temp.root          1.865 +- 0.1084
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_WJets_temp.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_ZJets_temp.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_ww_pat_1.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_wz_pat_1.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_zz_pat_1.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_LM0_temp.root          3.557 +- 0.1324
+Significancy                               1.031
+QCD Significancy                            1.123

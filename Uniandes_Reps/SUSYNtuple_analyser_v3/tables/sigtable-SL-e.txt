@@ -1,0 +1,18 @@
+Significance table for SLe
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt15.root              0 +- 0
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt30.root           2328 +- 950.5
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt80.root           1736 +- 130.1
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt170.root          940.8 +- 16.01
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt300.root          285.1 +- 1.922
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt470.root          58.28 +- 0.2834
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt800.root          3.526 +- 0.01094
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_QCD_Pt1400.root         0.0331 +- 0.0001058
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_TTbar_temp.root          112.3 +- 0.8411
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_WJets_temp.root          372.1 +- 35.97
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_ZJets_temp.root          7.563 +- 0.7211
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_ww_pat_1.root          2.633 +- 1.075
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_wz_pat_1.root          1.317 +- 0.3519
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_zz_pat_1.root           1.26 +- 0.3056
+/Volumes/Untitled/data/SUSYTree/OUT/Salida_LM0_temp.root          200.2 +- 0.993
+Significancy                               2.618
+QCD Significancy                            2.737

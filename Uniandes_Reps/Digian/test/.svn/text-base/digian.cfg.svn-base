@@ -1,0 +1,21 @@
+process Demo =  {
+
+untracked PSet maxEvents = {untracked int32 input =-1}  
+source = PoolSource 
+{ 
+     # replace 'myfile.root' with the source file you want to use
+     untracked vstring fileNames = {
+"rfio:/castor/cern.ch/cms/store/data/BeamCommissioning08/Cosmics/RECO/v1/000/063/050/0C9E6E9C-DC84-DD11-A5F7-000423D6CA72.root"
+		} 
+}
+
+#keep the logging output to a nice level
+service = MessageLogger {}
+
+module demo = Digian { 
+}
+
+
+path p = {demo} 
+
+}

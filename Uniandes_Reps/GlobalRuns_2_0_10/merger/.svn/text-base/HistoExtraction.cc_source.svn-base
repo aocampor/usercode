@@ -1,0 +1,162 @@
+#include <fstream>
+#include <sstream>
+#include <stdlib.h>
+#include <iostream>
+#include "TROOT.h"
+#include <vector>
+#include <math.h>
+#include "TH1F.h"
+#include "TFile.h"
+#include "TString.h"
+#include <algorithm>
+#include <math.h>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+
+int main(int argc, char **argv){
+  std::string p1;
+  ifstream* input1 = new ifstream("path_Exp_w0.dat",ios::in);
+  std::vector<std::string> exp;
+  exp.clear();
+  while(getline(*input1,p1,'\n')){
+    exp.push_back(p1);
+  }
+
+  std::string p2;
+  ifstream* input2 = new ifstream("path_Rpc_w0.dat",ios::in);
+  std::vector<std::string> rpc;
+  rpc.clear();
+  while(getline(*input2,p2,'\n')){
+    rpc.push_back(p2);
+  }
+
+  std::string p3;
+  ifstream* input3 = new ifstream("path_Res_w0.dat",ios::in);
+  std::vector<std::string> res;
+  res.clear();
+  while(getline(*input3,p3,'\n')){
+    res.push_back(p3);
+  }
+
+  std::string p4;
+  ifstream* input4 = new ifstream("path_Eff_w0.dat",ios::in);
+  std::vector<std::string> eff;
+  eff.clear();
+  while(getline(*input4,p4,'\n')){
+    eff.push_back(p4);
+  }
+  std::string file = "Merge_RUN.root";
+//  TFile* newResults = new TFile(("/tmp/my_self/position/051/RUN/RPC_w0_"+file).c_str(),"RECREATE");
+  TFile* newResults = new TFile(("/tmp/my_self/RPC_w0_"+file).c_str(),"RECREATE");
+
+  TH1F *RMSGlob = new TH1F("RMS","RMS",200,0.5,200.5);
+  TH1F *EffUnder = new TH1F("EffUnder","Strips Under 3 sigma Average value",200,0.5,200.5);
+  TH1F *EffGlob = new TH1F("GlobalEff","Global efficiency",200,0.5,200.5);
+  int ind=0;
+  for(unsigned int a=0;a<eff.size();a++){
+
+    TString name1 = (TString)exp[a];
+    TString name2 = (TString)rpc[a];
+    TString name3 = (TString)res[a];
+    TString name4 = (TString)eff[a];
+    
+    std::cout<<name1<<std::endl;
+    std::cout<<name2<<std::endl;
+    std::cout<<name3<<std::endl;
+    std::cout<<name4<<std::endl;
+
+    int first = eff[a].find("EfficiencyFromTrack_");
+    std::string cam = eff[a].substr(first+20);
+    std::cout<<"Cam "<<cam<<std::endl;
+
+//    TFile* histoResults = new TFile("/tmp/my_self/position/051/RUN/Merge_RUN.root");
+    TFile* histoResults = new TFile("/tmp/my_self/Merge_RUN.root");
+     
+    TH1F* EXP = (TH1F *) histoResults->Get(name1);
+    TH1F* RPC = (TH1F *) histoResults->Get(name2);
+    TH1F* RES = (TH1F *) histoResults->Get(name3);
+    
+    if(!EXP)continue;
+    TString s1 = "R_RUN_";
+    TH1F *EFF= new TH1F(s1+name4,s1+name4,100, 0.5, 100.5);
+    TH1F *EFFProfile= new TH1F(name4,s1+name4,100, 0.5, 100.5);
+
+    float sumEXP=0.;
+    float sumRPC=0.;
+    int count=0;
+    int expected=0;
+    for(unsigned int i=1;i<=100;++i){
+      if(EXP->GetBinContent(i)> 0){
+	float eff = RPC->GetBinContent(i)/EXP->GetBinContent(i);
+	float erreff = sqrt(eff*(1-eff)/EXP->GetBinContent(i));
+
+	sumEXP+=EXP->GetBinContent(i);
+	sumRPC+=RPC->GetBinContent(i);
+
+	EFFProfile->SetBinContent(i,eff*100.);
+	EFFProfile->SetBinError(i,erreff*100.);
+
+	EFF->Fill(eff*1.);
+	expected++;
+      }
+    }
+    double mean=EFF->GetMean();
+    double RMS=EFF->GetRMS();
+
+    for(unsigned int i=1;i<=100;++i){
+      if(EXP->GetBinContent(i)> 0){
+	float eff = RPC->GetBinContent(i)/EXP->GetBinContent(i);
+	if(eff<(mean-0.8*mean)){
+	  count++;
+	  std::cout<<"Eff-> "<< eff<<" Mean-> "<<mean<<" RMS-> "<<RMS<<std::endl;
+	}
+      }
+    }
+
+    float GlobEff = sumRPC/sumEXP;
+    float GlobErr = sqrt(GlobEff*(1-GlobEff)/sumEXP);
+
+
+    if(expected>0 && count<expected){
+
+      double percLow=(count*1./expected*1.);
+      std::cout << "Perc. Low Efficiency " << percLow << std::endl;
+      ind++;
+      char cam1[128];	
+      sprintf(cam1,"%s",cam.c_str());
+      TString camera = (TString)cam;
+	  
+      RMSGlob->SetBinContent(ind,RMS);	  
+      RMSGlob->GetXaxis()->SetBinLabel(ind,camera);
+      RMSGlob->GetXaxis()->LabelsOption("v");
+
+      EffUnder->SetBinContent(ind,percLow);
+      EffUnder->GetXaxis()->SetBinLabel(ind,camera);
+      EffUnder->GetXaxis()->LabelsOption("v");
+
+      EffGlob->SetBinContent(ind,GlobEff);
+      EffGlob->SetBinError(ind,GlobErr);
+      EffGlob->GetXaxis()->SetBinLabel(ind,camera);
+      EffGlob->GetXaxis()->LabelsOption("v");
+
+    }
+    newResults->WriteTObject(EFFProfile);
+    newResults->WriteTObject(RPC);
+    newResults->WriteTObject(EXP);
+    newResults->WriteTObject(RES);
+    newResults->WriteTObject(EFF);    
+  }
+  
+  newResults->WriteTObject(EffGlob);
+  newResults->WriteTObject(RMSGlob);
+  newResults->WriteTObject(EffUnder);
+
+  newResults->Close(); 
+  
+  delete newResults;
+  std::cout<<"File chiuso"<<std::endl;
+  return 0;
+}
+

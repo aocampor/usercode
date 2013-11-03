@@ -1,0 +1,62 @@
+#!/bin/tcsh
+#set echo on
+
+setenv CORAL_AUTH_USER ""
+setenv CORAL_AUTH_PASSWORD ""
+
+set prefix = "062"
+set Run = "815"
+set cmsver = "CMSSW_2_1_7"
+set GRN = "MagFieldPreBeam"
+set casth = "/castor/cern.ch/user/c/ccmuon/RPC/GlobalRuns"
+set casa = `pwd`
+set dataset = "/Cosmics/BeamCommissioning08-PromptReco-v1/RECO"
+set CASTOR_HOME_A = "/castor/cern.ch/user/c/ccmuon/RPC/GlobalRuns"
+set me = `whoami`
+
+
+mkdir trabajos
+eval `scramv1 ru -csh`
+
+set data = `./aSearchCLI --input "find file where dataset like $dataset and run = ${prefix}${Run}" --limit 0 | grep "/store/data"`
+echo $data
+rfmkdir $CASTOR_HOME_A/${GRN}
+rfchmod +777 $CASTOR_HOME_A/${GRN}
+
+rfmkdir $CASTOR_HOME_A/${GRN}/${prefix}
+rfchmod +777 $CASTOR_HOME_A/${GRN}/${prefix}
+
+rfmkdir $CASTOR_HOME_A/${GRN}/${prefix}/$Run
+rfchmod +777 $CASTOR_HOME_A/${GRN}/${prefix}/$Run
+
+foreach fls ( $data[*] )
+
+
+	cd $casa
+	set nom = `echo $fls | awk -F"/" '{print $11}' | awk -F"-" '{print $5}' | awk -F"." '{print $1}'`
+	echo $nom
+
+	cp source/TrackEfficiency_RUN.cfg trabajos/TrackEfficiency_${prefix}${Run}_${nom}.cfg
+	cp source/submit_JOB1.job trabajos/submit_${prefix}${Run}_${nom}.job 
+
+        set nom1 = `echo "\042""rfio:/castor/cern.ch/cms"$fls"\042"`
+
+	replace "input_source" "$nom1" -- trabajos/TrackEfficiency_${prefix}${Run}_${nom}.cfg
+	replace "file1" "/tmp/${me}/SumEff_${prefix}${Run}_${nom}.root" -- trabajos/TrackEfficiency_${prefix}${Run}_${nom}.cfg
+        replace "file2" "/tmp/${me}/RpcEff_track_${prefix}${Run}_${nom}.root" -- trabajos/TrackEfficiency_${prefix}${Run}_${nom}.cfg
+	replace "file2" "SumEff_${prefix}${Run}_${nom}.root" -- trabajos/submit_${prefix}${Run}_${nom}.job
+	replace "file3" "RpcEff_track_${prefix}${Run}_${nom}.root" -- trabajos/submit_${prefix}${Run}_${nom}.job
+        replace "file4" "dqm_${prefix}${Run}_${nom}.root" -- trabajos/submit_${prefix}${Run}_${nom}.job
+	replace "file1" "TrackEfficiency_${prefix}${Run}_${nom}.cfg" -- trabajos/submit_${prefix}${Run}_${nom}.job
+	replace "casa_t" "$casa" -- trabajos/submit_${prefix}${Run}_${nom}.job
+	replace "run_t" "$Run" -- trabajos/submit_${prefix}${Run}_${nom}.job
+	replace "prefix_t" "$prefix" -- trabajos/submit_${prefix}${Run}_${nom}.job  
+	replace "cas_t" "${casth}/${GRN}" -- trabajos/submit_${prefix}${Run}_${nom}.job
+	replace "RUN" "/tmp/${me}/dqm_${prefix}${Run}_${nom}.root"  -- trabajos/TrackEfficiency_${prefix}${Run}_${nom}.cfg 
+
+	cd trabajos
+	chmod +x submit_${prefix}${Run}_${nom}.job
+
+	bsub -q cmscaf submit_${prefix}${Run}_${nom}.job
+end
+	

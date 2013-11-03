@@ -1,0 +1,18 @@
+Significance table for DLSSmutau
+../root/OUT/Salida_QCD_Pt15.root              0 +- 0
+../root/OUT/Salida_QCD_Pt30.root              0 +- 0
+../root/OUT/Salida_QCD_Pt80.root          86.41 +- 49.89
+../root/OUT/Salida_QCD_Pt170.root           16.1 +- 3.6
+../root/OUT/Salida_QCD_Pt300.root           2.87 +- 0.3314
+../root/OUT/Salida_QCD_Pt470.root           0.33 +- 0.03667
+../root/OUT/Salida_QCD_Pt800.root        0.01844 +- 0.001359
+../root/OUT/Salida_QCD_Pt1400.root      1.798e-05 +- 4.239e-06
+../root/OUT/Salida_TTbar_temp.root         0.5025 +- 0.09671
+../root/OUT/Salida_WJets_temp.root              0 +- 0
+../root/OUT/Salida_ZJets_temp.root              0 +- 0
+../root/OUT/Salida_ww_pat_1.root              0 +- 0
+../root/OUT/Salida_wz_pat_1.root              0 +- 0
+../root/OUT/Salida_zz_pat_1.root              0 +- 0
+../root/OUT/Salida_LM0_temp.root         0.2619 +- 0.06174
+Significancy                             0.02541
+QCD Significancy                          0.02547
